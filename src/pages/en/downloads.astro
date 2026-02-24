@@ -1,24 +1,36 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import ReleaseCard from '../../components/ReleaseCard.astro';
+import DownloadGateModal from '../../components/DownloadGateModal.astro';
 ---
 
 <PageLayout
   lang="en"
-  title="Downloads | Scholarship project"
-  description="VST plugin releases, requirements, and documentation."
+  title="Plugin | Scholarship project"
+  description="VST plugin release access, requirements, and documentation."
 >
   <section class="content-stack">
-    <p class="section-kicker">Downloads</p>
+    <p class="section-kicker">Plugin</p>
     <h2>Latest release</h2>
     <ReleaseCard
       name="Generative Granular Synthesizer VST"
       version="v0.1.0-alpha"
       date="2026-02-21"
-      downloadUrl="https://example.com"
-      notes={['Placeholder link - replace with your external binary hosting.', 'Test release used for documentation and demos.']}
-      checksum={{ algo: 'SHA256', value: 'TO_BE_ADDED' }}
+      pendingLabel="Download is available through the form below"
+      notes={[
+        'After form approval, you will receive an active download link.',
+        'The response includes SHA256 checksum for binary verification.',
+        'Update-contact consent is required, with unsubscribe available.'
+      ]}
+      checksum={{ algo: 'SHA256', value: 'Provided after successful download request' }}
     />
+    <div class="text-panel">
+      <p>
+        To access the test build, submit the download form. Data is collected for project statistics and release
+        update communication.
+      </p>
+      <DownloadGateModal lang="en" pluginVersion="v0.1.0-alpha" contactEmail="contact@example.com" />
+    </div>
   </section>
 
   <section id="docs" class="content-stack">
@@ -33,4 +45,3 @@ import ReleaseCard from '../../components/ReleaseCard.astro';
     </div>
   </section>
 </PageLayout>
-

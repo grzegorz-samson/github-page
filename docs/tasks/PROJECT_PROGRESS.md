@@ -72,6 +72,19 @@ Build and publish a bilingual (PL/EN) scholarship project website documenting:
   - `public/assets/certificates/certyfikat-kurs-2-dataiku.pdf`
   - `public/assets/certificates/certyfikat-kurs-3-aws.pdf`
 - Updated scholarship milestone labels to `zrealizowane` and set all milestone statuses to `done`.
+- Added download-gate frontend integration:
+  - `src/components/DownloadGateModal.astro`
+  - `src/lib/config.ts`
+  - `src/lib/downloadGate.ts`
+  - integrated on `/pl/downloads` (`/pl/plugin`) and `/en/downloads` (`/en/plugin`)
+- Added legal pages for download consent:
+  - `src/pages/pl/regulamin.mdx`
+  - `src/pages/en/terms.mdx`
+- Added Cloudflare Worker backend scaffold with D1 migration:
+  - `backend/download-gate-api/src/index.ts`
+  - `backend/download-gate-api/migrations/0001_init.sql`
+  - `backend/download-gate-api/wrangler.jsonc`
+  - `backend/download-gate-api/README.md`
 
 ## Scholarship Tasks (from context PDF)
 1. Courses and training (09.2025-10.2025)  

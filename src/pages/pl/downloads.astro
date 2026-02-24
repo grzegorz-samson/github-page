@@ -1,37 +1,38 @@
----
+﻿---
 import PageLayout from '../../layouts/PageLayout.astro';
 import ReleaseCard from '../../components/ReleaseCard.astro';
+import DownloadGateModal from '../../components/DownloadGateModal.astro';
 import { withBase } from '../../lib/paths';
 
 const capabilityCards = [
   {
     icon: 'G',
-    title: 'Granularny silnik wieloźródłowy',
-    text: 'Ładowanie wielu plików WAV do wspólnego bufora i budowanie złożonych chmur ziaren w czasie rzeczywistym.',
+    title: 'Granularny silnik wieloĹşrĂłdĹ‚owy',
+    text: 'Ĺadowanie wielu plikĂłw WAV do wspĂłlnego bufora i budowanie zĹ‚oĹĽonych chmur ziaren w czasie rzeczywistym.',
     tags: ['Granular', 'WAV', 'Live']
   },
   {
     icon: 'P',
-    title: 'Precyzyjna kontrola parametrów',
-    text: 'Sterowanie czasem trwania ziaren, gęstością chmury, rozrzutem wysokości i głośności oraz obwiednią.',
+    title: 'Precyzyjna kontrola parametrĂłw',
+    text: 'Sterowanie czasem trwania ziaren, gÄ™stoĹ›ciÄ… chmury, rozrzutem wysokoĹ›ci i gĹ‚oĹ›noĹ›ci oraz obwiedniÄ….',
     tags: ['Pitch', 'Gain', 'Envelope']
   },
   {
     icon: 'W',
     title: 'Workflow oparty o waveform',
-    text: 'Selekcja, grupowanie i edycja zakresów próbkowania bezpośrednio na podglądzie fali.',
+    text: 'Selekcja, grupowanie i edycja zakresĂłw prĂłbkowania bezpoĹ›rednio na podglÄ…dzie fali.',
     tags: ['Waveform', 'Selection', 'Editing']
   },
   {
     icon: 'M',
-    title: 'Rozszerzony routing kanałów',
-    text: 'Panel multichannel z routingiem, mute/solo oraz parami panorama dla złożonych układów wyjściowych.',
+    title: 'Rozszerzony routing kanaĹ‚Ăłw',
+    text: 'Panel multichannel z routingiem, mute/solo oraz parami panorama dla zĹ‚oĹĽonych ukĹ‚adĂłw wyjĹ›ciowych.',
     tags: ['Routing', 'Multichannel', 'Pan']
   },
   {
     icon: 'A',
     title: 'Audio Generator (AI)',
-    text: 'Panel konwersacyjny wspierający generowanie materiału audio i szybkie iteracje wariantów brzmieniowych.',
+    text: 'Panel konwersacyjny wspierajÄ…cy generowanie materiaĹ‚u audio i szybkie iteracje wariantĂłw brzmieniowych.',
     tags: ['Generator', 'Prompt', 'Session']
   }
 ];
@@ -40,25 +41,25 @@ const useCaseCards = [
   {
     icon: 'F',
     title: 'Tekstury filmowe i drony',
-    text: 'Budowanie atmosfer i warstw tła o ciągłej, ewoluującej strukturze.',
+    text: 'Budowanie atmosfer i warstw tĹ‚a o ciÄ…gĹ‚ej, ewoluujÄ…cej strukturze.',
     tags: ['Cinematic', 'Ambient']
   },
   {
     icon: 'R',
     title: 'Rytmiczne glitche',
-    text: 'Dekonstrukcja i ponowne składanie materiału perkusyjnego w nieregularne sekwencje.',
+    text: 'Dekonstrukcja i ponowne skĹ‚adanie materiaĹ‚u perkusyjnego w nieregularne sekwencje.',
     tags: ['Glitch', 'Rhythm']
   },
   {
     icon: 'V',
-    title: 'Resynteza głosu i field recording',
-    text: 'Przetwarzanie źródeł mowy i nagrań terenowych do form eksperymentalnych.',
+    title: 'Resynteza gĹ‚osu i field recording',
+    text: 'Przetwarzanie ĹşrĂłdeĹ‚ mowy i nagraĹ„ terenowych do form eksperymentalnych.',
     tags: ['Voice', 'Field Recording']
   },
   {
     icon: 'B',
     title: 'Praca badawczo-artystyczna',
-    text: 'Eksploracja interaktywnych systemów audio i multimodalności w praktyce twórczej.',
+    text: 'Eksploracja interaktywnych systemĂłw audio i multimodalnoĹ›ci w praktyce twĂłrczej.',
     tags: ['Research', 'Interactive']
   }
 ];
@@ -68,36 +69,36 @@ const guiItems = [
     id: 'controls',
     chip: 'Controls',
     title: 'Controls Panel',
-    shortDescription: 'Główna warstwa kreacji i parametry granulacji.',
+    shortDescription: 'GĹ‚Ăłwna warstwa kreacji i parametry granulacji.',
     imageSrc: withBase('/assets/plugin/controls-panel.png'),
     imageAlt: 'Panel Controls we wtyczce GranularVST-3',
     description:
-      'Główna warstwa kreacji: Duration, Pitch, Gain, Envelope i Cloud. To tutaj ustawiane są parametry odpowiadające za charakter i dynamikę chmury granularnej.',
-    bullets: ['Sterowanie zakresem i dynamiką', 'Szybki dostęp do kluczowych parametrów', 'Tryb pracy nastawiony na iteracje'],
+      'GĹ‚Ăłwna warstwa kreacji: Duration, Pitch, Gain, Envelope i Cloud. To tutaj ustawiane sÄ… parametry odpowiadajÄ…ce za charakter i dynamikÄ™ chmury granularnej.',
+    bullets: ['Sterowanie zakresem i dynamikÄ…', 'Szybki dostÄ™p do kluczowych parametrĂłw', 'Tryb pracy nastawiony na iteracje'],
     tags: ['Duration', 'Pitch', 'Cloud']
   },
   {
     id: 'multichannel',
     chip: 'Multichannel',
     title: 'Multichannel Panel',
-    shortDescription: 'Routing kanałów i panorama dla złożonych układów.',
+    shortDescription: 'Routing kanaĹ‚Ăłw i panorama dla zĹ‚oĹĽonych ukĹ‚adĂłw.',
     imageSrc: withBase('/assets/plugin/multichannel-panel.png'),
     imageAlt: 'Panel Multichannel we wtyczce GranularVST-3',
     description:
-      'Routing kanałów z kontrolą aktywności, mute/solo i konfiguracją par panorama. Panel umożliwia pracę od stereo po rozszerzone układy wielokanałowe.',
-    bullets: ['Kontrola kanałów wyjściowych', 'Parowanie L/R i panorama', 'Skalowalność dla układów surround'],
+      'Routing kanaĹ‚Ăłw z kontrolÄ… aktywnoĹ›ci, mute/solo i konfiguracjÄ… par panorama. Panel umoĹĽliwia pracÄ™ od stereo po rozszerzone ukĹ‚ady wielokanaĹ‚owe.',
+    bullets: ['Kontrola kanaĹ‚Ăłw wyjĹ›ciowych', 'Parowanie L/R i panorama', 'SkalowalnoĹ›Ä‡ dla ukĹ‚adĂłw surround'],
     tags: ['Routing', 'Mute/Solo', 'Surround']
   },
   {
     id: 'audio-generator',
     chip: 'Audio Generator',
     title: 'Audio Generator (AI)',
-    shortDescription: 'Generowanie materiału audio i iteracje promptowe.',
+    shortDescription: 'Generowanie materiaĹ‚u audio i iteracje promptowe.',
     imageSrc: withBase('/assets/plugin/audio-generator-panel.png'),
     imageAlt: 'Panel Audio Generator (AI) we wtyczce GranularVST-3',
     description:
-      'Interfejs konwersacyjny do generowania materiału audio i zarządzania sesją. Rozszerza workflow o komponent promptowy i szybkie iteracje wariantów brzmieniowych.',
-    bullets: ['Tworzenie wariantów materiału audio', 'Obsługa kontekstu sesji', 'Workflow promptowy dla sound designu'],
+      'Interfejs konwersacyjny do generowania materiaĹ‚u audio i zarzÄ…dzania sesjÄ…. Rozszerza workflow o komponent promptowy i szybkie iteracje wariantĂłw brzmieniowych.',
+    bullets: ['Tworzenie wariantĂłw materiaĹ‚u audio', 'ObsĹ‚uga kontekstu sesji', 'Workflow promptowy dla sound designu'],
     tags: ['Generator', 'Prompt', 'Session']
   }
 ];
@@ -108,33 +109,41 @@ const initialPanel = guiItems[0];
 <PageLayout
   lang="pl"
   title="Wtyczka VST | Projekt stypendialny"
-  description="Opis wtyczki GranularVST-3: funkcjonalności, panele i zastosowania."
+  description="Opis wtyczki GranularVST-3: funkcjonalnoĹ›ci, panele i zastosowania."
 >
   <section class="content-stack">
     <p class="section-kicker">Wtyczka VST</p>
     <h2>GranularVST-3</h2>
     <div class="text-panel">
       <p>
-        GranularVST-3 to autorska wtyczka JUCE (VST3 + Standalone) do generatywnego przetwarzania krótkich nagrań
-        i budowania wielowarstwowych struktur granularnych. Narzędzie wspiera pracę kompozytorską, sound design
-        i eksperymentalne podejście do kreacji dźwięku.
+        GranularVST-3 to autorska wtyczka JUCE (VST3 + Standalone) do generatywnego przetwarzania krĂłtkich nagraĹ„
+        i budowania wielowarstwowych struktur granularnych. NarzÄ™dzie wspiera pracÄ™ kompozytorskÄ…, sound design
+        i eksperymentalne podejĹ›cie do kreacji dĹşwiÄ™ku.
       </p>
     </div>
     <ReleaseCard
       name="Generatywny syntezator granularny VST"
       version="v0.1.0-alpha"
       date="2026-02-21"
-      pendingLabel="Publikacja binarna w przygotowaniu"
+      pendingLabel="Pobieranie dostępne przez formularz poniżej"
       notes={[
-        'Instalator VST3 zostanie opublikowany po zamknięciu przeglądu stabilności.',
-        'Wraz z wydaniem zostaną opublikowane wymagania systemowe i suma kontrolna.'
+        'Po zatwierdzeniu formularza zobaczysz aktywny link do pobrania.',
+        'W odpowiedzi otrzymasz sumę kontrolną SHA256 do weryfikacji pliku.',
+        'Zgoda na informacje o aktualizacjach jest wymagana, z możliwością rezygnacji.'
       ]}
-      checksum={{ algo: 'SHA256', value: 'Zostanie opublikowana wraz z wydaniem' }}
+      checksum={{ algo: 'SHA256', value: 'Udostępniane po wysłaniu formularza pobierania' }}
     />
+    <div class="text-panel">
+      <p>
+        Aby pobrać wersję testową, wypełnij formularz pobierania. Dane są zapisywane w celu statystyki projektu i
+        obsługi aktualizacji.
+      </p>
+      <DownloadGateModal lang="pl" pluginVersion="v0.1.0-alpha" contactEmail="kontakt@example.com" />
+    </div>
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Funkcjonalności</p>
+    <p class="section-kicker">FunkcjonalnoĹ›ci</p>
     <h2>Co potrafi wtyczka</h2>
     <div class="plugin-feature-grid">
       {capabilityCards.map((item) => (
@@ -156,7 +165,7 @@ const initialPanel = guiItems[0];
 
   <section class="content-stack">
     <p class="section-kicker">Use case</p>
-    <h2>Zastosowania twórcze</h2>
+    <h2>Zastosowania twĂłrcze</h2>
     <div class="plugin-feature-grid plugin-feature-grid--compact">
       {useCaseCards.map((item) => (
         <article class="plugin-feature-card">
@@ -206,7 +215,7 @@ const initialPanel = guiItems[0];
           <h3 data-active-title>{initialPanel.title}</h3>
           <p class="plugin-panel-active__description" data-active-description>{initialPanel.description}</p>
           <section class="plugin-panel-active__highlights">
-            <h4>Szczegóły panelu</h4>
+            <h4>SzczegĂłĹ‚y panelu</h4>
             <ul data-active-bullets>
               {initialPanel.bullets.map((bullet) => (
                 <li>{bullet}</li>
@@ -224,7 +233,7 @@ const initialPanel = guiItems[0];
 
     <div class="text-panel">
       <p>
-        Kontekst naukowy i materiały konferencyjne są dostępne w zakładce <a href={withBase('/pl/science/')}>Nauka</a>.
+        Kontekst naukowy i materiaĹ‚y konferencyjne sÄ… dostÄ™pne w zakĹ‚adce <a href={withBase('/pl/science/')}>Nauka</a>.
       </p>
     </div>
   </section>
@@ -294,3 +303,4 @@ const initialPanel = guiItems[0];
     if (initialId) setActive(initialId, false);
   }
 </script>
+

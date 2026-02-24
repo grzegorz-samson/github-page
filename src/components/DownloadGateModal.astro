@@ -1,0 +1,472 @@
+---
+import { withBase } from '../lib/paths';
+
+type Lang = 'pl' | 'en';
+
+const { lang = 'pl', pluginVersion = 'v0.1.0-alpha', contactEmail = 'kontakt@example.com' } = Astro.props as {
+  lang?: Lang;
+  pluginVersion?: string;
+  contactEmail?: string;
+};
+
+const copy =
+  lang === 'pl'
+    ? {
+        openButton: 'Pobierz przez formularz',
+        kicker: 'Bezpieczne pobieranie',
+        title: 'Formularz pobierania',
+        description:
+          'Po przesłaniu formularza otrzymasz link do pobrania i sumę kontrolną SHA256 dla aktualnej wersji wtyczki.',
+        firstName: 'Imię',
+        lastName: 'Nazwisko',
+        email: 'E-mail',
+        purposesTitle: 'Do jakich celów planujesz użyć wtyczki?',
+        institution: 'AMFN lub inna instytucja (opcjonalnie)',
+        purposeOther: 'Inne (doprecyzuj)',
+        consentsTitle: 'Zgody',
+        consentTermsPrefix: 'Akceptuję',
+        consentTermsTerms: 'regulamin',
+        consentTermsAnd: 'oraz',
+        consentTermsPrivacy: 'politykę prywatności',
+        consentStats: 'Wyrażam zgodę na wykorzystanie danych do statystyk projektu.',
+        consentUpdates:
+          'Wyrażam zgodę na kontakt o aktualizacjach wtyczki (zgoda wymagana, można zrezygnować w każdej chwili).',
+        submit: 'Wyślij i pobierz',
+        cancel: 'Anuluj',
+        successTitle: 'Dostęp gotowy',
+        successText: 'Poniżej znajdziesz aktywny link do pobrania i sumę kontrolną SHA256.',
+        downloadNow: 'Pobierz plik',
+        copyLink: 'Kopiuj link',
+        copyHash: 'Kopiuj SHA256',
+        close: 'Zamknij',
+        backToForm: 'Wypełnij ponownie',
+        unsubscribeInfo: 'Aby wypisać się z informacji o aktualizacjach, napisz na',
+        validationError: 'Sprawdź formularz i uzupełnij wymagane pola.',
+        tooManyRequests: 'Za dużo prób. Odczekaj chwilę i spróbuj ponownie.',
+        serverError: 'Wystąpił błąd po stronie serwera. Spróbuj ponownie za chwilę.',
+        configError: 'Brak konfiguracji API pobierania. Ustaw PUBLIC_API_BASE.',
+        genericError: 'Nie udało się przetworzyć formularza.',
+        copiedLink: 'Link został skopiowany.',
+        copiedHash: 'SHA256 zostało skopiowane.',
+        copyFailed: 'Nie udało się skopiować. Skopiuj ręcznie.',
+        expiresAtLabel: 'Ważność linku'
+      }
+    : {
+        openButton: 'Download via form',
+        kicker: 'Secure download',
+        title: 'Download request form',
+        description:
+          'After submitting the form, you will get the download link and SHA256 checksum for the current plugin version.',
+        firstName: 'First name',
+        lastName: 'Last name',
+        email: 'Email',
+        purposesTitle: 'What is your intended use?',
+        institution: 'AMFN or another institution (optional)',
+        purposeOther: 'Other (please specify)',
+        consentsTitle: 'Consents',
+        consentTermsPrefix: 'I accept the',
+        consentTermsTerms: 'terms',
+        consentTermsAnd: 'and',
+        consentTermsPrivacy: 'privacy policy',
+        consentStats: 'I consent to anonymous usage statistics for this project.',
+        consentUpdates:
+          'I consent to receiving plugin update information (required, you can unsubscribe at any time).',
+        submit: 'Submit and download',
+        cancel: 'Cancel',
+        successTitle: 'Access granted',
+        successText: 'Use the link below and verify the SHA256 checksum before installation.',
+        downloadNow: 'Download file',
+        copyLink: 'Copy link',
+        copyHash: 'Copy SHA256',
+        close: 'Close',
+        backToForm: 'Submit another request',
+        unsubscribeInfo: 'To unsubscribe from update messages, contact',
+        validationError: 'Please review the form and complete required fields.',
+        tooManyRequests: 'Too many attempts. Please wait and try again.',
+        serverError: 'Server error. Please try again in a moment.',
+        configError: 'Download API is not configured. Set PUBLIC_API_BASE.',
+        genericError: 'Could not process the request.',
+        copiedLink: 'Link copied.',
+        copiedHash: 'SHA256 copied.',
+        copyFailed: 'Copy failed. Please copy manually.',
+        expiresAtLabel: 'Link expiry'
+      };
+
+const purposes =
+  lang === 'pl'
+    ? [
+        { value: 'student', label: 'Student' },
+        { value: 'academic_staff', label: 'Pracownik uczelni' },
+        { value: 'amfn', label: 'Związany z AMFN' },
+        { value: 'researcher', label: 'Badacz' },
+        { value: 'sound_designer', label: 'Sound designer' },
+        { value: 'composer', label: 'Kompozytor' },
+        { value: 'evaluation_test', label: 'Ewaluacja / test' },
+        { value: 'commercial_rd', label: 'Komercyjne R&D' },
+        { value: 'other', label: 'Inne' }
+      ]
+    : [
+        { value: 'student', label: 'Student' },
+        { value: 'academic_staff', label: 'Academic staff' },
+        { value: 'amfn', label: 'AMFN affiliated' },
+        { value: 'researcher', label: 'Researcher' },
+        { value: 'sound_designer', label: 'Sound designer' },
+        { value: 'composer', label: 'Composer' },
+        { value: 'evaluation_test', label: 'Evaluation / testing' },
+        { value: 'commercial_rd', label: 'Commercial R&D' },
+        { value: 'other', label: 'Other' }
+      ];
+
+const termsHref = lang === 'pl' ? withBase('/pl/regulamin/') : withBase('/en/terms/');
+const privacyHref =
+  lang === 'pl' ? `${withBase('/pl/regulamin/')}#polityka-prywatnosci` : `${withBase('/en/terms/')}#privacy-policy`;
+const modalHeadingId = `download-gate-title-${lang}`;
+---
+
+<div class="download-gate" data-download-gate data-lang={lang} data-plugin-version={pluginVersion}>
+  <button type="button" class="button button-primary" data-gate-open>{copy.openButton}</button>
+
+  <div class="download-gate-modal" data-gate-modal hidden>
+    <div class="download-gate-modal__backdrop" data-gate-close></div>
+    <div class="download-gate-modal__panel" role="dialog" aria-modal="true" aria-labelledby={modalHeadingId}>
+      <button type="button" class="download-gate-modal__close" data-gate-close aria-label={copy.close}>x</button>
+
+      <div data-gate-form-view>
+        <p class="section-kicker">{copy.kicker}</p>
+        <h3 id={modalHeadingId}>{copy.title}</h3>
+        <p>{copy.description}</p>
+
+        <form class="download-gate-form" data-gate-form novalidate>
+          <div class="download-gate-grid">
+            <label>
+              <span>{copy.firstName}</span>
+              <input type="text" name="firstName" minlength="2" maxlength="80" required />
+            </label>
+            <label>
+              <span>{copy.lastName}</span>
+              <input type="text" name="lastName" minlength="2" maxlength="80" required />
+            </label>
+          </div>
+
+          <label>
+            <span>{copy.email}</span>
+            <input type="email" name="email" maxlength="180" required />
+          </label>
+
+          <fieldset>
+            <legend>{copy.purposesTitle}</legend>
+            <div class="download-gate-check-grid">
+              {purposes.map((purpose) => (
+                <label class="download-gate-check">
+                  <input
+                    type="checkbox"
+                    name="purposes"
+                    value={purpose.value}
+                    data-purpose-other-toggle={purpose.value === 'other' ? 'true' : 'false'}
+                  />
+                  <span>{purpose.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label class="download-gate-other" data-purpose-other hidden>
+            <span>{copy.purposeOther}</span>
+            <textarea name="purposeOther" rows={2} maxlength="280" disabled></textarea>
+          </label>
+
+          <label>
+            <span>{copy.institution}</span>
+            <input type="text" name="institution" maxlength="120" />
+          </label>
+
+          <input class="download-gate-honeypot" type="text" name="website" tabindex="-1" autocomplete="off" />
+
+          <fieldset>
+            <legend>{copy.consentsTitle}</legend>
+            <label class="download-gate-check">
+              <input type="checkbox" name="consentTerms" required />
+              <span>
+                {copy.consentTermsPrefix}
+                {' '}
+                <a href={termsHref} target="_blank" rel="noreferrer">{copy.consentTermsTerms}</a>
+                {' '}
+                {copy.consentTermsAnd}
+                {' '}
+                <a href={privacyHref} target="_blank" rel="noreferrer">{copy.consentTermsPrivacy}</a>.
+              </span>
+            </label>
+            <label class="download-gate-check">
+              <input type="checkbox" name="consentStats" />
+              <span>{copy.consentStats}</span>
+            </label>
+            <label class="download-gate-check">
+              <input type="checkbox" name="consentUpdates" required />
+              <span>{copy.consentUpdates}</span>
+            </label>
+          </fieldset>
+
+          <p class="download-gate-form__error" data-gate-error hidden></p>
+
+          <div class="download-gate-actions">
+            <button type="submit" class="button button-primary" data-gate-submit>{copy.submit}</button>
+            <button type="button" class="button button-ghost" data-gate-close>{copy.cancel}</button>
+          </div>
+        </form>
+      </div>
+
+      <div data-gate-success hidden>
+        <p class="section-kicker">{copy.kicker}</p>
+        <h3>{copy.successTitle}</h3>
+        <p>{copy.successText}</p>
+        <div class="download-gate-result">
+          <a class="button button-primary" href="#" target="_blank" rel="noreferrer" data-gate-download-link>{copy.downloadNow}</a>
+          <button type="button" class="button button-ghost" data-copy-link>{copy.copyLink}</button>
+        </div>
+        <div class="download-gate-hash">
+          <p>SHA256</p>
+          <code data-gate-sha256></code>
+          <button type="button" class="button button-ghost" data-copy-sha>{copy.copyHash}</button>
+        </div>
+        <p class="download-gate-expiry" data-gate-expiry hidden></p>
+        <p>{copy.unsubscribeInfo} <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>
+        <p class="download-gate-form__error" data-gate-feedback hidden></p>
+        <div class="download-gate-actions">
+          <button type="button" class="button button-ghost" data-gate-reset>{copy.backToForm}</button>
+          <button type="button" class="button button-primary" data-gate-close>{copy.close}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { DownloadGateApiError, fetchDownloadLink } from '../lib/downloadGate';
+
+  const gates = document.querySelectorAll('[data-download-gate]');
+
+  const messages = {
+    pl: {
+      validationError: 'Sprawdź formularz i uzupełnij wymagane pola.',
+      tooManyRequests: 'Za dużo prób. Odczekaj chwilę i spróbuj ponownie.',
+      serverError: 'Wystąpił błąd po stronie serwera. Spróbuj ponownie za chwilę.',
+      configError: 'Brak konfiguracji API pobierania. Ustaw PUBLIC_API_BASE.',
+      genericError: 'Nie udało się przetworzyć formularza.',
+      copiedLink: 'Link został skopiowany.',
+      copiedHash: 'SHA256 zostało skopiowane.',
+      copyFailed: 'Nie udało się skopiować. Skopiuj ręcznie.',
+      expiresAtLabel: 'Ważność linku'
+    },
+    en: {
+      validationError: 'Please review the form and complete required fields.',
+      tooManyRequests: 'Too many attempts. Please wait and try again.',
+      serverError: 'Server error. Please try again in a moment.',
+      configError: 'Download API is not configured. Set PUBLIC_API_BASE.',
+      genericError: 'Could not process the request.',
+      copiedLink: 'Link copied.',
+      copiedHash: 'SHA256 copied.',
+      copyFailed: 'Copy failed. Please copy manually.',
+      expiresAtLabel: 'Link expiry'
+    }
+  };
+
+  const toBoolean = (value) => value === 'on' || value === true || value === 'true';
+
+  for (const gate of gates) {
+    const lang = gate.getAttribute('data-lang') === 'pl' ? 'pl' : 'en';
+    const copy = messages[lang];
+    const openButton = gate.querySelector('[data-gate-open]');
+    const modal = gate.querySelector('[data-gate-modal]');
+    const closeButtons = gate.querySelectorAll('[data-gate-close]');
+    const form = gate.querySelector('[data-gate-form]');
+    const formView = gate.querySelector('[data-gate-form-view]');
+    const successView = gate.querySelector('[data-gate-success]');
+    const errorBox = gate.querySelector('[data-gate-error]');
+    const feedbackBox = gate.querySelector('[data-gate-feedback]');
+    const submitButton = gate.querySelector('[data-gate-submit]');
+    const resetButton = gate.querySelector('[data-gate-reset]');
+    const purposeOtherToggle = gate.querySelector('[data-purpose-other-toggle="true"]');
+    const purposeOtherWrap = gate.querySelector('[data-purpose-other]');
+    const purposeOtherInput = purposeOtherWrap?.querySelector('textarea[name="purposeOther"]');
+    const downloadLink = gate.querySelector('[data-gate-download-link]');
+    const shaCode = gate.querySelector('[data-gate-sha256]');
+    const copyLinkButton = gate.querySelector('[data-copy-link]');
+    const copyShaButton = gate.querySelector('[data-copy-sha]');
+    const expiryLine = gate.querySelector('[data-gate-expiry]');
+
+    if (
+      !openButton ||
+      !modal ||
+      !form ||
+      !formView ||
+      !successView ||
+      !errorBox ||
+      !submitButton ||
+      !downloadLink ||
+      !shaCode ||
+      !copyLinkButton ||
+      !copyShaButton
+    ) {
+      continue;
+    }
+
+    const showError = (message) => {
+      errorBox.textContent = message;
+      errorBox.hidden = false;
+    };
+
+    const clearError = () => {
+      errorBox.textContent = '';
+      errorBox.hidden = true;
+    };
+
+    const showFeedback = (message) => {
+      if (!feedbackBox) return;
+      feedbackBox.textContent = message;
+      feedbackBox.hidden = false;
+      window.setTimeout(() => {
+        feedbackBox.hidden = true;
+      }, 1800);
+    };
+
+    const toggleOtherPurpose = () => {
+      if (!purposeOtherToggle || !purposeOtherWrap || !purposeOtherInput) return;
+      const enabled = purposeOtherToggle.checked;
+      purposeOtherWrap.hidden = !enabled;
+      purposeOtherInput.disabled = !enabled;
+      purposeOtherInput.required = enabled;
+      if (!enabled) {
+        purposeOtherInput.value = '';
+      }
+    };
+
+    const closeModal = () => {
+      modal.hidden = true;
+      document.body.classList.remove('download-gate-open');
+    };
+
+    const openModal = () => {
+      modal.hidden = false;
+      document.body.classList.add('download-gate-open');
+    };
+
+    const resetViews = () => {
+      formView.hidden = false;
+      successView.hidden = true;
+      form.reset();
+      clearError();
+      if (feedbackBox) {
+        feedbackBox.hidden = true;
+      }
+      if (expiryLine) {
+        expiryLine.hidden = true;
+      }
+      toggleOtherPurpose();
+    };
+
+    openButton.addEventListener('click', openModal);
+    closeButtons.forEach((button) => {
+      button.addEventListener('click', closeModal);
+    });
+    resetButton?.addEventListener('click', resetViews);
+    purposeOtherToggle?.addEventListener('change', toggleOtherPurpose);
+
+    copyLinkButton.addEventListener('click', async () => {
+      const href = downloadLink.getAttribute('href') ?? '';
+      if (!href) return;
+      try {
+        await navigator.clipboard.writeText(href);
+        showFeedback(copy.copiedLink);
+      } catch {
+        showFeedback(copy.copyFailed);
+      }
+    });
+
+    copyShaButton.addEventListener('click', async () => {
+      const sha = shaCode.textContent ?? '';
+      if (!sha) return;
+      try {
+        await navigator.clipboard.writeText(sha);
+        showFeedback(copy.copiedHash);
+      } catch {
+        showFeedback(copy.copyFailed);
+      }
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearError();
+
+      if (!form.reportValidity()) {
+        showError(copy.validationError);
+        return;
+      }
+
+      const formData = new FormData(form);
+      const payload = {
+        firstName: String(formData.get('firstName') ?? '').trim(),
+        lastName: String(formData.get('lastName') ?? '').trim(),
+        email: String(formData.get('email') ?? '').trim(),
+        purposes: formData.getAll('purposes').map((value) => String(value)),
+        purposeOther: String(formData.get('purposeOther') ?? '').trim(),
+        institution: String(formData.get('institution') ?? '').trim(),
+        consentTerms: toBoolean(formData.get('consentTerms')),
+        consentStats: toBoolean(formData.get('consentStats')),
+        consentUpdates: toBoolean(formData.get('consentUpdates')),
+        lang: gate.getAttribute('data-lang') ?? 'pl',
+        pluginVersion: gate.getAttribute('data-plugin-version') ?? '',
+        website: String(formData.get('website') ?? '').trim()
+      };
+
+      if (payload.purposes.length === 0 && payload.purposeOther.length < 3) {
+        showError(copy.validationError);
+        return;
+      }
+
+      if (payload.purposes.includes('other') && payload.purposeOther.length < 3) {
+        showError(copy.validationError);
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.setAttribute('aria-busy', 'true');
+
+      try {
+        const result = await fetchDownloadLink(payload);
+        downloadLink.setAttribute('href', result.downloadUrl);
+        shaCode.textContent = result.sha256;
+        if (expiryLine && result.expiresAt) {
+          expiryLine.textContent = `${copy.expiresAtLabel}: ${result.expiresAt}`;
+          expiryLine.hidden = false;
+        } else if (expiryLine) {
+          expiryLine.hidden = true;
+        }
+
+        formView.hidden = true;
+        successView.hidden = false;
+      } catch (error) {
+        if (error instanceof DownloadGateApiError && error.status === 429) {
+          showError(copy.tooManyRequests);
+        } else if (error instanceof DownloadGateApiError && error.status >= 500) {
+          if (error.message.includes('PUBLIC_API_BASE')) {
+            showError(copy.configError);
+          } else {
+            showError(copy.serverError);
+          }
+        } else if (error instanceof DownloadGateApiError && error.status === 400) {
+          showError(error.message || copy.validationError);
+        } else if (error instanceof Error) {
+          showError(error.message || copy.genericError);
+        } else {
+          showError(copy.genericError);
+        }
+      } finally {
+        submitButton.disabled = false;
+        submitButton.removeAttribute('aria-busy');
+      }
+    });
+
+    toggleOtherPurpose();
+    resetViews();
+  }
+</script>

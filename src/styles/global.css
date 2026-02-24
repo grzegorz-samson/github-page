@@ -307,6 +307,201 @@ section {
   font-size: 0.86rem;
 }
 
+.download-gate {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+body.download-gate-open {
+  overflow: hidden;
+}
+
+.download-gate-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  padding: 1rem;
+  display: grid;
+  place-items: center;
+}
+
+.download-gate-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 7, 12, 0.78);
+  backdrop-filter: blur(2px);
+}
+
+.download-gate-modal__panel {
+  position: relative;
+  width: min(760px, 94vw);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(105, 210, 231, 0.12), transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(246, 200, 95, 0.12), transparent 58%),
+    #101722;
+  padding: 1.1rem;
+  display: grid;
+  gap: 0.85rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.42);
+}
+
+.download-gate-modal__panel h3 {
+  font-size: 1.35rem;
+}
+
+.download-gate-modal__close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.download-gate-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.download-gate-form label,
+.download-gate-form fieldset {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.download-gate-form span,
+.download-gate-form legend {
+  color: var(--text-main);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.download-gate-form fieldset {
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.75rem;
+  padding: 0.7rem;
+}
+
+.download-gate-form input[type='text'],
+.download-gate-form input[type='email'],
+.download-gate-form textarea {
+  width: 100%;
+  border-radius: 0.68rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  padding: 0.6rem 0.68rem;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.download-gate-form input:focus-visible,
+.download-gate-form textarea:focus-visible {
+  outline: 1px solid rgba(246, 200, 95, 0.7);
+  border-color: rgba(246, 200, 95, 0.7);
+}
+
+.download-gate-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.download-gate-check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.42rem 0.7rem;
+}
+
+.download-gate-check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.5rem;
+}
+
+.download-gate-check input {
+  margin-top: 0.2rem;
+}
+
+.download-gate-check span {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+.download-gate-check a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.download-gate-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.download-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.download-gate-form__error {
+  color: #ffd0d0;
+  border: 1px solid rgba(255, 157, 157, 0.45);
+  border-radius: 0.72rem;
+  padding: 0.5rem 0.65rem;
+  background: rgba(255, 110, 110, 0.14);
+  font-size: 0.84rem;
+}
+
+.download-gate-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.download-gate-hash {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.82rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.72rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.download-gate-hash p {
+  color: var(--text-main);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.download-gate-hash code {
+  overflow-wrap: anywhere;
+  color: #e7edf7;
+}
+
+.download-gate-expiry {
+  font-size: 0.83rem;
+  color: #d8e2ef;
+}
+
 .media-wrap iframe {
   display: block;
   width: 100%;
@@ -978,6 +1173,11 @@ section {
   }
 
   .plugin-panel-active {
+    grid-template-columns: 1fr;
+  }
+
+  .download-gate-grid,
+  .download-gate-check-grid {
     grid-template-columns: 1fr;
   }
 
