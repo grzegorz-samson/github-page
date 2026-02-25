@@ -23,3 +23,14 @@ devserver*.log
 
 # jetbrains setting folder
 .idea/
+
+# local Cloudflare state
+backend/download-gate-api/.wrangler/
+
+# local context/source materials (not for repo)
+docs/context/
+docs/tasks/download_edit_script_v1.md
+
+# local logs/archives
+preview.log
+src.zip
