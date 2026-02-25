@@ -4,7 +4,7 @@ import { API_BASE } from '../lib/config';
 
 type Lang = 'pl' | 'en';
 
-const { lang = 'pl', pluginVersion = 'v0.1.0-alpha', contactEmail = 'kontakt@example.com' } = Astro.props as {
+const { lang = 'pl', pluginVersion = 'v0.1.0-alpha', contactEmail = 'contact[at]example.com' } = Astro.props as {
   lang?: Lang;
   pluginVersion?: string;
   contactEmail?: string;
@@ -57,7 +57,8 @@ const copy =
         copiedLink: 'Link został skopiowany.',
         copiedHash: 'SHA256 zostało skopiowane.',
         copyFailed: 'Nie udało się skopiować. Skopiuj ręcznie.',
-        expiresAtLabel: 'Ważność linku'
+        expiresAtLabel: 'Ważność linku',
+        shaLabel: 'SHA256 (opcjonalny kod do weryfikacji poprawności pobranego pliku)'
       }
     : {
         openButton: 'Download via form',
@@ -104,7 +105,8 @@ const copy =
         copiedLink: 'Link copied.',
         copiedHash: 'SHA256 copied.',
         copyFailed: 'Copy failed. Please copy manually.',
-        expiresAtLabel: 'Link expiry'
+        expiresAtLabel: 'Link expiry',
+        shaLabel: 'SHA256 (optional checksum for verifying downloaded file)'
       };
 
 const purposes =
@@ -147,127 +149,129 @@ const apiBase = API_BASE;
     <div class="download-gate-modal__panel" role="dialog" aria-modal="true" aria-labelledby={modalHeadingId}>
       <button type="button" class="download-gate-modal__close" data-gate-close aria-label={copy.close}>x</button>
 
-      <div data-gate-form-view>
-        <p class="section-kicker">{copy.kicker}</p>
-        <h3 id={modalHeadingId}>{copy.title}</h3>
-        <p>{copy.description}</p>
+      <div class="download-gate-modal__scroll">
+        <div data-gate-form-view>
+          <p class="section-kicker">{copy.kicker}</p>
+          <h3 id={modalHeadingId}>{copy.title}</h3>
+          <p>{copy.description}</p>
 
-        <form class="download-gate-form" data-gate-form novalidate>
-          <div class="download-gate-grid">
+          <form class="download-gate-form" data-gate-form novalidate>
+            <div class="download-gate-grid">
+              <label>
+                <span>{copy.firstName}</span>
+                <input type="text" name="firstName" minlength="2" maxlength="80" required />
+              </label>
+              <label>
+                <span>{copy.lastName}</span>
+                <input type="text" name="lastName" minlength="2" maxlength="80" required />
+              </label>
+            </div>
+
             <label>
-              <span>{copy.firstName}</span>
-              <input type="text" name="firstName" minlength="2" maxlength="80" required />
+              <span>{copy.email}</span>
+              <input type="email" name="email" maxlength="180" required />
             </label>
-            <label>
-              <span>{copy.lastName}</span>
-              <input type="text" name="lastName" minlength="2" maxlength="80" required />
+
+            <fieldset>
+              <legend>{copy.purposesTitle}</legend>
+              <div class="download-gate-check-grid">
+                {purposes.map((purpose) => (
+                  <label class="download-gate-check">
+                    <input
+                      type="checkbox"
+                      name="purposes"
+                      value={purpose.value}
+                      data-purpose-other-toggle={purpose.value === 'other' ? 'true' : 'false'}
+                    />
+                    <span>{purpose.label}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <label class="download-gate-other" data-purpose-other hidden>
+              <span>{copy.purposeOther}</span>
+              <textarea name="purposeOther" rows={2} maxlength="280" disabled></textarea>
             </label>
-          </div>
 
-          <label>
-            <span>{copy.email}</span>
-            <input type="email" name="email" maxlength="180" required />
-          </label>
-
-          <fieldset>
-            <legend>{copy.purposesTitle}</legend>
-            <div class="download-gate-check-grid">
-              {purposes.map((purpose) => (
+            <fieldset>
+              <legend>{copy.affiliationsTitle}</legend>
+              <div class="download-gate-check-grid">
                 <label class="download-gate-check">
-                  <input
-                    type="checkbox"
-                    name="purposes"
-                    value={purpose.value}
-                    data-purpose-other-toggle={purpose.value === 'other' ? 'true' : 'false'}
-                  />
-                  <span>{purpose.label}</span>
+                  <input type="checkbox" name="affiliations" value="amfn" />
+                  <span>{copy.affiliationAmfn}</span>
                 </label>
-              ))}
+                <label class="download-gate-check">
+                  <input type="checkbox" name="affiliations" value="other" data-affiliation-other-toggle="true" />
+                  <span>{copy.affiliationOther}</span>
+                </label>
+                <label class="download-gate-check">
+                  <input type="checkbox" name="affiliations" value="none" data-affiliation-none-toggle="true" />
+                  <span>{copy.affiliationNone}</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <label class="download-gate-other" data-institution-other hidden>
+              <span>{copy.institutionOther}</span>
+              <input type="text" name="institutionOther" maxlength="140" disabled />
+            </label>
+
+            <input class="download-gate-honeypot" type="text" name="website" tabindex="-1" autocomplete="off" />
+
+            <fieldset>
+              <legend>{copy.consentsTitle}</legend>
+              <label class="download-gate-check">
+                <input type="checkbox" name="consentTerms" required />
+                <span>
+                  {copy.consentTermsPrefix}
+                  {' '}
+                  <a href={termsHref} target="_blank" rel="noreferrer">{copy.consentTermsTerms}</a>
+                  {' '}
+                  {copy.consentTermsAnd}
+                  {' '}
+                  <a href={privacyHref} target="_blank" rel="noreferrer">{copy.consentTermsPrivacy}</a>.
+                </span>
+              </label>
+              <label class="download-gate-check">
+                <input type="checkbox" name="consentStats" />
+                <span>{copy.consentStats}</span>
+              </label>
+              <label class="download-gate-check">
+                <input type="checkbox" name="consentUpdates" required />
+                <span>{copy.consentUpdates}</span>
+              </label>
+            </fieldset>
+
+            <p class="download-gate-form__error" data-gate-error hidden></p>
+
+            <div class="download-gate-actions download-gate-actions--center">
+              <button type="submit" class="button button-primary" data-gate-submit>{copy.submit}</button>
+              <button type="button" class="button button-ghost" data-gate-close>{copy.cancel}</button>
             </div>
-          </fieldset>
+          </form>
+        </div>
 
-          <label class="download-gate-other" data-purpose-other hidden>
-            <span>{copy.purposeOther}</span>
-            <textarea name="purposeOther" rows={2} maxlength="280" disabled></textarea>
-          </label>
-
-          <fieldset>
-            <legend>{copy.affiliationsTitle}</legend>
-            <div class="download-gate-check-grid">
-              <label class="download-gate-check">
-                <input type="checkbox" name="affiliations" value="amfn" />
-                <span>{copy.affiliationAmfn}</span>
-              </label>
-              <label class="download-gate-check">
-                <input type="checkbox" name="affiliations" value="other" data-affiliation-other-toggle="true" />
-                <span>{copy.affiliationOther}</span>
-              </label>
-              <label class="download-gate-check">
-                <input type="checkbox" name="affiliations" value="none" data-affiliation-none-toggle="true" />
-                <span>{copy.affiliationNone}</span>
-              </label>
-            </div>
-          </fieldset>
-
-          <label class="download-gate-other" data-institution-other hidden>
-            <span>{copy.institutionOther}</span>
-            <input type="text" name="institutionOther" maxlength="140" disabled />
-          </label>
-
-          <input class="download-gate-honeypot" type="text" name="website" tabindex="-1" autocomplete="off" />
-
-          <fieldset>
-            <legend>{copy.consentsTitle}</legend>
-            <label class="download-gate-check">
-              <input type="checkbox" name="consentTerms" required />
-              <span>
-                {copy.consentTermsPrefix}
-                {' '}
-                <a href={termsHref} target="_blank" rel="noreferrer">{copy.consentTermsTerms}</a>
-                {' '}
-                {copy.consentTermsAnd}
-                {' '}
-                <a href={privacyHref} target="_blank" rel="noreferrer">{copy.consentTermsPrivacy}</a>.
-              </span>
-            </label>
-            <label class="download-gate-check">
-              <input type="checkbox" name="consentStats" />
-              <span>{copy.consentStats}</span>
-            </label>
-            <label class="download-gate-check">
-              <input type="checkbox" name="consentUpdates" required />
-              <span>{copy.consentUpdates}</span>
-            </label>
-          </fieldset>
-
-          <p class="download-gate-form__error" data-gate-error hidden></p>
-
-          <div class="download-gate-actions">
-            <button type="submit" class="button button-primary" data-gate-submit>{copy.submit}</button>
-            <button type="button" class="button button-ghost" data-gate-close>{copy.cancel}</button>
+        <div class="download-gate-success" data-gate-success hidden>
+          <p class="section-kicker">{copy.kicker}</p>
+          <h3>{copy.successTitle}</h3>
+          <p>{copy.successText}</p>
+          <div class="download-gate-result download-gate-result--center">
+            <a class="button button-primary" href="#" target="_blank" rel="noreferrer" data-gate-download-link>{copy.downloadNow}</a>
+            <button type="button" class="button button-ghost" data-copy-link>{copy.copyLink}</button>
           </div>
-        </form>
-      </div>
-
-      <div data-gate-success hidden>
-        <p class="section-kicker">{copy.kicker}</p>
-        <h3>{copy.successTitle}</h3>
-        <p>{copy.successText}</p>
-        <div class="download-gate-result">
-          <a class="button button-primary" href="#" target="_blank" rel="noreferrer" data-gate-download-link>{copy.downloadNow}</a>
-          <button type="button" class="button button-ghost" data-copy-link>{copy.copyLink}</button>
-        </div>
-        <div class="download-gate-hash">
-          <p>SHA256</p>
-          <code data-gate-sha256></code>
-          <button type="button" class="button button-ghost" data-copy-sha>{copy.copyHash}</button>
-        </div>
-        <p class="download-gate-expiry" data-gate-expiry hidden></p>
-        <p>{copy.unsubscribeInfo} <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>
-        <p class="download-gate-form__error" data-gate-feedback hidden></p>
-        <div class="download-gate-actions">
-          <button type="button" class="button button-ghost" data-gate-reset>{copy.backToForm}</button>
-          <button type="button" class="button button-primary" data-gate-close>{copy.close}</button>
+          <div class="download-gate-hash">
+            <p>{copy.shaLabel}</p>
+            <code data-gate-sha256></code>
+            <button type="button" class="button button-ghost" data-copy-sha>{copy.copyHash}</button>
+          </div>
+          <p class="download-gate-expiry" data-gate-expiry hidden></p>
+          <p>{copy.unsubscribeInfo} <span class="download-gate-obfuscated-email">{contactEmail}</span>.</p>
+          <p class="download-gate-form__error" data-gate-feedback hidden></p>
+          <div class="download-gate-actions download-gate-actions--center">
+            <button type="button" class="button button-ghost" data-gate-reset>{copy.backToForm}</button>
+            <button type="button" class="button button-primary" data-gate-close>{copy.close}</button>
+          </div>
         </div>
       </div>
     </div>

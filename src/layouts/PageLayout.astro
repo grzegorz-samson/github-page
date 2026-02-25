@@ -5,6 +5,11 @@ import { withBase } from '../lib/paths';
 import '../styles/global.css';
 
 const { title, description = '', lang = 'pl' } = Astro.props;
+const normalizePath = (value: string): string => {
+  const normalized = value.replace(/\/+$/, '');
+  return normalized.length > 0 ? normalized : '/';
+};
+const currentPath = normalizePath(Astro.url.pathname);
 
 const labels =
   lang === 'pl'
@@ -57,9 +62,14 @@ const navItems =
     <header class="main-header">
       <a class="brand" href={withBase(`/${lang}/`)}>GS</a>
       <nav>
-        {navItems.map((item) => (
-          <a href={item.href}>{item.label}</a>
-        ))}
+        {navItems.map((item) => {
+          const isCurrent = normalizePath(item.href) === currentPath;
+          return (
+            <a href={item.href} aria-current={isCurrent ? 'page' : undefined}>
+              {item.label}
+            </a>
+          );
+        })}
       </nav>
       <LanguageSwitch />
     </header>
