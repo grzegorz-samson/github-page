@@ -4,6 +4,9 @@ interface Env {
   DOWNLOAD_SHA256: string;
   ALLOWED_ORIGINS: string;
   IP_HASH_SALT: string;
+  RESEND_API_KEY?: string;
+  CONTACT_TO_EMAIL?: string;
+  CONTACT_FROM_EMAIL?: string;
 }
 
 interface DownloadPayload {
@@ -23,7 +26,18 @@ interface DownloadPayload {
   website: string;
 }
 
+interface ContactPayload {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  lang: string;
+  sourcePath: string;
+  website: string;
+}
+
 const RATE_LIMIT_MAX = 5;
+const CONTACT_RATE_LIMIT_MAX = 3;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PURPOSE_VALUES = new Set([
@@ -91,7 +105,7 @@ function normalizeAffiliations(value: unknown): string[] {
   return [...new Set(value.map((item) => normalizeText(item, 30)).filter((item) => AFFILIATION_VALUES.has(item)))];
 }
 
-function extractPayload(body: unknown): DownloadPayload | null {
+function extractDownloadPayload(body: unknown): DownloadPayload | null {
   if (!body || typeof body !== 'object') return null;
   const input = body as Record<string, unknown>;
 
@@ -113,7 +127,7 @@ function extractPayload(body: unknown): DownloadPayload | null {
   };
 }
 
-function validatePayload(payload: DownloadPayload): string | null {
+function validateDownloadPayload(payload: DownloadPayload): string | null {
   if (payload.website) return 'Validation failed.';
   if (payload.firstName.length < 2) return 'First name is required.';
   if (payload.lastName.length < 2) return 'Last name is required.';
@@ -130,6 +144,28 @@ function validatePayload(payload: DownloadPayload): string | null {
   return null;
 }
 
+function extractContactPayload(body: unknown): ContactPayload | null {
+  if (!body || typeof body !== 'object') return null;
+  const input = body as Record<string, unknown>;
+
+  return {
+    name: normalizeText(input.name, 100),
+    email: normalizeText(input.email, 180).toLowerCase(),
+    subject: normalizeText(input.subject, 140),
+    message: normalizeText(input.message, 2000),
+    lang: normalizeText(input.lang, 10),
+    sourcePath: normalizeText(input.sourcePath, 200),
+    website: normalizeText(input.website, 180)
+  };
+}
+
+function validateContactPayload(payload: ContactPayload): string | null {
+  if (payload.website) return 'Validation failed.';
+  if (!EMAIL_REGEX.test(payload.email)) return 'Email format is invalid.';
+  if (payload.message.length < 10) return 'Message must be at least 10 characters long.';
+  return null;
+}
+
 async function sha256Hex(value: string): Promise<string> {
   const data = new TextEncoder().encode(value);
   const hash = await crypto.subtle.digest('SHA-256', data);
@@ -142,6 +178,70 @@ function getClientIp(request: Request): string {
   const forwarded = request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim();
   if (forwarded) return forwarded;
   return 'unknown';
+}
+
+function isValidAbsoluteHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+async function isRateLimited(env: Env, table: 'downloads' | 'contact_messages', ipHash: string, max: number, now: number) {
+  const query = `SELECT COUNT(*) AS total FROM ${table} WHERE ip_hash = ?1 AND created_at_ms >= ?2`;
+  const limitRecord = await env.DB.prepare(query).bind(ipHash, now - RATE_LIMIT_WINDOW_MS).first<{ total: number | string }>();
+  const attemptCount = Number(limitRecord?.total ?? 0);
+  return attemptCount >= max;
+}
+
+async function sendContactEmail(payload: ContactPayload, env: Env): Promise<{ delivered: boolean; error: string | null }> {
+  const apiKey = env.RESEND_API_KEY?.trim();
+  const toEmail = env.CONTACT_TO_EMAIL?.trim();
+  const fromEmail = env.CONTACT_FROM_EMAIL?.trim() || 'onboarding@resend.dev';
+
+  if (!apiKey || !toEmail) {
+    return { delivered: false, error: 'resend_not_configured' };
+  }
+
+  const subject = payload.subject || 'New contact message from website';
+  const textBody = [
+    `Name: ${payload.name || '-'}`,
+    `Email: ${payload.email}`,
+    `Lang: ${payload.lang || '-'}`,
+    `Path: ${payload.sourcePath || '-'}`,
+    '',
+    'Message:',
+    payload.message
+  ].join('\n');
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [toEmail],
+        subject,
+        text: textBody,
+        reply_to: payload.email
+      })
+    });
+
+    if (!response.ok) {
+      const details = normalizeText(await response.text(), 260);
+      return { delivered: false, error: `resend_${response.status}${details ? `:${details}` : ''}` };
+    }
+
+    return { delivered: true, error: null };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'resend_request_failed';
+    return { delivered: false, error: normalizeText(message, 260) || 'resend_request_failed' };
+  }
 }
 
 async function handleDownload(request: Request, env: Env): Promise<Response> {
@@ -161,12 +261,12 @@ async function handleDownload(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'invalid_json', message: 'Invalid JSON payload.' }, 400, origin, env);
   }
 
-  const payload = extractPayload(body);
+  const payload = extractDownloadPayload(body);
   if (!payload) {
     return jsonResponse({ error: 'invalid_body', message: 'Invalid request body.' }, 400, origin, env);
   }
 
-  const validationError = validatePayload(payload);
+  const validationError = validateDownloadPayload(payload);
   if (validationError) {
     return jsonResponse({ error: 'validation_error', message: validationError }, 400, origin, env);
   }
@@ -175,14 +275,7 @@ async function handleDownload(request: Request, env: Env): Promise<Response> {
   const ipHash = await sha256Hex(`${clientIp}:${env.IP_HASH_SALT}`);
   const now = Date.now();
 
-  const limitRecord = await env.DB.prepare(
-    'SELECT COUNT(*) AS total FROM downloads WHERE ip_hash = ?1 AND created_at_ms >= ?2'
-  )
-    .bind(ipHash, now - RATE_LIMIT_WINDOW_MS)
-    .first<{ total: number | string }>();
-
-  const attemptCount = Number(limitRecord?.total ?? 0);
-  if (attemptCount >= RATE_LIMIT_MAX) {
+  if (await isRateLimited(env, 'downloads', ipHash, RATE_LIMIT_MAX, now)) {
     return jsonResponse({ error: 'rate_limited', message: 'Too many requests. Try again later.' }, 429, origin, env);
   }
 
@@ -226,15 +319,102 @@ async function handleDownload(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'db_insert_failed', message: 'Could not store download request.' }, 500, origin, env);
   }
 
+  const downloadUrl = env.DOWNLOAD_URL.trim();
+  if (
+    !downloadUrl ||
+    downloadUrl.includes('DOWNLOAD_URL_PLACEHOLDER') ||
+    downloadUrl.startsWith('<') ||
+    !isValidAbsoluteHttpUrl(downloadUrl)
+  ) {
+    return jsonResponse(
+      { error: 'download_config_missing', message: 'Download URL is not configured.' },
+      500,
+      origin,
+      env
+    );
+  }
+
   return jsonResponse(
     {
-      downloadUrl: env.DOWNLOAD_URL,
+      downloadUrl,
       sha256: env.DOWNLOAD_SHA256
     },
     200,
     origin,
     env
   );
+}
+
+async function handleContact(request: Request, env: Env): Promise<Response> {
+  const origin = getOrigin(request);
+  if (!isAllowedOrigin(origin, env)) {
+    return jsonResponse({ error: 'forbidden', message: 'Origin is not allowed.' }, 403, origin, env);
+  }
+
+  if (!request.headers.get('Content-Type')?.includes('application/json')) {
+    return jsonResponse({ error: 'invalid_content_type', message: 'Content-Type must be application/json.' }, 415, origin, env);
+  }
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ error: 'invalid_json', message: 'Invalid JSON payload.' }, 400, origin, env);
+  }
+
+  const payload = extractContactPayload(body);
+  if (!payload) {
+    return jsonResponse({ error: 'invalid_body', message: 'Invalid request body.' }, 400, origin, env);
+  }
+
+  const validationError = validateContactPayload(payload);
+  if (validationError) {
+    return jsonResponse({ error: 'validation_error', message: validationError }, 400, origin, env);
+  }
+
+  const clientIp = getClientIp(request);
+  const ipHash = await sha256Hex(`${clientIp}:${env.IP_HASH_SALT}`);
+  const now = Date.now();
+
+  if (await isRateLimited(env, 'contact_messages', ipHash, CONTACT_RATE_LIMIT_MAX, now)) {
+    return jsonResponse({ error: 'rate_limited', message: 'Too many requests. Try again later.' }, 429, origin, env);
+  }
+
+  const mailResult = await sendContactEmail(payload, env);
+  const id = crypto.randomUUID();
+  const createdAt = new Date(now).toISOString();
+  const userAgent = normalizeText(request.headers.get('User-Agent'), 300);
+
+  const insert = await env.DB.prepare(
+    `
+      INSERT INTO contact_messages (
+        id, created_at, created_at_ms, name, email, subject, message, lang, source_path,
+        user_agent, ip_hash, email_sent, email_error
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)
+    `
+  )
+    .bind(
+      id,
+      createdAt,
+      now,
+      payload.name || null,
+      payload.email,
+      payload.subject || null,
+      payload.message,
+      payload.lang || null,
+      payload.sourcePath || null,
+      userAgent || null,
+      ipHash,
+      mailResult.delivered ? 1 : 0,
+      mailResult.error ? normalizeText(mailResult.error, 260) : null
+    )
+    .run();
+
+  if (!insert.success) {
+    return jsonResponse({ error: 'db_insert_failed', message: 'Could not store contact request.' }, 500, origin, env);
+  }
+
+  return jsonResponse({ ok: true, delivered: mailResult.delivered }, 200, origin, env);
 }
 
 async function handleOptions(request: Request, env: Env): Promise<Response> {
@@ -253,12 +433,16 @@ export default {
       return new Response('ok', { status: 200 });
     }
 
-    if (url.pathname === '/download' && request.method === 'OPTIONS') {
+    if ((url.pathname === '/download' || url.pathname === '/contact') && request.method === 'OPTIONS') {
       return handleOptions(request, env);
     }
 
     if (url.pathname === '/download' && request.method === 'POST') {
       return handleDownload(request, env);
+    }
+
+    if (url.pathname === '/contact' && request.method === 'POST') {
+      return handleContact(request, env);
     }
 
     return jsonResponse({ error: 'not_found', message: 'Route not found.' }, 404, getOrigin(request), env);

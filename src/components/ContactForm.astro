@@ -1,0 +1,312 @@
+---
+import { API_BASE } from '../lib/config';
+
+type Lang = 'pl' | 'en';
+
+const { lang = 'pl' } = Astro.props as { lang?: Lang };
+
+const copy =
+  lang === 'pl'
+    ? {
+        kicker: 'Kontakt',
+        title: 'Formularz kontaktowy',
+        description: 'Masz pytanie o projekt, warsztaty lub badania? Napisz wiadomość.',
+        name: 'Imię i nazwisko (opcjonalnie)',
+        email: 'E-mail',
+        subject: 'Temat (opcjonalnie)',
+        message: 'Wiadomość',
+        submit: 'Wyślij wiadomość',
+        reset: 'Wyczyść',
+        validationError: 'Sprawdź formularz i uzupełnij wymagane pola.',
+        messageLengthError: 'Wiadomość musi mieć co najmniej 10 znaków.',
+        tooManyRequests: 'Za dużo prób. Odczekaj chwilę i spróbuj ponownie.',
+        serverError: 'Wystąpił błąd po stronie serwera. Spróbuj ponownie za chwilę.',
+        configError: 'Brak konfiguracji API. Ustaw PUBLIC_API_BASE.',
+        genericError: 'Nie udało się wysłać formularza.',
+        successDelivered: 'Wiadomość została wysłana. Otrzymasz odpowiedź na podany adres e-mail.',
+        successFallback:
+          'Wiadomość została zapisana. Powiadomienie e-mail po stronie serwera jest chwilowo niedostępne.'
+      }
+    : {
+        kicker: 'Contact',
+        title: 'Contact form',
+        description: 'Do you have a question about the project, workshops, or research? Send a message.',
+        name: 'Full name (optional)',
+        email: 'Email',
+        subject: 'Subject (optional)',
+        message: 'Message',
+        submit: 'Send message',
+        reset: 'Clear',
+        validationError: 'Please review the form and complete required fields.',
+        messageLengthError: 'Message must be at least 10 characters long.',
+        tooManyRequests: 'Too many attempts. Please wait and try again.',
+        serverError: 'Server error. Please try again in a moment.',
+        configError: 'Contact API is not configured. Set PUBLIC_API_BASE.',
+        genericError: 'Could not send the form.',
+        successDelivered: 'Message sent successfully. You will receive a reply at the provided email address.',
+        successFallback:
+          'Message saved successfully. Server-side email delivery is temporarily unavailable.'
+      };
+---
+
+<div class="text-panel contact-form" data-contact-form data-lang={lang} data-api-base={API_BASE}>
+  <p class="section-kicker">{copy.kicker}</p>
+  <h3>{copy.title}</h3>
+  <p class="contact-form__lead">{copy.description}</p>
+
+  <form class="contact-form__grid" data-contact-form-element novalidate>
+    <label>
+      <span>{copy.name}</span>
+      <input type="text" name="name" maxlength="100" />
+    </label>
+
+    <label>
+      <span>{copy.email}</span>
+      <input type="email" name="email" maxlength="180" required />
+    </label>
+
+    <label class="contact-form__full">
+      <span>{copy.subject}</span>
+      <input type="text" name="subject" maxlength="140" />
+    </label>
+
+    <label class="contact-form__full">
+      <span>{copy.message}</span>
+      <textarea name="message" rows={6} maxlength="2000" minlength="10" required></textarea>
+    </label>
+
+    <input class="contact-form__honeypot" type="text" name="website" tabindex="-1" autocomplete="off" />
+
+    <p class="contact-form__status" data-contact-error hidden></p>
+    <p class="contact-form__status contact-form__status--success" data-contact-success hidden></p>
+
+    <div class="contact-form__actions">
+      <button type="submit" class="button button-primary" data-contact-submit>{copy.submit}</button>
+      <button type="reset" class="button button-ghost">{copy.reset}</button>
+    </div>
+  </form>
+</div>
+
+<script type="module">
+  import { ContactFormApiError, fetchContactMessage } from '../lib/contactForm';
+
+  const forms = document.querySelectorAll('[data-contact-form]');
+
+  const messages = {
+    pl: {
+      validationError: 'Sprawdź formularz i uzupełnij wymagane pola.',
+      messageLengthError: 'Wiadomość musi mieć co najmniej 10 znaków.',
+      tooManyRequests: 'Za dużo prób. Odczekaj chwilę i spróbuj ponownie.',
+      serverError: 'Wystąpił błąd po stronie serwera. Spróbuj ponownie za chwilę.',
+      configError: 'Brak konfiguracji API. Ustaw PUBLIC_API_BASE.',
+      genericError: 'Nie udało się wysłać formularza.',
+      successDelivered: 'Wiadomość została wysłana. Otrzymasz odpowiedź na podany adres e-mail.',
+      successFallback:
+        'Wiadomość została zapisana. Powiadomienie e-mail po stronie serwera jest chwilowo niedostępne.'
+    },
+    en: {
+      validationError: 'Please review the form and complete required fields.',
+      messageLengthError: 'Message must be at least 10 characters long.',
+      tooManyRequests: 'Too many attempts. Please wait and try again.',
+      serverError: 'Server error. Please try again in a moment.',
+      configError: 'Contact API is not configured. Set PUBLIC_API_BASE.',
+      genericError: 'Could not send the form.',
+      successDelivered: 'Message sent successfully. You will receive a reply at the provided email address.',
+      successFallback:
+        'Message saved successfully. Server-side email delivery is temporarily unavailable.'
+    }
+  };
+
+  for (const root of forms) {
+    const lang = root.getAttribute('data-lang') === 'pl' ? 'pl' : 'en';
+    const copy = messages[lang];
+    const apiBase = root.getAttribute('data-api-base') ?? '';
+    const form = root.querySelector('[data-contact-form-element]');
+    const errorBox = root.querySelector('[data-contact-error]');
+    const successBox = root.querySelector('[data-contact-success]');
+    const submitButton = root.querySelector('[data-contact-submit]');
+
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !(errorBox instanceof HTMLElement) ||
+      !(successBox instanceof HTMLElement) ||
+      !(submitButton instanceof HTMLButtonElement)
+    ) {
+      continue;
+    }
+
+    const showError = (message) => {
+      errorBox.textContent = message;
+      errorBox.hidden = false;
+      successBox.hidden = true;
+      successBox.textContent = '';
+    };
+
+    const showSuccess = (message) => {
+      successBox.textContent = message;
+      successBox.hidden = false;
+      errorBox.hidden = true;
+      errorBox.textContent = '';
+    };
+
+    const clearStatus = () => {
+      errorBox.hidden = true;
+      errorBox.textContent = '';
+      successBox.hidden = true;
+      successBox.textContent = '';
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearStatus();
+
+      if (!form.reportValidity()) {
+        showError(copy.validationError);
+        return;
+      }
+
+      const formData = new FormData(form);
+      const message = String(formData.get('message') ?? '').trim();
+
+      if (message.length < 10) {
+        showError(copy.messageLengthError);
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.setAttribute('aria-busy', 'true');
+
+      try {
+        const payload = {
+          name: String(formData.get('name') ?? '').trim(),
+          email: String(formData.get('email') ?? '').trim(),
+          subject: String(formData.get('subject') ?? '').trim(),
+          message,
+          lang,
+          sourcePath: window.location.pathname,
+          website: String(formData.get('website') ?? '').trim()
+        };
+
+        if (!apiBase) {
+          throw new ContactFormApiError(copy.configError, 500);
+        }
+
+        const response = await fetchContactMessage(payload);
+        showSuccess(response.delivered ? copy.successDelivered : copy.successFallback);
+        form.reset();
+      } catch (error) {
+        if (error instanceof ContactFormApiError) {
+          if (error.status === 429) {
+            showError(copy.tooManyRequests);
+          } else if (error.status >= 500) {
+            showError(error.message === copy.configError ? copy.configError : copy.serverError);
+          } else {
+            showError(error.message || copy.genericError);
+          }
+        } else {
+          showError(copy.genericError);
+        }
+      } finally {
+        submitButton.disabled = false;
+        submitButton.removeAttribute('aria-busy');
+      }
+    });
+
+    form.addEventListener('reset', () => {
+      clearStatus();
+    });
+  }
+</script>
+
+<style>
+  .contact-form {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .contact-form h3 {
+    font-size: 1.45rem;
+  }
+
+  .contact-form__lead {
+    max-width: 70ch;
+  }
+
+  .contact-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .contact-form__grid label {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .contact-form__grid span {
+    font-size: 0.88rem;
+    color: #e5edf7;
+    font-weight: 600;
+  }
+
+  .contact-form__grid input[type='text'],
+  .contact-form__grid input[type='email'],
+  .contact-form__grid textarea {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.82rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    padding: 0.62rem 0.75rem;
+    font: inherit;
+  }
+
+  .contact-form__grid input:focus-visible,
+  .contact-form__grid textarea:focus-visible {
+    outline: 2px solid rgba(105, 210, 231, 0.55);
+    outline-offset: 1px;
+  }
+
+  .contact-form__full {
+    grid-column: 1 / -1;
+  }
+
+  .contact-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .contact-form__status {
+    grid-column: 1 / -1;
+    border-radius: 0.72rem;
+    padding: 0.56rem 0.7rem;
+    font-size: 0.84rem;
+    border: 1px solid rgba(255, 157, 157, 0.45);
+    background: rgba(255, 110, 110, 0.14);
+    color: #ffd0d0;
+  }
+
+  .contact-form__status--success {
+    border-color: rgba(104, 211, 145, 0.42);
+    background: rgba(104, 211, 145, 0.12);
+    color: #c9f5d9;
+  }
+
+  .contact-form__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 900px) {
+    .contact-form__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

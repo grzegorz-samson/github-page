@@ -1,5 +1,6 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
+import ContactForm from '../../components/ContactForm.astro';
 ---
 
 <PageLayout lang="en" title="Bio | Scholarship project" description="Short bio of the project author.">
@@ -17,5 +18,8 @@ import PageLayout from '../../layouts/PageLayout.astro';
       </ul>
     </div>
   </section>
-</PageLayout>
 
+  <section class="content-stack">
+    <ContactForm lang="en" />
+  </section>
+</PageLayout>
