@@ -1,0 +1,38 @@
+---
+import { API_BASE } from '../lib/config';
+
+const { lang = 'pl' } = Astro.props as { lang?: 'pl' | 'en' };
+const apiBase = API_BASE;
+---
+
+{apiBase && (
+  <script is:inline define:vars={{ apiBase, lang }}>
+    (() => {
+      try {
+        const endpoint = `${String(apiBase).replace(/\/$/, '')}/analytics/pageview`;
+        const payload = {
+          path: window.location.pathname,
+          lang: lang || document.documentElement.lang || '',
+          referrer: document.referrer || '',
+          website: ''
+        };
+        const body = JSON.stringify(payload);
+
+        if (navigator.sendBeacon) {
+          const blob = new Blob([body], { type: 'application/json' });
+          navigator.sendBeacon(endpoint, blob);
+          return;
+        }
+
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+          keepalive: true
+        }).catch(() => {});
+      } catch {
+        // noop
+      }
+    })();
+  </script>
+)}

@@ -387,6 +387,29 @@ const apiBase = API_BASE;
     return data;
   };
 
+  const sendGateEvent = (apiBase, payload) => {
+    if (!apiBase) return;
+    const endpoint = `${apiBase.replace(/\/$/, '')}/event`;
+    const body = JSON.stringify(payload);
+
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: 'application/json' });
+        navigator.sendBeacon(endpoint, blob);
+        return;
+      }
+    } catch {
+      // noop
+    }
+
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+      keepalive: true
+    }).catch(() => {});
+  };
+
   const toBoolean = (value) => value === 'on' || value === true || value === 'true';
 
   for (const gate of gates) {
@@ -416,6 +439,8 @@ const apiBase = API_BASE;
     const copyLinkButton = gate.querySelector('[data-copy-link]');
     const copyShaButton = gate.querySelector('[data-copy-sha]');
     const expiryLine = gate.querySelector('[data-gate-expiry]');
+    const pluginVersion = gate.getAttribute('data-plugin-version') ?? '';
+    const pagePath = window.location.pathname;
 
     if (
       !openButton ||
@@ -499,6 +524,18 @@ const apiBase = API_BASE;
       document.body.classList.add('download-gate-open');
     };
 
+    const emitEvent = (eventName, status = '') => {
+      sendGateEvent(apiBase, {
+        event: eventName,
+        path: pagePath,
+        lang,
+        pluginVersion,
+        status,
+        source: 'download_gate_modal',
+        website: ''
+      });
+    };
+
     const resetViews = () => {
       formView.hidden = false;
       successView.hidden = true;
@@ -514,7 +551,10 @@ const apiBase = API_BASE;
       toggleInstitutionOther();
     };
 
-    openButton.addEventListener('click', openModal);
+    openButton.addEventListener('click', () => {
+      openModal();
+      emitEvent('download_modal_open');
+    });
     closeButtons.forEach((button) => {
       button.addEventListener('click', closeModal);
     });
@@ -552,6 +592,7 @@ const apiBase = API_BASE;
 
       if (!form.reportValidity()) {
         showError(copy.validationError);
+        emitEvent('download_submit_error', 'client_validation');
         return;
       }
 
@@ -574,26 +615,31 @@ const apiBase = API_BASE;
 
       if (payload.purposes.length === 0 && payload.purposeOther.length < 3) {
         showError(copy.validationError);
+        emitEvent('download_submit_error', 'purpose_validation');
         return;
       }
 
       if (payload.purposes.includes('other') && payload.purposeOther.length < 3) {
         showError(copy.validationError);
+        emitEvent('download_submit_error', 'purpose_other_validation');
         return;
       }
 
       if (payload.affiliations.length === 0) {
         showError(copy.affiliationsError);
+        emitEvent('download_submit_error', 'affiliation_validation');
         return;
       }
 
       if (payload.affiliations.includes('none') && payload.affiliations.length > 1) {
         showError(copy.noneExclusivityError);
+        emitEvent('download_submit_error', 'affiliation_none_conflict');
         return;
       }
 
       if (payload.affiliations.includes('other') && payload.institutionOther.length < 2) {
         showError(copy.institutionOtherError);
+        emitEvent('download_submit_error', 'institution_other_validation');
         return;
       }
 
@@ -613,26 +659,40 @@ const apiBase = API_BASE;
 
         formView.hidden = true;
         successView.hidden = false;
+        emitEvent('download_submit_ok');
+        emitEvent('download_link_shown');
       } catch (error) {
+        let errorStatus = 'runtime_error';
         if (error instanceof DownloadGateApiError && error.status === 429) {
           showError(copy.tooManyRequests);
+          errorStatus = '429';
         } else if (error instanceof DownloadGateApiError && error.status >= 500) {
           if (error.message.includes('PUBLIC_API_BASE')) {
             showError(copy.configError);
+            errorStatus = 'config';
           } else {
             showError(copy.serverError);
+            errorStatus = String(error.status);
           }
         } else if (error instanceof DownloadGateApiError && error.status === 400) {
           showError(error.message || copy.validationError);
+          errorStatus = '400';
         } else if (error instanceof Error) {
           showError(error.message || copy.genericError);
+          errorStatus = 'client_error';
         } else {
           showError(copy.genericError);
+          errorStatus = 'unknown_error';
         }
+        emitEvent('download_submit_error', errorStatus);
       } finally {
         submitButton.disabled = false;
         submitButton.removeAttribute('aria-busy');
       }
+    });
+
+    downloadLink.addEventListener('click', () => {
+      emitEvent('download_clicked');
     });
 
     toggleOtherPurpose();

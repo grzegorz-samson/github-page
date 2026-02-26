@@ -63,9 +63,21 @@ const timelineItems = [
     <p class="section-kicker">Bio</p>
     <h2>Grzegorz Samson</h2>
     <div class="bio-grid">
-      <div class="bio-photo">
-        <img src={withBase('/assets/bio/grzegorz-samson-profile.png')} alt="Portrait of Grzegorz Samson" loading="lazy" />
-      </div>
+      <a
+        class="bio-photo"
+        href={withBase('/assets/bio/grzegorz-samson-profile.png')}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img
+          src={withBase('/assets/bio/grzegorz-samson-profile-thumb.webp')}
+          alt="Portrait of Grzegorz Samson"
+          loading="lazy"
+          decoding="async"
+          width="960"
+          height="960"
+        />
+      </a>
       <div class="text-panel bio-rich-text">
         <p>
           Grzegorz Samson develops artistic-research projects in new sound technologies,

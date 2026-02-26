@@ -1,6 +1,7 @@
 ﻿---
 import LanguageSwitch from '../components/LanguageSwitch.astro';
 import FundingFooter from '../components/FundingFooter.astro';
+import PageViewTracker from '../components/PageViewTracker.astro';
 import { withBase } from '../lib/paths';
 import '../styles/global.css';
 
@@ -92,5 +93,6 @@ const footerText =
       <p>09.2025 - 02.2026</p>
     </footer>
     {lang === 'pl' && <FundingFooter lang={lang} />}
+    <PageViewTracker lang={lang} />
   </body>
 </html>

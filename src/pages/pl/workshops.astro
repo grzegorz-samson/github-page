@@ -40,13 +40,21 @@ import { withBase } from '../../lib/paths';
     <h2>Dwa bloki warsztatowe</h2>
     <div class="workshop-session-grid">
       <article class="workshop-session">
-        <div class="workshop-poster">
+        <a
+          class="workshop-poster"
+          href={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen.png')}
+          target="_blank"
+          rel="noreferrer"
+        >
           <img
-            src={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen.png')}
+            src={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen-thumb.webp')}
             alt="Grafika warsztatów: Wykorzystanie technologii generatywnych w kreacji dźwięku"
             loading="lazy"
+            decoding="async"
+            width="960"
+            height="640"
           />
-        </div>
+        </a>
         <div class="text-panel workshop-session__content">
           <p class="section-kicker">17:00-18:15</p>
           <h3>Wykorzystanie technologii generatywnych w kreacji dźwięku</h3>
@@ -63,13 +71,21 @@ import { withBase } from '../../lib/paths';
       </article>
 
       <article class="workshop-session">
-        <div class="workshop-poster">
+        <a
+          class="workshop-poster"
+          href={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst.png')}
+          target="_blank"
+          rel="noreferrer"
+        >
           <img
-            src={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst.png')}
+            src={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst-thumb.webp')}
             alt="Grafika warsztatów: Wstęp do projektowania wtyczek VST"
             loading="lazy"
+            decoding="async"
+            width="960"
+            height="640"
           />
-        </div>
+        </a>
         <div class="text-panel workshop-session__content">
           <p class="section-kicker">18:30-19:45</p>
           <h3>Wstęp do projektowania wtyczek VST</h3>

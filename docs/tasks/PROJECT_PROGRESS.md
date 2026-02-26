@@ -1,6 +1,6 @@
 # Project Progress Tracker
 
-Last update: 2026-02-24
+Last update: 2026-02-26
 
 ## Goal
 Build and publish a bilingual (PL/EN) scholarship project website documenting:
@@ -21,6 +21,24 @@ Build and publish a bilingual (PL/EN) scholarship project website documenting:
 - `docs/context/scholarship trademarks/*` (KPO branding)
 
 ## Changelog
+### 2026-02-26
+- Added detailed implementation documentation:
+  - `docs/tasks/SECURITY_SITE_IMPLEMENTATION_2026-02-26.md`
+- Confirmed primary production site is now:
+  - `https://grzegorz-samson.github.io/`
+- Legacy GitHub Pages site for repo `github-page` was disabled.
+- Implemented backend security upgrade locally (not published yet):
+  - encrypted-at-rest form fields in Worker/D1 flow,
+  - hashed identifiers for analytics/dedup (`email_hash`, `ip_hash`),
+  - admin-only stats and records endpoints.
+- Added D1 migration for secure storage and pageview analytics:
+  - `backend/download-gate-api/migrations/0004_secure_storage_and_pageviews.sql`
+- Added pageview tracker on frontend:
+  - `src/components/PageViewTracker.astro`
+- Added local image performance optimization (not published yet):
+  - workshop thumbnails (`.webp`) and profile thumbnail (`.webp`) with full-res click-through.
+- Updated favicon asset locally (centered `GS`, not published yet).
+
 ### 2026-02-24
 - Added public research assets:
   - `public/assets/research/from-text-wishes-to-sound-adc-2025-poster.jpg`
@@ -118,3 +136,20 @@ Status: done (milestones marked as completed; release publication still maintain
 - PL copy is now normalized with Polish diacritics and consistent terminology.
 - In the dark theme, funding footer now targets monochromatic KPO presentation.
 - `docs/context/bio/Materials for bio.txt` is now populated and included in the bio content update.
+
+## Security Hardening (2026-02-26)
+- Implemented admin UI XSS hardening in `src/pages/admin.astro`:
+  - removed HTML string rendering (`innerHTML`) for charts/tables,
+  - switched to DOM node creation + `textContent`,
+  - stopped persisting admin token in browser storage.
+- Implemented backend auth hardening in `backend/download-gate-api/src/index.ts`:
+  - removed admin token transport via URL query (`?token=`),
+  - kept header-based auth (`Authorization: Bearer`, `X-Admin-Token`).
+- Tightened payload validation in `backend/download-gate-api/src/index.ts`:
+  - added unsafe character guard for analytics/event fields (`<`, `>`, `|`, control chars),
+  - validation now rejects unsafe `path`, `status`, and `source`.
+- Added strict download URL validation in `backend/download-gate-api/src/index.ts`:
+  - download link must parse as URL and use `https:` protocol.
+- Updated docs:
+  - `backend/download-gate-api/README.md`
+  - `docs/tasks/SECURITY_SITE_IMPLEMENTATION_2026-02-26.md`
