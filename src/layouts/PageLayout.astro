@@ -6,6 +6,9 @@ import { withBase } from '../lib/paths';
 import '../styles/global.css';
 
 const { title, description = '', lang = 'pl' } = Astro.props;
+const pageTitle = typeof title === 'string' && title.trim().length > 0 ? title.trim() : 'Greggular VST';
+const pageDescription = typeof description === 'string' ? description.trim() : '';
+const pageUrl = Astro.url.href;
 const normalizePath = (value: string): string => {
   const normalized = value.replace(/\/+$/, '');
   return normalized.length > 0 ? normalized : '/';
@@ -64,8 +67,15 @@ const footerText =
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <link rel="icon" href={withBase('/favicon.ico')} />
-    <title>{title}</title>
-    {description && <meta name="description" content={description} />}
+    <title>{pageTitle}</title>
+    {pageDescription && <meta name="description" content={pageDescription} />}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    {pageDescription && <meta property="og:description" content={pageDescription} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    {pageDescription && <meta name="twitter:description" content={pageDescription} />}
   </head>
   <body>
     <div class="site-bg"></div>

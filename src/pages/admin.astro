@@ -42,7 +42,7 @@ const defaultApiBase = API_BASE;
         <button type="button" class="button button-primary" data-admin-load-stats>Pobierz statystyki</button>
         <button type="button" class="button button-ghost" data-admin-load-events>Odśwież eventy lejka</button>
         <button type="button" class="button button-ghost" data-admin-load-pageviews>Pageviews (JSON)</button>
-        <button type="button" class="button button-ghost" data-admin-load-downloads>Pobrania (JSON)</button>
+        <button type="button" class="button button-ghost" data-admin-load-downloads>Pobrania (tabela)</button>
         <button type="button" class="button button-ghost" data-admin-load-contacts>Kontakt (JSON)</button>
       </div>
 
@@ -116,6 +116,26 @@ const defaultApiBase = API_BASE;
         </div>
       </article>
 
+      <article class="admin-viz-card" data-downloads-table-wrap hidden>
+        <h3>Ostatnie pobrania</h3>
+        <p class="admin-table-empty" data-downloads-table-empty hidden>Brak danych pobran.</p>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Czas</th>
+                <th>Imie i nazwisko</th>
+                <th>E-mail</th>
+                <th>Role</th>
+                <th>Powiazanie</th>
+                <th>Zgody</th>
+              </tr>
+            </thead>
+            <tbody data-downloads-table-body></tbody>
+          </table>
+        </div>
+      </article>
+
       <details class="admin-json-panel">
         <summary>Pokaż surowy JSON</summary>
         <div class="admin-output-grid">
@@ -158,6 +178,9 @@ const defaultApiBase = API_BASE;
   const recentEventsWrap = document.querySelector('[data-recent-events-wrap]');
   const recentEventsEmpty = document.querySelector('[data-recent-events-empty]');
   const recentEventsBody = document.querySelector('[data-recent-events]');
+  const downloadsTableWrap = document.querySelector('[data-downloads-table-wrap]');
+  const downloadsTableEmpty = document.querySelector('[data-downloads-table-empty]');
+  const downloadsTableBody = document.querySelector('[data-downloads-table-body]');
 
   const chartNodes = {
     pageviews: document.querySelector('[data-chart-pageviews]'),
@@ -350,6 +373,60 @@ const defaultApiBase = API_BASE;
     }
   };
 
+  const renderDownloadsTable = (items) => {
+    if (!(downloadsTableWrap instanceof HTMLElement) || !(downloadsTableBody instanceof HTMLElement)) return;
+    downloadsTableWrap.hidden = false;
+    clearNode(downloadsTableBody);
+
+    if (!Array.isArray(items) || items.length === 0) {
+      if (downloadsTableEmpty instanceof HTMLElement) downloadsTableEmpty.hidden = false;
+      return;
+    }
+    if (downloadsTableEmpty instanceof HTMLElement) downloadsTableEmpty.hidden = true;
+
+    for (const row of items) {
+      const tr = document.createElement('tr');
+
+      const tdCreatedAt = document.createElement('td');
+      tdCreatedAt.textContent = String(row?.createdAt ?? '-');
+      tr.appendChild(tdCreatedAt);
+
+      const tdName = document.createElement('td');
+      const fullName = [row?.firstName ?? '', row?.lastName ?? ''].join(' ').trim();
+      tdName.textContent = fullName || '-';
+      tr.appendChild(tdName);
+
+      const tdEmail = document.createElement('td');
+      tdEmail.textContent = String(row?.email ?? '-');
+      tr.appendChild(tdEmail);
+
+      const tdPurposes = document.createElement('td');
+      const purposes = Array.isArray(row?.purposes) ? row.purposes.join(', ') : '';
+      const purposeOther =
+        typeof row?.purposeOther === 'string' && row.purposeOther.trim().length > 0 ? `; inne: ${row.purposeOther}` : '';
+      tdPurposes.textContent = `${purposes}${purposeOther}` || '-';
+      tr.appendChild(tdPurposes);
+
+      const tdAffiliations = document.createElement('td');
+      const affiliations = Array.isArray(row?.affiliations) ? row.affiliations.join(', ') : '';
+      const institutionOther =
+        typeof row?.institutionOther === 'string' && row.institutionOther.trim().length > 0
+          ? `; instytucja: ${row.institutionOther}`
+          : '';
+      tdAffiliations.textContent = `${affiliations}${institutionOther}` || '-';
+      tr.appendChild(tdAffiliations);
+
+      const tdConsents = document.createElement('td');
+      const terms = row?.consentTerms ? 'terms: yes' : 'terms: no';
+      const updates = row?.consentUpdates ? 'updates: yes' : 'updates: no';
+      const stats = row?.consentStats ? 'stats: yes' : 'stats: no';
+      tdConsents.textContent = `${terms}, ${updates}, ${stats}`;
+      tr.appendChild(tdConsents);
+
+      downloadsTableBody.appendChild(tr);
+    }
+  };
+
   const fetchAdmin = async (path) => {
     const base = getBaseUrl();
     const token = getToken();
@@ -423,7 +500,10 @@ const defaultApiBase = API_BASE;
       renderRecentEvents(records?.items ?? []);
     }
     if (type === 'pageviews') setOutput('pageviews', records);
-    if (type === 'downloads') setOutput('downloads', records);
+    if (type === 'downloads') {
+      setOutput('downloads', records);
+      renderDownloadsTable(records?.items ?? []);
+    }
     if (type === 'contacts') setOutput('contacts', records);
   };
 

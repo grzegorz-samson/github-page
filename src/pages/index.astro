@@ -9,7 +9,12 @@ const plUrl = withBase('/pl/');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta http-equiv="refresh" content={`0; url=${plUrl}`} />
-    <title>Scholarship Project</title>
+    <meta property="og:title" content="Greggular VST" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Greggular VST" />
+    <title>Greggular VST</title>
   </head>
   <body>
     <p>Redirecting to <a href={plUrl}>Polish site</a>...</p>
