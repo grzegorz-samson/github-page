@@ -10,12 +10,12 @@ const pluginPanelsHref = `${withBase('/en/plugin/')}#panels`;
 <PageLayout
   lang="en"
   title="Greggular VST"
-  description="Project website: VST tool, research, and conference materials."
+  description="Greggular VST: VST plugin, research, and educational activities delivered within the scholarship project."
 >
   <HeroCta
     kicker="Scholarship project"
-    title="Generative granular synthesizer VST"
-    subtitle="Scholarship project website: New technologies in developing tools and technological competences for contemporary music."
+    title="New technologies in developing tools and technological competences for contemporary music."
+    subtitle="Generative granular synthesizer VST."
     imageSrc={withBase('/assets/plugin/controls-panel.png')}
     imageAlt="VST plugin visualization"
     imageHref={pluginPanelsHref}
@@ -28,23 +28,28 @@ const pluginPanelsHref = `${withBase('/en/plugin/')}#panels`;
   />
 
   <section>
-    <p class="section-kicker">Site scope</p>
+    <p class="section-kicker">Project at a glance</p>
     <FeatureGrid
       items={[
         {
-          title: 'VST + documentation',
-          text: 'Public plugin, technical documentation, and usage guide.',
+          title: 'About the project',
+          text: 'Full overview of the goals, outcomes, research materials, and scholarship timeline.',
+          href: withBase('/en/project/')
+        },
+        {
+          title: 'VST plugin',
+          text: 'An original tool for generative design of sound structures and textures.',
           href: withBase('/en/plugin/')
         },
         {
-          title: 'Workshops and implementations',
-          text: 'Educational activities, open sessions, and dissemination of project outcomes.',
-          href: withBase('/en/workshops/')
+          title: 'Research and conference',
+          text: 'Poster and method overview presented during Audio Developer Conference 2025.',
+          href: withBase('/en/research/')
         },
         {
-          title: 'Research and conferences',
-          text: 'ADC 2025 materials: poster, method overview, and project research context.',
-          href: withBase('/en/research/')
+          title: 'Workshops',
+          text: 'Educational activities and dissemination of project outcomes.',
+          href: withBase('/en/workshops/')
         }
       ]}
     />

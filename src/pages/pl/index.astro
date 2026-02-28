@@ -10,12 +10,12 @@ const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
 <PageLayout
   lang="pl"
   title="Greggular VST"
-  description="Strona projektu: narzędzie VST, badania i materiały konferencyjne."
+  description="Greggular VST: wtyczka VST, badania i działania edukacyjne zrealizowane w ramach projektu stypendialnego."
 >
   <HeroCta
     kicker="Projekt stypendialny"
-    title="Generatywny syntezator granularny VST"
-    subtitle="Strona projektu stypendialnego: „Nowe technologie w rozwoju narzędzi i kompetencji technologicznych dla współczesnej muzyki”."
+    title="Nowe technologie w rozwoju narzędzi i kompetencji technologicznych dla współczesnej muzyki."
+    subtitle="Generatywny syntezator granularny VST."
     imageSrc={withBase('/assets/plugin/controls-panel.png')}
     imageAlt="Wizualizacja pluginu VST"
     imageHref={pluginPanelsHref}
@@ -28,23 +28,28 @@ const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
   />
 
   <section>
-    <p class="section-kicker">Zakres strony</p>
+    <p class="section-kicker">Projekt w skrócie</p>
     <FeatureGrid
       items={[
         {
-          title: 'VST + dokumentacja',
-          text: 'Publiczna wtyczka, dokumentacja techniczna i instrukcja użycia.',
+          title: 'O projekcie',
+          text: 'Pełny opis założeń, rezultatów, materiału audio, badań i harmonogramu działań.',
+          href: withBase('/pl/project/')
+        },
+        {
+          title: 'Wtyczka VST',
+          text: 'Autorskie narzędzie do generatywnego projektowania struktur i tekstur dźwiękowych.',
           href: withBase('/pl/plugin/')
         },
         {
-          title: 'Warsztaty i wdrożenia',
-          text: 'Działania edukacyjne, otwarte spotkania i upowszechnianie rezultatów projektu.',
-          href: withBase('/pl/workshops/')
+          title: 'Badania i konferencja',
+          text: 'Poster i opis metody zaprezentowane podczas Audio Developer Conference 2025.',
+          href: withBase('/pl/research/')
         },
         {
-          title: 'Badania i konferencje',
-          text: 'Materiały ADC 2025: poster, opis metod i kontekst badawczy projektu.',
-          href: withBase('/pl/research/')
+          title: 'Warsztaty',
+          text: 'Działania edukacyjne oraz upowszechnianie rezultatów projektu.',
+          href: withBase('/pl/workshops/')
         }
       ]}
     />
