@@ -1,5 +1,14 @@
 ---
-const { items = [] } = Astro.props;
+type TimelineItem = {
+  label: string;
+  date: string;
+  status: string;
+  statusLabel?: string;
+  href?: string;
+  hrefLabel?: string;
+};
+
+const { items = [] }: { items: TimelineItem[] } = Astro.props;
 
 function statusClass(status: string) {
   if (status === 'done') return 'status-done';
@@ -9,13 +18,26 @@ function statusClass(status: string) {
 ---
 
 <ol class="timeline-list">
-  {items.map((item: { label: string; date: string; status: string; statusLabel?: string }) => (
+  {items.map((item) => (
     <li>
-      <div>
-        <h3>{item.label}</h3>
-        <p>{item.date}</p>
-      </div>
-      <span class={`timeline-status ${statusClass(item.status)}`}>{item.statusLabel ?? item.status}</span>
+      {item.href ? (
+        <a class="timeline-card timeline-card--link" href={item.href}>
+          <div class="timeline-copy">
+            <h3>{item.label}</h3>
+            <p>{item.date}</p>
+            <span class="timeline-link">{item.hrefLabel ?? 'Zobacz dokumentację'}</span>
+          </div>
+          <span class={`timeline-status ${statusClass(item.status)}`}>{item.statusLabel ?? item.status}</span>
+        </a>
+      ) : (
+        <div class="timeline-card">
+          <div class="timeline-copy">
+            <h3>{item.label}</h3>
+            <p>{item.date}</p>
+          </div>
+          <span class={`timeline-status ${statusClass(item.status)}`}>{item.statusLabel ?? item.status}</span>
+        </div>
+      )}
     </li>
   ))}
 </ol>

@@ -1,5 +1,6 @@
 ﻿---
 import PageLayout from '../../layouts/PageLayout.astro';
+import MediaEmbedYouTube from '../../components/MediaEmbedYouTube.astro';
 import { withBase } from '../../lib/paths';
 ---
 
@@ -37,7 +38,7 @@ import { withBase } from '../../lib/paths';
 
   <section class="content-stack">
     <p class="section-kicker">Materials</p>
-    <h2>Two workshop blocks</h2>
+    <h2>Workshops</h2>
     <div class="workshop-session-grid">
       <article class="workshop-session">
         <a
@@ -47,20 +48,20 @@ import { withBase } from '../../lib/paths';
           rel="noreferrer"
         >
           <img
-            src={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen-thumb.webp')}
+            src={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen-web.webp')}
             alt="Workshop graphic: Creative use of generative technologies in sound creation"
             loading="lazy"
             decoding="async"
-            width="960"
-            height="640"
+            width="1280"
+            height="852"
           />
         </a>
         <div class="text-panel workshop-session__content">
           <p class="section-kicker">17:00-18:15</p>
-          <h3>Using generative technologies in sound creation</h3>
+          <h3>Creative use of generative technologies in sound creation</h3>
           <p>
-            A block focused on creative use of generative models in sound work and multimodal
-            content processing.
+            A workshop focused on practical use of generative models in sound work,
+            multimodal content processing, and experimental creative workflows.
           </p>
           <ul class="workshop-session-list">
             <li>Transformers in multimodal processing and their role in creative workflows.</li>
@@ -78,26 +79,74 @@ import { withBase } from '../../lib/paths';
           rel="noreferrer"
         >
           <img
-            src={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst-thumb.webp')}
-            alt="Workshop graphic: Introduction to VST plugin design"
+            src={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst-web.webp')}
+            alt="Workshop graphic: Introduction to VST plugin design for generative sound"
             loading="lazy"
             decoding="async"
-            width="960"
-            height="640"
+            width="1280"
+            height="852"
           />
         </a>
         <div class="text-panel workshop-session__content">
           <p class="section-kicker">18:30-19:45</p>
-          <h3>Introduction to VST plugin design</h3>
+          <h3>Introduction to VST plugin design for generative sound</h3>
           <p>
-            A practical block featuring the custom generative granular synthesizer and
-            basics of plugin development workflow.
+            A practical workshop featuring the custom generative granular synthesizer,
+            panel architecture, and the basics of audio plugin development workflow.
           </p>
           <ul class="workshop-session-list">
             <li>Demo of the custom plugin and VST tool design approach.</li>
             <li>Introduction to JUCE and tools for creating and modifying plugins.</li>
             <li>Recommended setup: Visual Studio Code, JUCE, Git, or GitHub Desktop.</li>
           </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <p class="section-kicker">Video documentation</p>
+    <h2>Workshop recordings</h2>
+    <div class="workshop-video-grid">
+      <article class="workshop-video-card">
+        <MediaEmbedYouTube
+          url="https://youtu.be/jvLza3zHNsk"
+          title="Creative use of generative technologies in sound creation"
+        />
+        <div class="text-panel workshop-video-card__content">
+          <h3>Creative use of generative technologies in sound creation</h3>
+          <p>
+            This recording documents the workshop focused on generative audio technologies,
+            multimodality, and practical model-driven workflows in creative practice.
+          </p>
+          <div class="hero-cta-row">
+            <a class="button button-ghost" href="https://youtu.be/jvLza3zHNsk" target="_blank" rel="noreferrer">
+              Open on YouTube
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="workshop-video-card">
+        <MediaEmbedYouTube
+          url="https://youtu.be/0orqVGwfPPI"
+          title="Introduction to VST plugin design for generative sound"
+        />
+        <div class="text-panel workshop-video-card__content">
+          <h3>Introduction to VST plugin design for generative sound</h3>
+          <p>
+            The video covers the custom plugin panels, interface logic, and the foundations
+            of designing and extending VST tools in practice.
+          </p>
+          <p>
+            Due to the interactive nature of the demonstration, part of the video presentation is not available;
+            the documentation is represented by the audio track.
+          </p>
+          <div class="hero-cta-row">
+            <a class="button button-ghost" href="https://youtu.be/0orqVGwfPPI" target="_blank" rel="noreferrer">
+              Open on YouTube
+            </a>
+          </div>
         </div>
       </article>
     </div>

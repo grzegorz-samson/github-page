@@ -703,6 +703,10 @@ body.download-gate-open {
 }
 
 .timeline-list li {
+  margin: 0;
+}
+
+.timeline-card {
   border: 1px solid var(--card-border);
   border-radius: 1rem;
   background: var(--card);
@@ -714,6 +718,26 @@ body.download-gate-open {
   align-items: center;
 }
 
+.timeline-card--link {
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.timeline-card--link:hover,
+.timeline-card--link:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(105, 210, 231, 0.34);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, 0.22);
+  background:
+    linear-gradient(145deg, rgba(105, 210, 231, 0.08), rgba(255, 255, 255, 0.02) 44%),
+    var(--card);
+}
+
 .timeline-list h3 {
   font-size: 1rem;
   margin-bottom: 0.3rem;
@@ -721,6 +745,25 @@ body.download-gate-open {
 
 .timeline-list p {
   font-size: 0.9rem;
+}
+
+.timeline-copy {
+  display: grid;
+  gap: 0.24rem;
+}
+
+.timeline-link {
+  width: fit-content;
+  font-size: 0.84rem;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(105, 210, 231, 0.35);
+  transition: border-color 160ms ease, color 160ms ease, opacity 160ms ease;
+}
+
+.timeline-card--link:hover .timeline-link,
+.timeline-card--link:focus-visible .timeline-link {
+  color: #9de9ff;
+  border-color: rgba(157, 233, 255, 0.72);
 }
 
 .timeline-status {
@@ -1553,6 +1596,119 @@ body.download-gate-open {
   font-size: 0.64rem;
 }
 
+.workshop-video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.workshop-video-card {
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  background:
+    linear-gradient(145deg, rgba(105, 210, 231, 0.08), rgba(255, 255, 255, 0.02) 42%),
+    rgba(255, 255, 255, 0.03);
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.workshop-video-card .media-wrap {
+  margin: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.workshop-video-card__content {
+  margin: 0;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(105, 210, 231, 0.04) 46%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.workshop-video-card__content h3 {
+  margin-bottom: 0.65rem;
+}
+
+.workshop-video-card__content .hero-cta-row {
+  margin-top: 1rem;
+}
+
+.plugin-video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plugin-video-card {
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  background:
+    linear-gradient(145deg, rgba(246, 200, 95, 0.06), rgba(255, 255, 255, 0.02) 44%),
+    rgba(255, 255, 255, 0.03);
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.plugin-video-card .media-wrap {
+  margin: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.plugin-video-card__content {
+  margin: 0;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(246, 200, 95, 0.05) 42%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.plugin-video-card__content h3 {
+  margin-bottom: 0.65rem;
+}
+
+.plugin-video-card__content .hero-cta-row {
+  margin-top: 1rem;
+}
+
+.plugin-about-card {
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(105, 210, 231, 0.04) 46%),
+    rgba(255, 255, 255, 0.03);
+  padding: 0.85rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.plugin-about-card__media {
+  display: block;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.plugin-about-card__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plugin-about-card__content {
+  margin: 0;
+}
+
 .timeline-hint {
   font-size: 0.9rem;
   color: var(--text-soft);
@@ -1767,6 +1923,18 @@ body.download-gate-open {
   }
 
   .workshop-session-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workshop-video-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .plugin-video-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .plugin-about-card {
     grid-template-columns: 1fr;
   }
 

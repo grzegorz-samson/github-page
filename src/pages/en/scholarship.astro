@@ -14,17 +14,17 @@ import { withBase } from '../../lib/paths';
     <h2>Project milestones</h2>
     <Timeline
       items={[
-        { label: 'Courses and training (task 1)', date: '09.2025 - 10.2025', status: 'done', statusLabel: 'completed' },
-        { label: 'International conference (task 2)', date: '10.2025 - 11.2025', status: 'done', statusLabel: 'completed' },
-        { label: 'VST plugin concept and implementation (task 3)', date: '10.2025 - 12.2025', status: 'done', statusLabel: 'completed' },
-        { label: 'Composition with the tool (task 4)', date: '12.2025 - 01.2026', status: 'done', statusLabel: 'completed' },
-        { label: 'Workshops and public lectures (task 5)', date: '12.2025 - 02.2026', status: 'done', statusLabel: 'completed' },
-        { label: 'Documentation and distribution of outcomes (task 6)', date: '01.2026 - 02.2026', status: 'done', statusLabel: 'completed' }
+        { label: 'Courses and training (task 1)', date: '09.2025 - 10.2025', status: 'done', statusLabel: 'completed', href: withBase('/en/scholarship/#training'), hrefLabel: 'View certificates' },
+        { label: 'International conference (task 2)', date: '10.2025 - 11.2025', status: 'done', statusLabel: 'completed', href: withBase('/en/research/'), hrefLabel: 'View research' },
+        { label: 'VST plugin concept and implementation (task 3)', date: '10.2025 - 12.2025', status: 'done', statusLabel: 'completed', href: withBase('/en/plugin/'), hrefLabel: 'View plugin' },
+        { label: 'Composition with the tool (task 4)', date: '12.2025 - 01.2026', status: 'done', statusLabel: 'completed', href: withBase('/en/project/#composition'), hrefLabel: 'View composition' },
+        { label: 'Workshops and public lectures (task 5)', date: '12.2025 - 02.2026', status: 'done', statusLabel: 'completed', href: withBase('/en/workshops/'), hrefLabel: 'View workshops' },
+        { label: 'Documentation and distribution of outcomes (task 6)', date: '01.2026 - 02.2026', status: 'done', statusLabel: 'completed', href: withBase('/en/project/'), hrefLabel: 'View project' }
       ]}
     />
   </section>
 
-  <section class="content-stack">
+  <section id="training" class="content-stack">
     <p class="section-kicker">Training</p>
     <h2>Certificates</h2>
     <div class="publication-list">

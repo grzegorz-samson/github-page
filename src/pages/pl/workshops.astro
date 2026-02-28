@@ -1,5 +1,6 @@
----
+﻿---
 import PageLayout from '../../layouts/PageLayout.astro';
+import MediaEmbedYouTube from '../../components/MediaEmbedYouTube.astro';
 import { withBase } from '../../lib/paths';
 ---
 
@@ -37,7 +38,7 @@ import { withBase } from '../../lib/paths';
 
   <section class="content-stack">
     <p class="section-kicker">Materiały</p>
-    <h2>Dwa bloki warsztatowe</h2>
+    <h2>Warsztaty</h2>
     <div class="workshop-session-grid">
       <article class="workshop-session">
         <a
@@ -47,20 +48,20 @@ import { withBase } from '../../lib/paths';
           rel="noreferrer"
         >
           <img
-            src={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen-thumb.webp')}
-            alt="Grafika warsztatów: Wykorzystanie technologii generatywnych w kreacji dźwięku"
+            src={withBase('/assets/workshops/warsztaty-1-kreatywne-audio-gen-web.webp')}
+            alt="Grafika warsztatów: Kreatywne wykorzystanie technologii generatywnych w kreacji dźwięku"
             loading="lazy"
             decoding="async"
-            width="960"
-            height="640"
+            width="1280"
+            height="852"
           />
         </a>
         <div class="text-panel workshop-session__content">
           <p class="section-kicker">17:00-18:15</p>
-          <h3>Wykorzystanie technologii generatywnych w kreacji dźwięku</h3>
+          <h3>Kreatywne wykorzystanie technologii generatywnych w kreacji dźwięku</h3>
           <p>
-            Blok poświęcony kreatywnemu wykorzystaniu modeli generatywnych w pracy z dźwiękiem i multimodalnym
-            przetwarzaniem treści.
+            Warsztaty poświęcone praktycznemu wykorzystaniu modeli generatywnych w pracy z dźwiękiem,
+            multimodalnym przetwarzaniu treści i eksperymentalnym workflow twórczym.
           </p>
           <ul class="workshop-session-list">
             <li>Transformery w przetwarzaniu multimodalnym i ich rola w procesie kreatywnym.</li>
@@ -78,26 +79,74 @@ import { withBase } from '../../lib/paths';
           rel="noreferrer"
         >
           <img
-            src={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst-thumb.webp')}
-            alt="Grafika warsztatów: Wstęp do projektowania wtyczek VST"
+            src={withBase('/assets/workshops/warsztaty-2-wprowadzenie-do-vst-web.webp')}
+            alt="Grafika warsztatów: Wprowadzenie do projektowania wtyczek VST dla dźwięku generatywnego"
             loading="lazy"
             decoding="async"
-            width="960"
-            height="640"
+            width="1280"
+            height="852"
           />
         </a>
         <div class="text-panel workshop-session__content">
           <p class="section-kicker">18:30-19:45</p>
-          <h3>Wstęp do projektowania wtyczek VST</h3>
+          <h3>Wprowadzenie do projektowania wtyczek VST dla dźwięku generatywnego</h3>
           <p>
-            Część praktyczna z prezentacją autorskiego generatywnego syntezatora granularnego i podstawami workflow
-            tworzenia pluginów.
+            Część praktyczna z prezentacją autorskiego generatywnego syntezatora granularnego,
+            architektury paneli i podstaw workflow tworzenia pluginów audio.
           </p>
           <ul class="workshop-session-list">
             <li>Pokaz autorskiej wtyczki i podejścia do projektowania narzędzia VST.</li>
             <li>Wprowadzenie do standardu JUCE oraz narzędzi do tworzenia i modyfikacji pluginów.</li>
             <li>Zalecane przygotowanie: Visual Studio Code, JUCE, Git lub GitHub Desktop.</li>
           </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <p class="section-kicker">Dokumentacja wideo</p>
+    <h2>Nagrania z warsztatów</h2>
+    <div class="workshop-video-grid">
+      <article class="workshop-video-card">
+        <MediaEmbedYouTube
+          url="https://youtu.be/jvLza3zHNsk"
+          title="Kreatywne wykorzystanie technologii generatywnych w kreacji dźwięku"
+        />
+        <div class="text-panel workshop-video-card__content">
+          <h3>Kreatywne wykorzystanie technologii generatywnych w kreacji dźwięku</h3>
+          <p>
+            Nagranie dokumentuje warsztaty poświęcone generatywnym technologiom audio, multimodalności
+            i praktycznym scenariuszom wykorzystania modeli w procesie twórczym.
+          </p>
+          <div class="hero-cta-row">
+            <a class="button button-ghost" href="https://youtu.be/jvLza3zHNsk" target="_blank" rel="noreferrer">
+              Otwórz na YouTube
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="workshop-video-card">
+        <MediaEmbedYouTube
+          url="https://youtu.be/0orqVGwfPPI"
+          title="Wprowadzenie do projektowania wtyczek VST dla dźwięku generatywnego"
+        />
+        <div class="text-panel workshop-video-card__content">
+          <h3>Wprowadzenie do projektowania wtyczek VST dla dźwięku generatywnego</h3>
+          <p>
+            Materiał wideo obejmuje pokaz paneli autorskiej wtyczki, logikę interfejsu oraz podstawy
+            projektowania i rozwijania pluginów VST w praktyce.
+          </p>
+          <p>
+            Z uwagi na interaktywny charakter pokazu część prezentacji wideo nie jest dostępna,
+            dokumentację stanowi ścieżka dźwiękowa.
+          </p>
+          <div class="hero-cta-row">
+            <a class="button button-ghost" href="https://youtu.be/0orqVGwfPPI" target="_blank" rel="noreferrer">
+              Otwórz na YouTube
+            </a>
+          </div>
         </div>
       </article>
     </div>

@@ -2,6 +2,7 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import ReleaseCard from '../../components/ReleaseCard.astro';
 import DownloadGateModal from '../../components/DownloadGateModal.astro';
+import MediaEmbedYouTube from '../../components/MediaEmbedYouTube.astro';
 import { withBase } from '../../lib/paths';
 
 const capabilityCards = [
@@ -178,6 +179,31 @@ const initialPanel = guiItems[0];
         Research context and conference materials are available in the <a href={withBase('/en/research/')}>Research</a> tab.
       </p>
     </div>
+
+    <article class="plugin-about-card">
+      <a
+        class="plugin-about-card__media"
+        href={withBase('/assets/plugin/about-greggular-vst.png')}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img
+          src={withBase('/assets/plugin/about-greggular-vst.png')}
+          alt="About GreggularVST panel"
+          loading="lazy"
+          decoding="async"
+          width="1537"
+          height="1024"
+        />
+      </a>
+      <div class="text-panel plugin-about-card__content">
+        <p class="section-kicker">Information panel</p>
+        <h3>About GreggularVST</h3>
+        <p>
+          This separate panel presents information about the author and the source of funding.
+        </p>
+      </div>
+    </article>
   </section>
 
   <section class="content-stack">
@@ -223,6 +249,50 @@ const initialPanel = guiItems[0];
   </section>
 
   <section class="content-stack">
+    <p class="section-kicker">Video documentation</p>
+    <h2>Plugin demonstration videos</h2>
+    <div class="plugin-video-grid">
+      <article class="plugin-video-card">
+        <MediaEmbedYouTube
+          url="https://youtu.be/408RIow4tQE"
+          title="GreggularVST - Demo I"
+        />
+        <div class="text-panel plugin-video-card__content">
+          <h3>Demo I</h3>
+          <p>
+            This recording documents the GreggularVST workflow and shows how the plugin operates
+            with generative audio material in practice.
+          </p>
+          <div class="hero-cta-row">
+            <a class="button button-ghost" href="https://youtu.be/408RIow4tQE" target="_blank" rel="noreferrer">
+              Open on YouTube
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plugin-video-card">
+        <MediaEmbedYouTube
+          url="https://youtu.be/0Vzin_ilv40"
+          title="GreggularVST - Demo II"
+        />
+        <div class="text-panel plugin-video-card__content">
+          <h3>Demo II</h3>
+          <p>
+            The second video complements the plugin documentation and presents additional aspects
+            of the interface, parameters, and granular panel workflow.
+          </p>
+          <div class="hero-cta-row">
+            <a class="button button-ghost" href="https://youtu.be/0Vzin_ilv40" target="_blank" rel="noreferrer">
+              Open on YouTube
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="download" class="content-stack">
     <p class="section-kicker">Download</p>
     <h2>Download</h2>
     <ReleaseCard
