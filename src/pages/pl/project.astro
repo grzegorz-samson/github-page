@@ -2,7 +2,6 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import HeroCta from '../../components/HeroCta.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
-import ReleaseCard from '../../components/ReleaseCard.astro';
 import MediaEmbedSoundCloud from '../../components/MediaEmbedSoundCloud.astro';
 import Timeline from '../../components/Timeline.astro';
 import CTAContact from '../../components/CTAContact.astro';
@@ -23,12 +22,12 @@ const compositionEmbed =
 >
   <HeroCta
     kicker="Projekt stypendialny"
-    title="Generatywny syntezator granularny VST"
-    subtitle="Nowe technologie w rozwoju narzędzi i kompetencji technologicznych dla współczesnej muzyki."
+    title="Nowe technologie w rozwoju narzędzi i kompetencji technologicznych dla współczesnej muzyki."
+    subtitle="Generatywny syntezator granularny VST."
     imageSrc={withBase('/assets/plugin/controls-panel.png')}
     imageAlt="Interfejs wtyczki VST"
     imageHref={pluginPanelsHref}
-    badges={['Open source', 'Real-time sound design', 'Stypendium 2025/2026']}
+    badges={['Open access', 'Real-time sound design', 'Stypendium 2025/2026']}
     primaryCta={{ label: 'Wtyczka VST', href: withBase('/pl/plugin/') }}
     secondaryCtas={[
       { label: 'Badania (ADC 2025)', href: withBase('/pl/research/') },
@@ -55,17 +54,16 @@ const compositionEmbed =
           text: 'Utwór „Pendamonika” opublikowany na SoundCloud jako rezultat pracy z narzędziem.',
           href: '#composition'
         },
-        {
-          title: 'Warsztaty i wdrożenia',
-          text: 'Działania edukacyjne oraz upowszechnianie rezultatów projektu.',
-          href: withBase('/pl/workshops/')
-        }
+          {
+            title: 'Warsztaty',
+            text: 'Działania edukacyjne oraz upowszechnianie rezultatów projektu.',
+            href: '#workshops'
+          }
       ]}
     />
   </section>
 
   <section id="vst" class="content-stack">
-    <p class="section-kicker">Rezultat 1</p>
     <h2>Wtyczka VST</h2>
     <div class="text-panel">
       <p>
@@ -81,21 +79,9 @@ const compositionEmbed =
         <a class="button button-primary" href={withBase('/pl/plugin/')}>Przejdź do zakładki Wtyczka VST</a>
       </div>
     </div>
-
-    <ReleaseCard
-      name="Generatywny syntezator granularny VST"
-      version="v0.1.0-alpha"
-      date="2026-02-21"
-      pendingLabel="Pobieranie przez formularz (zakładka Wtyczka VST)"
-      notes={[
-        'Aktualna wersja testowa: v0.1.0-alpha.',
-        'Link do pobrania otrzymasz po poprawnym wysłaniu formularza w zakładce „Wtyczka VST”.'
-      ]}
-    />
   </section>
 
   <section id="composition" class="content-stack">
-    <p class="section-kicker">Rezultat 2</p>
     <h2>Kompozycja i materiał audio</h2>
     <div class="text-panel">
       <p>
@@ -124,7 +110,6 @@ const compositionEmbed =
   </section>
 
   <section id="research" class="content-stack">
-    <p class="section-kicker">Rezultat 3</p>
     <h2>Badania i konferencja ADC 2025</h2>
     <div class="project-research-preview">
       <div class="text-panel">
@@ -144,10 +129,7 @@ const compositionEmbed =
         </div>
       </div>
 
-      <a
-        class="research-poster-card research-poster-card--thumb"
-        href={withBase('/pl/research/')}
-      >
+      <a class="research-poster-card research-poster-card--thumb" href={withBase('/pl/research/')}>
         <img
           src={withBase('/assets/research/from-text-wishes-to-sound-adc-2025-poster-thumb.jpg')}
           alt="Poster naukowy: From Text Wishes to Sound"
@@ -157,6 +139,24 @@ const compositionEmbed =
           height="1600"
         />
       </a>
+    </div>
+  </section>
+
+    <section id="workshops" class="content-stack">
+      <h2>Warsztaty</h2>
+      <div class="text-panel">
+        <p>
+          Część upowszechniająca projektu objęła warsztaty poświęcone kreatywnemu audio generatywnemu
+          oraz wprowadzeniu do pracy z wtyczkami VST.
+        </p>
+      <ul class="project-result-list">
+        <li>Prezentacja workflow pracy z narzędziami generatywnymi i granularnymi.</li>
+        <li>Omówienie paneli wtyczki oraz praktycznych scenariuszy użycia w środowisku muzycznym.</li>
+        <li>Materiały i dokumentacja warsztatowa zostały zebrane w oddzielnej zakładce strony.</li>
+      </ul>
+      <div class="hero-cta-row">
+        <a class="button button-primary" href={withBase('/pl/workshops/')}>Zobacz sekcję Warsztaty</a>
+      </div>
     </div>
   </section>
 

@@ -1,8 +1,7 @@
-﻿---
+---
 import PageLayout from '../../layouts/PageLayout.astro';
 import HeroCta from '../../components/HeroCta.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
-import ReleaseCard from '../../components/ReleaseCard.astro';
 import MediaEmbedSoundCloud from '../../components/MediaEmbedSoundCloud.astro';
 import Timeline from '../../components/Timeline.astro';
 import CTAContact from '../../components/CTAContact.astro';
@@ -19,16 +18,16 @@ const compositionEmbed =
 <PageLayout
   lang="en"
   title="Scholarship project | Generative granular synthesizer VST"
-  description="A unified page with scholarship project outcomes: VST plugin, research materials, and educational activities."
+  description="A unified page with scholarship project outcomes: VST plugin, audio material, research, and educational activities."
 >
   <HeroCta
     kicker="Scholarship project"
-    title="Generative granular synthesizer VST"
-    subtitle="New technologies in developing tools and technological competences for contemporary music."
+    title="New technologies in developing tools and technological competences for contemporary music."
+    subtitle="Generative granular synthesizer VST."
     imageSrc={withBase('/assets/plugin/controls-panel.png')}
     imageAlt="VST plugin interface"
     imageHref={pluginPanelsHref}
-    badges={['Open source', 'Real-time sound design', 'Scholarship 2025/2026']}
+    badges={['Open access', 'Real-time sound design', 'Scholarship 2025/2026']}
     primaryCta={{ label: 'VST Plugin', href: withBase('/en/plugin/') }}
     secondaryCtas={[
       { label: 'Research (ADC 2025)', href: withBase('/en/research/') },
@@ -55,17 +54,16 @@ const compositionEmbed =
           text: 'The “Pendamonika” piece published on SoundCloud as an artistic outcome of the tool.',
           href: '#composition'
         },
-        {
-          title: 'Workshops and implementation',
-          text: 'Educational activities and dissemination of project outcomes.',
-          href: withBase('/en/workshops/')
-        }
+          {
+            title: 'Workshops',
+            text: 'Educational activities and dissemination of project outcomes.',
+            href: '#workshops'
+          }
       ]}
     />
   </section>
 
   <section id="vst" class="content-stack">
-    <p class="section-kicker">Outcome 1</p>
     <h2>VST Plugin</h2>
     <div class="text-panel">
       <p>
@@ -75,27 +73,15 @@ const compositionEmbed =
       <ul class="project-result-list">
         <li>Real-time generation and modulation of granular structures.</li>
         <li>Workflow focused on experimental sound design and compositional practice.</li>
-        <li>Public overview of features, panels, and test-build download process.</li>
+        <li>Public overview of features, panels, and the test-build download process.</li>
       </ul>
       <div class="hero-cta-row">
         <a class="button button-primary" href={withBase('/en/plugin/')}>Go to VST Plugin tab</a>
       </div>
     </div>
-
-    <ReleaseCard
-      name="Generative granular synthesizer VST"
-      version="v0.1.0-alpha"
-      date="2026-02-21"
-      pendingLabel="Download via form (VST Plugin tab)"
-      notes={[
-        'Current test build: v0.1.0-alpha.',
-        'You will receive the download link after successful form submission in the "VST Plugin" tab.'
-      ]}
-    />
   </section>
 
   <section id="composition" class="content-stack">
-    <p class="section-kicker">Outcome 2</p>
     <h2>Composition and audio material</h2>
     <div class="text-panel">
       <p>
@@ -124,7 +110,6 @@ const compositionEmbed =
   </section>
 
   <section id="research" class="content-stack">
-    <p class="section-kicker">Outcome 3</p>
     <h2>Research and ADC 2025 conference</h2>
     <div class="project-research-preview">
       <div class="text-panel">
@@ -133,7 +118,7 @@ const compositionEmbed =
           (November 10-12, 2025, Bristol, UK and online).
         </p>
         <p>
-          The "From Text Wishes to Sound" poster presents an approach combining prompt-layer design,
+          The “From Text Wishes to Sound” poster presents an approach combining prompt-layer design,
           audio material generation, and real-time granular processing.
         </p>
         <div class="hero-cta-row">
@@ -144,10 +129,7 @@ const compositionEmbed =
         </div>
       </div>
 
-      <a
-        class="research-poster-card research-poster-card--thumb"
-        href={withBase('/en/research/')}
-      >
+      <a class="research-poster-card research-poster-card--thumb" href={withBase('/en/research/')}>
         <img
           src={withBase('/assets/research/from-text-wishes-to-sound-adc-2025-poster-thumb.jpg')}
           alt="Research poster: From Text Wishes to Sound"
@@ -157,6 +139,24 @@ const compositionEmbed =
           height="1600"
         />
       </a>
+    </div>
+  </section>
+
+    <section id="workshops" class="content-stack">
+      <h2>Workshops</h2>
+      <div class="text-panel">
+        <p>
+          The dissemination part of the project included workshops focused on creative generative audio
+          and an introduction to working with VST plugins.
+        </p>
+      <ul class="project-result-list">
+        <li>Presentation of workflow based on generative and granular tools.</li>
+        <li>Overview of plugin panels and practical use cases in music-oriented environments.</li>
+        <li>Workshop materials and documentation are gathered in a dedicated section of the site.</li>
+      </ul>
+      <div class="hero-cta-row">
+        <a class="button button-primary" href={withBase('/en/workshops/')}>View Workshops section</a>
+      </div>
     </div>
   </section>
 

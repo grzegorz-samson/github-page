@@ -255,6 +255,43 @@ section {
   margin-bottom: 0.45rem;
 }
 
+.text-panel p {
+  text-align: justify;
+  text-justify: inter-word;
+  text-wrap: pretty;
+  hyphens: auto;
+  widows: 2;
+  orphans: 2;
+}
+
+.text-panel li,
+.plugin-intro-panel__body p,
+.plugin-panel-active__description,
+.plugin-feature-card p,
+.plugin-panel-tile__body p,
+.feature-card p,
+.feature-card li,
+.funding-note {
+  text-wrap: pretty;
+  hyphens: auto;
+}
+
+.feature-card p,
+.plugin-feature-card p,
+.plugin-panel-tile__body p,
+.plugin-intro-panel__body p,
+.plugin-panel-active__description,
+.funding-note {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.feature-card p,
+.plugin-feature-card p,
+.plugin-panel-tile__body p {
+  text-align: left;
+}
+
 .feature-card:hover {
   border-color: rgba(246, 200, 95, 0.45);
   background: rgba(255, 255, 255, 0.09);

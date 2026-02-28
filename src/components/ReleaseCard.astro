@@ -16,7 +16,7 @@ const hasActionSlot = Astro.slots.has('action');
 <article class="release-card">
   <div class="release-head">
     <h3>{name}</h3>
-    <p>{version} | {date}</p>
+    <p>{date ? `${version} | ${date}` : version}</p>
   </div>
 
   {downloadUrl ? (

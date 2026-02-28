@@ -104,5 +104,74 @@ const footerText =
     </footer>
     <FundingFooter lang={lang} />
     <PageViewTracker lang={lang} />
+    <script>
+      const TYPOGRAPHY_ROOTS = ['main.container', '.funding-footer'];
+      const TYPOGRAPHY_SKIP = new Set([
+        'A',
+        'BUTTON',
+        'CODE',
+        'INPUT',
+        'KBD',
+        'LABEL',
+        'OPTION',
+        'PRE',
+        'SCRIPT',
+        'SELECT',
+        'STYLE',
+        'TEXTAREA'
+      ]);
+      const HANGING_WORDS = ['a', 'i', 'o', 'u', 'w', 'z', 'na', 'do', 'od', 'po', 'za', 'we', 'ze'];
+      const HANGING_PATTERN = new RegExp(`(^|[\\s([{"'“”„«»])(${HANGING_WORDS.join('|')})\\s+`, 'giu');
+
+      const shouldSkipNode = (node) => {
+        let current = node.parentElement;
+        while (current) {
+          if (TYPOGRAPHY_SKIP.has(current.tagName)) return true;
+          current = current.parentElement;
+        }
+        return false;
+      };
+
+      const protectHangingWords = (value) =>
+        value.replace(HANGING_PATTERN, (match, prefix, word) => `${prefix}${word}\u00A0`);
+
+      const walkerFilter = {
+        acceptNode(node) {
+          if (!(node instanceof Text)) return NodeFilter.FILTER_REJECT;
+          if (!node.textContent || !node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+          if (shouldSkipNode(node)) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      };
+
+      const applyPolishTypography = () => {
+        if (document.documentElement.lang !== 'pl') return;
+
+        for (const selector of TYPOGRAPHY_ROOTS) {
+          const root = document.querySelector(selector);
+          if (!(root instanceof HTMLElement)) continue;
+
+          const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, walkerFilter);
+          const nodes = [];
+          let currentNode = walker.nextNode();
+          while (currentNode) {
+            nodes.push(currentNode);
+            currentNode = walker.nextNode();
+          }
+
+          for (const node of nodes) {
+            const original = node.textContent ?? '';
+            const updated = protectHangingWords(original);
+            if (updated !== original) node.textContent = updated;
+          }
+        }
+      };
+
+      const runTypographyPass = () => {
+        applyPolishTypography();
+      };
+
+      runTypographyPass();
+    </script>
   </body>
 </html>
