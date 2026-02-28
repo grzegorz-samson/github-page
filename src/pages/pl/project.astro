@@ -3,11 +3,17 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import HeroCta from '../../components/HeroCta.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 import ReleaseCard from '../../components/ReleaseCard.astro';
+import MediaEmbedSoundCloud from '../../components/MediaEmbedSoundCloud.astro';
 import Timeline from '../../components/Timeline.astro';
 import CTAContact from '../../components/CTAContact.astro';
 import { withBase } from '../../lib/paths';
 
 const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
+const compositionUrl =
+  'https://soundcloud.com/grzegorz-samson/pendamonika?si=6aacac95930e4ebda45e3a0d4d83c5cb&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing';
+const compositionShortUrl = 'https://on.soundcloud.com/OX5N1JL1DpdXQQRi6P';
+const compositionEmbed =
+  'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2275153826&color=%230f1211&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true';
 ---
 
 <PageLayout
@@ -45,6 +51,11 @@ const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
           href: '#research'
         },
         {
+          title: 'Kompozycja',
+          text: 'Utwór „Pendamonika” opublikowany na SoundCloud jako rezultat pracy z narzędziem.',
+          href: '#composition'
+        },
+        {
           title: 'Warsztaty i wdrożenia',
           text: 'Działania edukacyjne oraz upowszechnianie rezultatów projektu.',
           href: withBase('/pl/workshops/')
@@ -80,6 +91,35 @@ const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
         'Aktualna wersja testowa: v0.1.0-alpha.',
         'Link do pobrania otrzymasz po poprawnym wysłaniu formularza w zakładce „Wtyczka VST”.'
       ]}
+    />
+  </section>
+
+  <section id="composition" class="content-stack">
+    <p class="section-kicker">Rezultat 2</p>
+    <h2>Kompozycja i materiał audio</h2>
+    <div class="text-panel">
+      <p>
+        Część artystyczna projektu obejmuje utwór „Pendamonika”, rozwijany równolegle z pracą nad
+        wtyczką GreggularVST i wykorzystujący granularne przetwarzanie, warstwowanie tekstur oraz
+        eksperymentalne podejście do formy dźwiękowej.
+      </p>
+      <ul class="project-result-list">
+        <li>Kompozycja powstała jako praktyczny rezultat testów twórczych prowadzonych z użyciem wtyczki.</li>
+        <li>Materiał dokumentuje wykorzystanie narzędzia w workflow kompozytorskim i sound designie.</li>
+        <li>Publikacja na SoundCloud stanowi publiczną prezentację rezultatu artystycznego projektu.</li>
+      </ul>
+      <div class="hero-cta-row">
+        <a class="button button-primary" href={compositionShortUrl} target="_blank" rel="noreferrer">
+          Otwórz na SoundCloud
+        </a>
+      </div>
+    </div>
+    <MediaEmbedSoundCloud
+      url={compositionUrl}
+      title="Pendamonika — Grzegorz Samson"
+      embedSrc={compositionEmbed}
+      visual={true}
+      height={300}
     />
   </section>
 

@@ -1,12 +1,27 @@
 ---
-const { url, title = 'SoundCloud track' } = Astro.props;
-const embed = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23f6c85f&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true`;
+const {
+  url,
+  title = 'SoundCloud track',
+  embedSrc,
+  visual = false,
+  height
+} = Astro.props;
+
+const embed =
+  typeof embedSrc === 'string' && embedSrc.trim().length > 0
+    ? embedSrc.trim()
+    : `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%230f1211&auto_play=false&hide_related=false&show_comments=${
+        visual ? 'true' : 'false'
+      }&show_user=true&show_reposts=false&show_teaser=true${visual ? '&visual=true' : ''}`;
+
+const frameHeight = typeof height === 'number' ? height : visual ? 300 : 166;
 ---
 
 <div class="soundcloud-wrap">
   <iframe
     title={title}
     src={embed}
+    height={frameHeight}
     loading="lazy"
     allow="autoplay"
   />

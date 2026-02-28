@@ -1,26 +1,36 @@
----
+﻿---
 import { withBase } from '../lib/paths';
 
 const {
   lang = 'pl',
   showLogos = true,
-  noteText = 'Działania poprowadzone w ramach projektu stypendialnego „Nowe technologie w rozwoju narzędzi i kompetencji technologicznych dla współczesnej muzyki” realizowanego przez Grzegorza Samsona. Sfinansowane przez Unię Europejską NextGenerationEU.'
+  noteText =
+    lang === 'pl'
+      ? 'Działania poprowadzone w ramach projektu stypendialnego „Nowe technologie w rozwoju narzędzi i kompetencji technologicznych dla współczesnej muzyki” realizowanego przez Grzegorza Samsona. Sfinansowane przez Unię Europejską NextGenerationEU.'
+      : 'Activities carried out within the scholarship project “New technologies in developing tools and technological competences for contemporary music” implemented by Grzegorz Samson. Funded by the European Union NextGenerationEU.'
 } = Astro.props;
+
+const footerLabel = lang === 'pl' ? 'Informacja o finansowaniu projektu' : 'Project funding information';
+const logoSrc =
+  lang === 'pl'
+    ? withBase('/assets/funding/kpo-ngeu-achromatic.png')
+    : withBase('/assets/funding/kpo-ngeu-achromatic-en.png');
+const logoAlt =
+  lang === 'pl'
+    ? 'KPO i NextGenerationEU - wariant achromatyczny'
+    : 'KPO and NextGenerationEU - achromatic version';
 ---
 
-{lang === 'pl' && (
-  <section class="funding-footer" aria-label="Informacja o finansowaniu projektu">
-    {showLogos && (
-      <div class="funding-logos">
-        <img
-          src={withBase('/assets/funding/kpo-ngeu-achromatic.png')}
-          alt="KPO i NextGenerationEU - wariant achromatyczny"
-          class="funding-logo-white"
-          loading="lazy"
-        />
-      </div>
-    )}
-    <p class="funding-note">{noteText}</p>
-  </section>
-)}
-
+<section class="funding-footer" aria-label={footerLabel}>
+  {showLogos && (
+    <div class="funding-logos">
+      <img
+        src={logoSrc}
+        alt={logoAlt}
+        class="funding-logo-white"
+        loading="lazy"
+      />
+    </div>
+  )}
+  <p class="funding-note">{noteText}</p>
+</section>
