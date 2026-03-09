@@ -22,13 +22,13 @@ const { trainings = [], initialId }: { trainings: TrainingItem[]; initialId?: st
 const startId = trainings.some((item) => item.id === initialId) ? initialId : trainings[0]?.id;
 const startTraining = trainings.find((item) => item.id === startId) ?? trainings[0];
 
-// Calibrated geographic bounds for the Europe SVG crop.
-// This keeps marker placement tied to city coordinates instead of manual per-city percentages.
+// Calibrated to the current Europe SVG crop using Braga + Krakow anchor points.
+// These are visual map bounds for this exact asset, not atlas-style geographic bounds.
 const GEO_BOUNDS = {
-  minLon: -20,
-  maxLon: 45,
-  minLat: 30,
-  maxLat: 72
+  minLon: -21.45,
+  maxLon: 43,
+  minLat: 7.31,
+  maxLat: 82
 };
 
 const mercatorY = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
@@ -51,29 +51,36 @@ const projectPoint = (lat: number, lon: number) => {
   <div class="training-map__visual">
     <div class="training-map__shell">
       <div class="training-map__artwork" aria-hidden="true">
-        <div class="training-map__figure">
-          <img class="training-map__image" src={withBase('/assets/maps/europe-outline.svg')} alt="" />
+        <div class="training-map__figure" data-training-figure>
+          <img
+            class="training-map__image"
+            data-training-image
+            src={withBase('/assets/maps/europe-outline.svg')}
+            alt=""
+          />
 
-          {trainings.map((training) => {
-            const point =
-              typeof training.x === 'number' && typeof training.y === 'number'
-                ? { x: training.x, y: training.y }
-                : projectPoint(training.lat, training.lon);
+          <div class="training-map__overlay" data-training-overlay>
+            {trainings.map((training) => {
+              const point =
+                typeof training.x === 'number' && typeof training.y === 'number'
+                  ? { x: training.x, y: training.y }
+                  : projectPoint(training.lat, training.lon);
 
-            return (
-            <button
-              type="button"
-              class={`training-map__marker ${training.id === startId ? 'is-active' : ''}`}
-              style={`--marker-x:${point.x}%; --marker-y:${point.y}%;`}
-              data-training-id={training.id}
-              aria-pressed={training.id === startId ? 'true' : 'false'}
-              aria-label={`${training.city}, ${training.country} - ${training.title}`}
-            >
-              <span class="training-map__marker-dot" aria-hidden="true"></span>
-              <span class="training-map__marker-label">{training.city}</span>
-            </button>
-            );
-          })}
+              return (
+                <button
+                  type="button"
+                  class={`training-map__marker ${training.id === startId ? 'is-active' : ''}`}
+                  style={`--marker-x:${point.x}%; --marker-y:${point.y}%;`}
+                  data-training-id={training.id}
+                  aria-pressed={training.id === startId ? 'true' : 'false'}
+                  aria-label={`${training.city}, ${training.country} - ${training.title}`}
+                >
+                  <span class="training-map__marker-dot" aria-hidden="true"></span>
+                  <span class="training-map__marker-label">{training.city}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -135,6 +142,9 @@ const projectPoint = (lat: number, lon: number) => {
     const countryEl = root.querySelector('[data-training-country]');
     const institutionEl = root.querySelector('[data-training-institution]');
     const descriptionEl = root.querySelector('[data-training-description]');
+    const figure = root.querySelector('[data-training-figure]');
+    const image = root.querySelector('[data-training-image]');
+    const overlay = root.querySelector('[data-training-overlay]');
 
     if (!buttons.length || !metaEl || !titleEl || !cityEl || !countryEl || !institutionEl || !descriptionEl) continue;
 
@@ -158,6 +168,42 @@ const projectPoint = (lat: number, lon: number) => {
       descriptionEl.textContent = active.description;
     };
 
+    const updateOverlayBox = () => {
+      if (!(figure instanceof HTMLElement) || !(image instanceof HTMLImageElement) || !(overlay instanceof HTMLElement)) {
+        return;
+      }
+
+      const figureRect = figure.getBoundingClientRect();
+      if (!figureRect.width || !figureRect.height) return;
+
+      const naturalWidth = image.naturalWidth || figureRect.width;
+      const naturalHeight = image.naturalHeight || figureRect.height;
+      const imageRatio = naturalWidth / naturalHeight;
+      const figureRatio = figureRect.width / figureRect.height;
+
+      let renderWidth = 0;
+      let renderHeight = 0;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (figureRatio > imageRatio) {
+        renderHeight = figureRect.height;
+        renderWidth = renderHeight * imageRatio;
+        offsetX = (figureRect.width - renderWidth) / 2;
+        offsetY = 0;
+      } else {
+        renderWidth = figureRect.width;
+        renderHeight = renderWidth / imageRatio;
+        offsetX = 0;
+        offsetY = (figureRect.height - renderHeight) / 2;
+      }
+
+      overlay.style.left = `${offsetX}px`;
+      overlay.style.top = `${offsetY}px`;
+      overlay.style.width = `${renderWidth}px`;
+      overlay.style.height = `${renderHeight}px`;
+    };
+
     for (const button of buttons) {
       const activate = () => {
         const id = button.dataset.trainingId;
@@ -168,6 +214,17 @@ const projectPoint = (lat: number, lon: number) => {
       button.addEventListener('mouseenter', activate);
       button.addEventListener('focus', activate);
     }
+
+    const syncOverlay = () => updateOverlayBox();
+
+    if (image instanceof HTMLImageElement) {
+      if (image.complete) {
+        updateOverlayBox();
+      } else {
+        image.addEventListener('load', updateOverlayBox, { once: true });
+      }
+    }
+    window.addEventListener('resize', syncOverlay);
 
     const initialFromAttr = root.getAttribute('data-initial-id');
     if (initialFromAttr) setActive(initialFromAttr);
@@ -230,6 +287,12 @@ const projectPoint = (lat: number, lon: number) => {
       drop-shadow(0 18px 28px rgba(0, 0, 0, 0.35));
   }
 
+  .training-map__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
   .training-map__marker {
     position: absolute;
     left: var(--marker-x);
@@ -243,6 +306,7 @@ const projectPoint = (lat: number, lon: number) => {
     color: var(--text-main);
     cursor: pointer;
     padding: 0;
+    pointer-events: auto;
   }
 
   .training-map__marker-dot {
