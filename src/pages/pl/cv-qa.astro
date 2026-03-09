@@ -1,0 +1,862 @@
+---
+import {
+  AudioWaveform,
+  BadgeCheck,
+  BookOpenText,
+  BriefcaseBusiness,
+  Building2,
+  Code2,
+  Languages,
+  Mail,
+  MapPinned,
+  MonitorCog,
+  Palette,
+  Presentation,
+  Sparkles,
+  Users
+} from 'lucide';
+import HorizontalTimeline from '../../components/HorizontalTimeline.astro';
+import EuropeTrainingMap from '../../components/EuropeTrainingMap.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
+import ObfuscatedEmailImage from '../../components/ObfuscatedEmailImage.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
+import PolandVisitMap from '../../components/PolandVisitMap.astro';
+import { withBase } from '../../lib/paths';
+
+const experienceCards = [
+  {
+    title: 'Polska Komisja Akredytacyjna',
+    meta: 'Ekspert studencki | od 21.12.2024',
+    icon: BadgeCheck,
+    points: [
+      `Ekspert studencki <a href="https://pka.edu.pl/" target="_blank" rel="noreferrer">Polskiej Komisji Akredytacyjnej</a>, zaangażowany w oceny programowe i analizę dokumentacji kierunków artystycznych oraz projektowych.`,
+      'W 2025 roku brałem udział w ocenach kierunków: kompozycja i teoria muzyki, wzornictwo, edukacja artystyczna w zakresie sztuki muzycznej, Art &amp; Design oraz jazz i muzyka estradowa, a także w ocenie wniosku o uruchomienie studiów II stopnia na kierunku komunikacja wizualna.',
+      'Doświadczenie obejmuje formułowanie uwag z perspektywy studenckiej i jakościowej wobec programu studiów, organizacji procesu dydaktycznego, zgodności efektów uczenia się oraz rozwiązań instytucjonalnych.'
+    ]
+  },
+  {
+    title: "ESU's Quality Assurance Student Experts' Pool",
+    meta: 'Członek ESU QA Pool | 18.07.2025-17.07.2026',
+    icon: Sparkles,
+    points: [
+      `Od 18 lipca 2025 do 17 lipca 2026 jestem członkiem <a href="https://esu-online.org/" target="_blank" rel="noreferrer">ESU's Quality Assurance Student Experts' Pool</a>, czyli europejskiej puli ekspertów studenckich European Students' Union przygotowywanych do udziału w procesach zewnętrznego i wewnętrznego zapewniania jakości w szkolnictwie wyższym.`,
+      'Brałem udział w szkoleniu QA Pool Training w Bradze w Portugalii w dniach 10-11.10.2025.',
+      'Szkolenia i warsztaty dotyczyły m.in. QA 101, European Standards and Guidelines (ESG), dobrych praktyk krajowych, udziału studentów w procesach zapewniania jakości, prowadzenia review, organizacji pracy eksperta studenckiego, społecznego wymiaru jakości kształcenia oraz wprowadzenia do EQAR prowadzonego przez Aleksandara Šušnjara, EQAR Director.'
+    ]
+  },
+  {
+    title: 'Akademia Muzyczna im. Feliksa Nowowiejskiego w Bydgoszczy',
+    meta: 'Przewodniczący Samorządu Studentów | od 01.09.2022',
+    icon: Building2,
+    points: [
+      'Pełnię funkcję Przewodniczącego Samorządu Studentów AMFN oraz zasiadam w Senacie Uczelni, opiniując programy kształcenia i regulacje uczelniane, w tym regulamin studiów i zasady rekrutacji.',
+      'Doświadczenie obejmuje aktywny udział w procesach zapewniania jakości kształcenia, w tym w pracach komisji jakości, współtworzenie ankiet dla absolwentów i narzędzi informacji zwrotnej oraz publiczne reprezentowanie społeczności studenckiej.',
+      'Jestem certyfikowanym ekspertem praw studenta po Konferencji Ekspertów Praw Studenta PSRP (25-28.08.2022), odpowiedzialnym za organizowanie i prowadzenie szkoleń wprowadzających z zakresu praw i obowiązków studenta.',
+      'Brałem udział w 31. i 32. Ogólnopolskim Zjeździe Przewodniczących Samorządów Studenckich w Warszawie (24-26.11.2023 oraz 22-24.11.2024), poświęconych wymianie dobrych praktyk, polityce studenckiej i debacie o przyszłości szkolnictwa wyższego.',
+      `Zaangażowanie obejmuje również prowadzenie i współorganizację inicjatyw studenckich, takich jak konferencja <a href="https://www.amuz.bydgoszcz.pl/wydarzenia/i-studenckie-spotkanie-laboratorium-muzyczne/" target="_blank" rel="noreferrer">„Laboratorium Muzyczne I”</a>, <a href="https://www.amuz.bydgoszcz.pl/wydarzenia/laboratorium-muzyczne-ii-miedzynarodowa-konferencja-studencka-z-cyklu/" target="_blank" rel="noreferrer">„Laboratorium Muzyczne II”</a> oraz kolejne odsłony wydarzenia, w tym <a href="https://www.facebook.com/events/455307457062305" target="_blank" rel="noreferrer">edycję z 2025 roku</a>, a także projektów grantowych finansowanych m.in. przez Narodowy Instytut Wolności i Ministerstwo Nauki i Szkolnictwa Wyższego.`
+    ]
+  },
+  {
+    title: 'Forum Uczelni Artystycznych / Parlament Studentów RP',
+    meta: 'Przewodniczący FUA | 01.01.2024-26.04.2025',
+    icon: Users,
+    points: [
+      `Reprezentowałem samorządy studenckie największych polskich uczelni artystycznych w ramach Parlamentu Studentów Rzeczypospolitej Polskiej poprzez <a href="https://www.facebook.com/ForumUczelniArtystycznych" target="_blank" rel="noreferrer">Forum Uczelni Artystycznych</a>.`,
+      'Współorganizowałem sześć ogólnopolskich kongresów FUA: w 2024 roku Warszawa (16-18.02), Katowice (26-28.04), Poznań (25-27.10) i Toruń (13-15.12), a w 2025 roku Łódź (21-23.02) oraz Gdańsk (25-27.04).',
+      'Zakres działań obejmował projektowanie agendy, komunikację wewnętrzną i zewnętrzną, logistykę wydarzeń, prowadzenie warsztatów oraz współpracę z lokalnymi samorządami studenckimi i władzami uczelni.',
+      'Reprezentowałem głos studentów również podczas posiedzenia Podkomisji Stałej ds. Nauki i Szkolnictwa Wyższego dotyczącego kondycji publicznych akademii muzycznych (06.02.2025) oraz podczas spotkania konsultacyjnego z Ministrem Nauki i Szkolnictwa Wyższego Dariuszem Wieczorkiem (29.02.2024).'
+    ]
+  },
+  {
+    title: 'Wdrożenia edukacyjne i projekty rozwojowe',
+    meta: 'AMFN / KPO / inicjatywy studenckie',
+    icon: MonitorCog,
+    points: [
+      `Koordynowałem projekt współfinansowany z NextGenerationEU <a href="https://www.konkurspaderewskiego.pl/inkluzywnosc-wsparcie-nowe-technologie/" target="_blank" rel="noreferrer">„Inkluzywność, wsparcie, nowe technologie – podnoszenie kompetencji językowych i społecznych na Akademii Muzycznej w Bydgoszczy”</a>, obejmujący ponad 100 uczestników specjalistycznych warsztatów języka angielskiego.`,
+      'W ramach projektu opracowałem i wdrożyłem rozwiązania AI, w tym chatboty Felix i Grammy, wspierające spersonalizowaną naukę, dostęp do specjalistycznego słownictwa muzycznego, rozwój kompetencji cyfrowych oraz równość językową w szkolnictwie wyższym artystycznym.',
+      `Aktualnie koordynuję działania studenckiego koła naukowo-artystycznego <a href="https://www.facebook.com/spektrum.amfn" target="_blank" rel="noreferrer">SPEKTRUM</a> przy AMFN, organizując warsztaty i masterclassy z naciskiem na współpracę interdyscyplinarną, rozwój artystyczny i wspieranie inicjatyw studenckich. Równolegle rozwijam profil badawczo-artystyczny związany z technologiami audio i AI.`
+    ]
+  }
+];
+
+const visitationItems = [
+  {
+    id: 'warszawa-2025',
+    city: 'Warszawa',
+    date: '15-16.01.2025',
+    title: 'Wizytacja PKA: Kompozycja i teoria muzyki',
+    institution: 'Uniwersytet Muzyczny Fryderyka Chopina',
+    program: 'kompozycja i teoria muzyki',
+    description: 'Ocena programu muzycznego z perspektywy jakości kształcenia, dokumentacji kierunku i doświadczenia studenckiego.',
+    x: 68.4,
+    y: 45.3
+  },
+  {
+    id: 'gdansk-2025',
+    city: 'Gdańsk',
+    date: '25-26.02.2025',
+    title: 'Wizytacja PKA: Wzornictwo',
+    institution: 'Akademia Sztuk Pięknych w Gdańsku',
+    program: 'wzornictwo',
+    description: 'Ocena programu z obszaru designu, ze szczególnym uwzględnieniem przebiegu studiów i organizacji procesu dydaktycznego.',
+    x: 45,
+    y: 9.3
+  },
+  {
+    id: 'olsztyn-2025',
+    city: 'Olsztyn',
+    date: '02-03.04.2025',
+    title: 'Wizytacja PKA: Edukacja artystyczna w zakresie sztuki muzycznej',
+    institution: 'Uniwersytet Warmińsko-Mazurski w Olsztynie',
+    program: 'edukacja artystyczna w zakresie sztuki muzycznej',
+    description: 'Wizytacja programu łączącego dydaktykę muzyczną i praktykę artystyczną, z oceną spójności założeń programu.',
+    x: 63.3,
+    y: 19
+  },
+  {
+    id: 'krakow-2025',
+    city: 'Kraków',
+    date: '29-30.04.2025',
+    title: 'Wizytacja PKA: Art & Design',
+    institution: 'Uniwersytet Komisji Edukacji Narodowej w Krakowie',
+    program: 'Art & Design',
+    description: 'Ocena programu Art & Design oraz sposobu jego komunikacji, organizacji i spójności z potrzebami studentów.',
+    x: 57.9,
+    y: 82
+  },
+  {
+    id: 'lublin-2025',
+    city: 'Lublin',
+    date: '06-07.05.2025',
+    title: 'Wizytacja PKA: Jazz i muzyka estradowa',
+    institution: 'Uniwersytet Marii Curie-Skłodowskiej w Lublinie',
+    program: 'jazz i muzyka estradowa',
+    description: 'Wizytacja kierunku wykonawczego z naciskiem na praktykę studiów, zaplecze i organizację ścieżki kształcenia.',
+    x: 83.8,
+    y: 61.9
+  },
+  {
+    id: 'walbrzych-2025',
+    city: 'Wałbrzych',
+    date: '17-24.06.2025',
+    title: 'Wniosek PKA: Komunikacja wizualna',
+    institution: 'Akademia Nauk Stosowanych Angelusa Silesiusa',
+    program: 'Studia II stopnia - ocena wniosku o nowy program',
+    description: 'Ocena nowego wniosku programowego z obszaru komunikacji wizualnej, z perspektywy zgodności założeń i potrzeb studentów.',
+    x: 21.6,
+    y: 70
+  },
+  {
+    id: 'warszawa-vizja-2025',
+    city: 'Warszawa',
+    date: '09.2025',
+    title: 'Wniosek PKA: Aktorstwo',
+    institution: 'Uniwersytet VIZJA',
+    program: 'Wniosek o uruchomienie kierunku: aktorstwo',
+    description: 'Ocena wniosku programowego dla kierunku aktorstwo z perspektywy jakości założeń, organizacji studiów i potrzeb kandydatów.',
+    x: 68.4,
+    y: 45.3
+  },
+  {
+    id: 'katowice-2025',
+    city: 'Katowice',
+    date: '24-25.11.2025',
+    title: 'Wizytacja PKA: Reżyseria',
+    institution: 'Szkoła Filmowa im. Krzysztofa Kieślowskiego, Uniwersytet Śląski w Katowicach',
+    program: 'reżyseria',
+    description: 'Wizytacja kierunku reżyseria w szkole filmowej, z uwzględnieniem specyfiki praktycznego i projektowego trybu kształcenia.',
+    x: 48.8,
+    y: 78.6
+  },
+  {
+    id: 'poznan-2026',
+    city: 'Poznań',
+    date: '13-14.01.2026',
+    title: 'Wizytacja PKA: Reżyseria dźwięku',
+    institution: 'Uniwersytet im. Adama Mickiewicza w Poznaniu',
+    program: 'reżyseria dźwięku',
+    description: 'Wizytacja programu reżyserii dźwięku, obejmująca organizację ścieżki studiowania, zaplecze i zgodność efektów uczenia się.',
+    x: 28,
+    y: 42.3
+  },
+  {
+    id: 'suwalki-2026',
+    city: 'Suwałki',
+    date: '06-07.03.2026',
+    title: 'Wizytacja PKA: Transport',
+    institution: 'Państwowa Uczelnia Zawodowa im. prof. Edwarda F. Szczepanika w Suwałkach',
+    program: 'transport',
+    description: 'Wizytacja kierunku transport, obejmująca ocenę założeń programu, organizacji toku studiów i zgodności efektów uczenia się.',
+    x: 74.5,
+    y: 16.2
+  }
+];
+
+const conferenceItems = [
+  {
+    id: 'isset-2023',
+    year: '2023',
+    date: '12.10.2023',
+    label: 'ISSET',
+    title: 'ISSET 2023 - International Symposium on Sound Engineering and Tonmeistering, Warszawa',
+    description: 'Prezentacja konferencyjna: „Procedurally Generated AI Compound Media for Expanding Audial Creations, Broadening Immersion and Perception Experience”.'
+  },
+  {
+    id: 'musa-2023',
+    year: '2023',
+    date: '28.10.2023',
+    label: 'MuSA',
+    title: 'MuSA 2023 - Music and Sonic Art: Seeing Sound, Hearing Sight, University of Manchester',
+    description: 'Prezentacja konferencyjna: „Exploring the Capabilities of Generative Pre-Trained Transformers...”.'
+  },
+  {
+    id: 'composer-2023',
+    year: '2023',
+    date: '22.11.2023',
+    label: 'AMFN',
+    title: 'Konferencja „Kompozytor w środowisku”, Bydgoszcz',
+    description: 'Prezentacja: „Kompozytor w środowisku narzędzi sztucznej inteligencji”.'
+  },
+  {
+    id: 'renewable-2024',
+    year: '2024',
+    date: '15-17.10.2024',
+    label: 'RenMus',
+    title: 'International Online Conference on Renewable Music',
+    description: 'Prezentacja konferencyjna: „Approaches to Renewable Music Using Generative Pre-Trained Transformer Networks”.'
+  },
+  {
+    id: 'paderewski-2024',
+    year: '2024',
+    date: '17.10.2024',
+    label: 'Pad II',
+    title: 'II Festiwal Paderewskiego, Bydgoszcz',
+    description: 'Wykład: „Czy sztuczna inteligencja może zastąpić Paderewskiego?”.'
+  },
+  {
+    id: 'soundspektrum-2024',
+    year: '2024',
+    date: '2024',
+    label: 'SPEK',
+    title: 'AI SoundSpektrum Conference, Bydgoszcz',
+    description: 'Organizator i prelegent. Wystąpienie: „Is Synthetic Art Still Coming, or Has It Already Arrived?”.'
+  },
+  {
+    id: 'aes-2025',
+    year: '2025',
+    date: '05.2025',
+    label: 'AES',
+    title: 'Audio Engineering Society European Convention 2025, Warszawa',
+    description: 'Prezentacja posterowa: „Exploring the Process of Interconnected Procedurally Generated Visual and Audial Content”.'
+  }
+];
+
+const trainingItems = [
+  {
+    id: 'braga-2025',
+    city: 'Braga',
+    country: 'Portugalia',
+    meta: 'ESU QA Pool | 10-11.10.2025',
+    title: 'ESU QA Pool Training',
+    institution: 'European Students’ Union',
+    description: 'Szkolenie europejskiej puli ekspertów studenckich w obszarze quality assurance, ESG, review process i społecznego wymiaru jakości kształcenia.',
+    lat: 41.5454,
+    lon: -8.4265
+  },
+  {
+    id: 'krakow-pka',
+    city: 'Kraków',
+    country: 'Polska',
+    meta: 'Polska Komisja Akredytacyjna',
+    title: 'Szkolenia PKA',
+    institution: 'Polska Komisja Akredytacyjna',
+    description: 'Szkolenia przygotowujące do pracy eksperta studenckiego PKA, obejmujące procedury oceny programowej, analizę dokumentacji i rolę studenta w procesie akredytacyjnym.',
+    lat: 50.0647,
+    lon: 19.945
+  }
+];
+
+const publications = [
+  {
+    title: 'Perspectives on Generative Sound Design: A Generative Soundscapes Showcase',
+    meta: 'Arts (MDPI), opublikowano: 12.06.2025',
+    label: 'DOI: 10.3390/arts14030067',
+    href: 'https://doi.org/10.3390/arts14030067'
+  },
+  {
+    title: 'Exploring the Process of Interconnected Procedurally Generated Visual and Audial Content',
+    meta: 'AES Journal, opublikowano: 12.05.2025',
+    label: 'AES E-Library (id 22884)',
+    href: 'https://aes.org/publications/elibrary-page/?id=22884'
+  },
+  {
+    title: 'Procedurally Generated AI Compound Media for Expanding Audial Creations, Broadening Immersion and Perception Experience',
+    meta: 'International Journal of Electronics and Telecommunications, opublikowano: 25.06.2024',
+    label: 'DOI: 10.24425/ijet.2024.149550',
+    href: 'https://doi.org/10.24425/ijet.2024.149550'
+  }
+];
+
+const languageItems = [
+  'Polski - ojczysty',
+  'Angielski - C1',
+  'Niemiecki - A2',
+  'Francuski - A2/A1',
+  'Hiszpański - A1'
+];
+
+const digitalSkillGroups = [
+  {
+    title: 'Narzędzia pracy i współpracy',
+    icon: MonitorCog,
+    items: [
+      'Microsoft Word, Excel, PowerPoint i Teams',
+      'Outlook oraz Google Drive',
+      'Organizacja komunikacji, materiałów i raportowania'
+    ]
+  },
+  {
+    title: 'Audio i produkcja',
+    icon: AudioWaveform,
+    items: [
+      'Ableton, Pro Tools, Apple Logic Pro, Reaper, Cubase',
+      'Praca z materiałem audio i środowiskami DAW',
+      'Łączenie praktyki dźwiękowej z rozwiązaniami AI'
+    ]
+  },
+  {
+    title: 'Projektowanie i edycja',
+    icon: Palette,
+    items: [
+      'Adobe Photoshop, Lightroom i Illustrator',
+      'Przygotowanie materiałów wizualnych i komunikacyjnych',
+      'Wsparcie projektów edukacyjnych i promocyjnych'
+    ]
+  },
+  {
+    title: 'Programowanie i AI',
+    icon: Code2,
+    items: [
+      'C, C++, Java, HTML, MS SQL Server',
+      'AI engineering i chatboty edukacyjne',
+      'Wdrożenia cyfrowe wspierające proces dydaktyczny'
+    ]
+  }
+];
+
+const strengths = [
+  {
+    title: 'Analiza dokumentów i procedur',
+    text: 'Pracuję z programami studiów, regulaminami, efektami uczenia się i dokumentacją ewaluacyjną w sposób uporządkowany, krytyczny i nastawiony na praktyczne wnioski.'
+  },
+  {
+    title: 'Perspektywa studencka i reprezentacja',
+    text: 'Łączę perspektywę eksperta studenckiego PKA, przewodniczącego samorządu uczelnianego i działań ogólnopolskich w FUA, dzięki czemu potrafię przekładać głos studentów na konkretne rekomendacje.'
+  },
+  {
+    title: 'Ankiety i narzędzia feedbackowe',
+    text: 'Mam doświadczenie we współtworzeniu ankiet absolwenckich i narzędzi informacji zwrotnej oraz w ocenie, czy proces zbierania feedbacku rzeczywiście prowadzi do poprawy jakości kształcenia.'
+  },
+  {
+    title: 'Technologie i standardy jakości',
+    text: 'Łączę doświadczenie organizacyjne z wdrożeniami cyfrowymi i AI oraz europejskim kontekstem QA, obejmującym ESG, EQAR i społeczną dostępność procesu kształcenia.'
+  }
+];
+---
+
+<PageLayout
+  lang="pl"
+  title="CV QA | Grzegorz Samson"
+  description="Podstrona CV przygotowana pod zgłoszenie do zespołu ds. jakości kształcenia."
+>
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={BriefcaseBusiness} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Doświadczenie</p>
+        <h2>Doświadczenie istotne dla jakości kształcenia</h2>
+      </div>
+    </div>
+
+    <div class="qa-accordion-list">
+      {experienceCards.map((card) => (
+        <details class="qa-accordion-card">
+          <summary class="qa-accordion-summary">
+            <div class="qa-accordion-heading">
+              <span class="qa-card-icon" aria-hidden="true">
+                <LucideIcon icon={card.icon} size={18} />
+              </span>
+              <div>
+                <p class="section-kicker">{card.meta}</p>
+                <h3>{card.title}</h3>
+              </div>
+            </div>
+            <span class="qa-accordion-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="qa-accordion-body">
+            <ul>
+              {card.points.map((point) => (
+                <li set:html={point}></li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="content-stack" id="wizytacje-pka">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={MapPinned} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Wizytacje</p>
+        <h2>Mapa wizytacji PKA w Polsce</h2>
+      </div>
+    </div>
+
+    <PolandVisitMap visits={visitationItems} initialId="warszawa-2025" />
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={MapPinned} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Szkolenia</p>
+        <h2>Mapa szkoleń QA i PKA w Europie</h2>
+      </div>
+    </div>
+
+    <EuropeTrainingMap trainings={trainingItems} initialId="braga-2025" />
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={Presentation} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Konferencje i prezentacje</p>
+        <h2>Oś czasu konferencji i prezentacji</h2>
+      </div>
+    </div>
+    <p class="timeline-hint">Najedź lub kliknij skrót wydarzenia, aby wyświetlić szczegóły prezentacji.</p>
+    <HorizontalTimeline items={conferenceItems} initialId="aes-2025" />
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={BookOpenText} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Publikacje</p>
+        <h2>Wybrane artykuły naukowe</h2>
+      </div>
+    </div>
+
+    <div class="publication-list">
+      {publications.map((publication) => (
+        <article class="publication-card">
+          <h3>{publication.title}</h3>
+          <p class="publication-meta">{publication.meta}</p>
+          <div class="publication-links">
+            <a class="button button-primary" href={publication.href} target="_blank" rel="noreferrer">
+              {publication.label}
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={Languages} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Języki</p>
+        <h2>Umiejętności językowe</h2>
+      </div>
+    </div>
+
+    <div class="qa-chip-grid">
+      {languageItems.map((language) => (
+        <div class="qa-chip-card">
+          <LucideIcon icon={Languages} size={16} class="qa-chip-icon" />
+          <span>{language}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={MonitorCog} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Kompetencje cyfrowe</p>
+        <h2>Narzędzia i środowiska pracy</h2>
+      </div>
+    </div>
+
+    <div class="qa-grid">
+      {digitalSkillGroups.map((group) => (
+        <article class="feature-card qa-skill-card">
+          <div class="qa-skill-head">
+            <span class="qa-card-icon" aria-hidden="true">
+              <LucideIcon icon={group.icon} size={18} />
+            </span>
+            <h3>{group.title}</h3>
+          </div>
+          <ul class="project-result-list qa-list-compact">
+            {group.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={Sparkles} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Kompetencje</p>
+        <h2>Kompetencje przydatne w pracy zespołu</h2>
+      </div>
+    </div>
+
+    <div class="qa-grid">
+      {strengths.map((item) => (
+        <article class="feature-card qa-skill-card">
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <p class="section-kicker">Deklaracja</p>
+    <h2>Jak rozumiem swoją rolę</h2>
+
+    <div class="text-panel">
+      <p>
+        Zależy mi na tym, aby głos studentów był traktowany jako pełnoprawne źródło wiedzy
+        o funkcjonowaniu uczelni, a nie wyłącznie formalny element procedury.
+      </p>
+      <p>
+        Dobrze działający system jakości powinien łączyć rzetelność dokumentacyjną,
+        perspektywę codziennego studiowania oraz społeczną dostępność kształcenia:
+        organizację zajęć, obieg informacji, sensowność narzędzi ewaluacyjnych,
+        dostępność wsparcia i realny wpływ informacji zwrotnej na zmiany.
+      </p>
+
+      <ul class="project-result-list">
+        <li>chcę wspierać rozwiązania, które są czytelne, użyteczne i możliwe do wdrożenia,</li>
+        <li>zależy mi na spokojnej, merytorycznej współpracy między studentami, nauczycielami akademickimi i władzami uczelni,</li>
+        <li>bliskie jest mi myślenie o jakości kształcenia jako o procesie ciągłego doskonalenia, a nie wyłącznie kontroli.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <div class="qa-section-heading">
+      <span class="qa-section-icon" aria-hidden="true">
+        <LucideIcon icon={Mail} size={20} />
+      </span>
+      <div>
+        <p class="section-kicker">Kontakt</p>
+        <h2>Kontakt</h2>
+      </div>
+    </div>
+
+    <div class="qa-contact-card">
+      <p class="qa-contact-copy">
+        <span class="qa-card-icon qa-card-icon--inline" aria-hidden="true">
+          <LucideIcon icon={Mail} size={17} />
+        </span>
+        <span>
+          W sprawach związanych z działalnością organizacyjną, dydaktyczną i jakością kształcenia
+          można skontaktować się ze mną mailowo:
+          {' '}
+          <ObfuscatedEmailImage lang="pl" localPart="grzegorzsamson218" domain="hotmail" tld="com" />
+          .
+        </span>
+      </p>
+      <div class="hero-cta-row">
+        <a class="button button-ghost" href={withBase('/pl/bio/')}>Powrót do bio</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <p class="section-kicker">CV / jakość kształcenia</p>
+    <h2>CV do zespołu ds. jakości kształcenia</h2>
+
+    <div class="qa-hero">
+      <div class="text-panel">
+        <p>
+          Jestem studentem reżyserii dźwięku oraz osobą od kilku lat aktywnie zaangażowaną
+          w funkcjonowanie Akademii Muzycznej im. Feliksa Nowowiejskiego w Bydgoszczy
+          na poziomie samorządowym, organizacyjnym i opiniodawczym.
+        </p>
+        <p>
+          Jakość kształcenia rozumiem nie tylko jako zgodność formalną, ale również jako
+          realne doświadczenie studiowania: przejrzystość programu, komunikację, skuteczność
+          narzędzi ewaluacyjnych, dostępność wsparcia i zdolność uczelni do reagowania na
+          potrzeby środowiska artystycznego.
+        </p>
+        <p>
+          Łączę doświadczenie zdobyte wewnątrz uczelni z perspektywą zewnętrznej oceny
+          programów studiów jako ekspert studencki PKA oraz europejskim kontekstem QA
+          wynikającym z udziału w ESU QA Pool. Dzięki temu mogę wnieść do zespołu
+          zarówno głos studentów, jak i szersze spojrzenie na standardy jakości w szkolnictwie wyższym.
+        </p>
+
+        <div class="badge-row">
+          <span class="badge">Ekspert studencki PKA</span>
+          <span class="badge">ESU QA Pool</span>
+          <span class="badge">Samorząd Studentów AMFN</span>
+          <span class="badge">Senat Uczelni</span>
+          <span class="badge">Jakość kształcenia</span>
+        </div>
+
+        <div class="hero-cta-row">
+          <a class="button button-primary" href={withBase('/pl/bio/')}>Zobacz główne bio</a>
+          <a class="button button-ghost" href="#wizytacje-pka">Przejdź do wizytacji</a>
+        </div>
+      </div>
+
+      <aside class="qa-side-card">
+        <p class="section-kicker">Obszary wsparcia</p>
+        <h3>Co mogę wnieść do zespołu</h3>
+        <ul class="project-result-list">
+          <li>opiniowanie rozwiązań związanych z jakością kształcenia z perspektywy studenta uczelni artystycznej,</li>
+          <li>współpracę przy ankietach, formularzach feedbackowych i analizie potrzeb studentów oraz absolwentów,</li>
+          <li>czytelną komunikację między studentami, nauczycielami akademickimi i władzami jednostki,</li>
+          <li>perspektywę porównawczą wynikającą z doświadczeń uczelnianych, ogólnopolskich, akredytacyjnych i europejskich,</li>
+          <li>wrażliwość na rolę dostępności oraz nowych technologii w procesie dydaktycznym.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .qa-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .qa-section-heading .section-kicker {
+    margin-bottom: 0.25rem;
+  }
+
+  .qa-section-heading h2 {
+    margin: 0;
+  }
+
+  .qa-section-icon,
+  .qa-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: var(--accent-2);
+    background: linear-gradient(135deg, rgba(105, 210, 231, 0.16), rgba(246, 200, 95, 0.08));
+    border: 1px solid rgba(105, 210, 231, 0.18);
+  }
+
+  .qa-section-icon {
+    width: 2.55rem;
+    height: 2.55rem;
+    flex: 0 0 auto;
+    margin-top: 0.1rem;
+  }
+
+  .qa-card-icon {
+    width: 2.1rem;
+    height: 2.1rem;
+    flex: 0 0 auto;
+  }
+
+  .qa-card-icon--inline {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .qa-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .qa-side-card,
+  .qa-contact-card,
+  .qa-chip-card {
+    border: 1px solid var(--card-border);
+    border-radius: 1rem;
+    background: var(--card);
+    padding: 1rem;
+  }
+
+  .qa-side-card h3,
+  .qa-contact-card h3,
+  .qa-skill-card h3 {
+    margin-bottom: 0.6rem;
+  }
+
+  .qa-contact-copy {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .qa-accordion-list {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .qa-accordion-card {
+    border: 1px solid var(--card-border);
+    border-radius: 1rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+    overflow: hidden;
+  }
+
+  .qa-accordion-summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .qa-accordion-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .qa-accordion-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .qa-accordion-summary h3 {
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+
+  .qa-accordion-icon {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+    transition: transform 160ms ease;
+    margin-right: 0.25rem;
+  }
+
+  .qa-accordion-card[open] .qa-accordion-icon {
+    transform: rotate(225deg);
+  }
+
+  .qa-accordion-body {
+    padding: 0 1rem 1rem;
+  }
+
+  .qa-accordion-body ul {
+    margin-top: 0;
+    padding-left: 1.1rem;
+  }
+
+  .qa-accordion-body li {
+    color: var(--text-soft);
+    margin-bottom: 0.55rem;
+  }
+
+  :global(.qa-accordion-body a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    font-weight: 600;
+  }
+
+  :global(.qa-accordion-body a:hover) {
+    color: #ffe6a4;
+  }
+
+  .qa-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .qa-skill-card,
+  .qa-skill-card:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--card-border);
+    background: var(--card);
+  }
+
+  .qa-skill-card {
+    cursor: default;
+    transition: none;
+  }
+
+  .qa-skill-head {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .qa-list-compact {
+    margin: 0;
+  }
+
+  .qa-chip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .qa-chip-card {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 4.4rem;
+  }
+
+  .qa-chip-icon {
+    color: var(--accent-2);
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 900px) {
+    .qa-hero,
+    .qa-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

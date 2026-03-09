@@ -32,7 +32,7 @@ const startItem = items.find((item) => item.id === startId) ?? items[0];
               class={`horizontal-timeline__dot ${item.id === startId ? 'is-active' : ''}`}
               data-timeline-id={item.id}
               aria-pressed={item.id === startId ? 'true' : 'false'}
-              aria-label={`${item.year} — ${item.title}`}
+              aria-label={`${item.year} - ${item.title}`}
             >
               <span class="horizontal-timeline__short">{item.label}</span>
             </button>

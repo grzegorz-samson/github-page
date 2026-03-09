@@ -12,6 +12,7 @@
     "@astrojs/mdx": "^4.3.13",
     "@tailwindcss/vite": "^4.2.0",
     "astro": "^5.17.1",
+    "lucide": "^0.577.0",
     "tailwindcss": "^4.2.0"
   }
 }

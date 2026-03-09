@@ -1,0 +1,38 @@
+---
+type IconNode = [string, Record<string, string>][];
+
+type Props = {
+  icon: IconNode;
+  size?: number | string;
+  strokeWidth?: number | string;
+  class?: string;
+};
+
+const {
+  icon,
+  size = 18,
+  strokeWidth = 1.9,
+  class: className = ''
+}: Props = Astro.props;
+
+const escapeAttr = (value: string | number) =>
+  String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+
+const iconMarkup = (icon ?? [])
+  .map(([tag, attrs]) => {
+    const attrMarkup = Object.entries(attrs)
+      .map(([key, value]) => `${key}="${escapeAttr(value)}"`)
+      .join(' ');
+
+    return `<${tag} ${attrMarkup}></${tag}>`;
+  })
+  .join('');
+
+const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="${escapeAttr(size)}" height="${escapeAttr(size)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${escapeAttr(strokeWidth)}" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon ${escapeAttr(className)}" aria-hidden="true" focusable="false">${iconMarkup}</svg>`;
+---
+
+<Fragment set:html={svgMarkup} />

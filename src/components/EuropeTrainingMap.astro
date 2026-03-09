@@ -1,0 +1,395 @@
+---
+import { BadgeCheck, Building2, FileText, MapPinned } from 'lucide';
+import { withBase } from '../lib/paths';
+import LucideIcon from './LucideIcon.astro';
+
+type TrainingItem = {
+  id: string;
+  city: string;
+  country: string;
+  meta: string;
+  title: string;
+  institution: string;
+  description: string;
+  lat: number;
+  lon: number;
+};
+
+const { trainings = [], initialId }: { trainings: TrainingItem[]; initialId?: string } = Astro.props;
+
+const startId = trainings.some((item) => item.id === initialId) ? initialId : trainings[0]?.id;
+const startTraining = trainings.find((item) => item.id === startId) ?? trainings[0];
+
+// Calibrated geographic bounds for the Europe SVG crop.
+// This keeps marker placement tied to city coordinates instead of manual per-city percentages.
+const GEO_BOUNDS = {
+  minLon: -20,
+  maxLon: 45,
+  minLat: 34,
+  maxLat: 72
+};
+
+const projectPoint = (lat: number, lon: number) => {
+  const x = ((lon - GEO_BOUNDS.minLon) / (GEO_BOUNDS.maxLon - GEO_BOUNDS.minLon)) * 100;
+  const y = ((GEO_BOUNDS.maxLat - lat) / (GEO_BOUNDS.maxLat - GEO_BOUNDS.minLat)) * 100;
+
+  return {
+    x: Number(x.toFixed(2)),
+    y: Number(y.toFixed(2))
+  };
+};
+---
+
+<div class="training-map" data-training-map data-initial-id={startId}>
+  <div class="training-map__visual">
+    <div class="training-map__shell">
+      <div class="training-map__artwork" aria-hidden="true">
+        <div class="training-map__figure">
+          <img class="training-map__image" src={withBase('/assets/maps/europe-outline.svg')} alt="" />
+
+          {trainings.map((training) => {
+            const point = projectPoint(training.lat, training.lon);
+
+            return (
+            <button
+              type="button"
+              class={`training-map__marker ${training.id === startId ? 'is-active' : ''}`}
+              style={`--marker-x:${point.x}%; --marker-y:${point.y}%;`}
+              data-training-id={training.id}
+              aria-pressed={training.id === startId ? 'true' : 'false'}
+              aria-label={`${training.city}, ${training.country} - ${training.title}`}
+            >
+              <span class="training-map__marker-dot" aria-hidden="true"></span>
+              <span class="training-map__marker-label">{training.city}</span>
+            </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <article class="training-map__panel" aria-live="polite">
+    <div class="training-map__panel-chip">
+      <LucideIcon icon={BadgeCheck} size={15} />
+      <span>Szkolenia QA</span>
+    </div>
+
+    <p class="training-map__panel-meta" data-training-meta>{startTraining?.meta}</p>
+    <h3 data-training-title>{startTraining?.title}</h3>
+
+    <div class="training-map__facts">
+      <div class="training-map__fact-card">
+        <span class="training-map__fact-icon" aria-hidden="true">
+          <LucideIcon icon={MapPinned} size={18} />
+        </span>
+        <div>
+          <p class="training-map__fact-label">Miejsce</p>
+          <p class="training-map__panel-place">
+            <span data-training-city>{startTraining?.city}</span>, <span data-training-country>{startTraining?.country}</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="training-map__fact-card">
+        <span class="training-map__fact-icon" aria-hidden="true">
+          <LucideIcon icon={Building2} size={18} />
+        </span>
+        <div>
+          <p class="training-map__fact-label">Organizacja</p>
+          <p class="training-map__panel-institution" data-training-institution>{startTraining?.institution}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="training-map__summary">
+      <div class="training-map__summary-head">
+        <span class="training-map__fact-icon" aria-hidden="true">
+          <LucideIcon icon={FileText} size={18} />
+        </span>
+        <p class="training-map__fact-label">Opis</p>
+      </div>
+      <p class="training-map__panel-description" data-training-description>{startTraining?.description}</p>
+    </div>
+  </article>
+</div>
+
+<script define:vars={{ trainings }}>
+  const roots = document.querySelectorAll('[data-training-map]');
+
+  for (const root of roots) {
+    const buttons = Array.from(root.querySelectorAll('button[data-training-id]'));
+    const metaEl = root.querySelector('[data-training-meta]');
+    const titleEl = root.querySelector('[data-training-title]');
+    const cityEl = root.querySelector('[data-training-city]');
+    const countryEl = root.querySelector('[data-training-country]');
+    const institutionEl = root.querySelector('[data-training-institution]');
+    const descriptionEl = root.querySelector('[data-training-description]');
+
+    if (!buttons.length || !metaEl || !titleEl || !cityEl || !countryEl || !institutionEl || !descriptionEl) continue;
+
+    const map = new Map(trainings.map((training) => [training.id, training]));
+
+    const setActive = (id) => {
+      const active = map.get(id);
+      if (!active) return;
+
+      for (const button of buttons) {
+        const isActive = button.dataset.trainingId === id;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      }
+
+      metaEl.textContent = active.meta;
+      titleEl.textContent = active.title;
+      cityEl.textContent = active.city;
+      countryEl.textContent = active.country;
+      institutionEl.textContent = active.institution;
+      descriptionEl.textContent = active.description;
+    };
+
+    for (const button of buttons) {
+      const activate = () => {
+        const id = button.dataset.trainingId;
+        if (id) setActive(id);
+      };
+
+      button.addEventListener('click', activate);
+      button.addEventListener('mouseenter', activate);
+      button.addEventListener('focus', activate);
+    }
+
+    const initialFromAttr = root.getAttribute('data-initial-id');
+    if (initialFromAttr) setActive(initialFromAttr);
+  }
+</script>
+
+<style>
+  .training-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.95fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .training-map__visual,
+  .training-map__panel {
+    border: 1px solid var(--card-border);
+    border-radius: 1rem;
+    background: var(--card);
+    padding: 1rem;
+  }
+
+  .training-map__shell {
+    position: relative;
+    aspect-ratio: 1.22;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 24% 14%, rgba(105, 210, 231, 0.16), transparent 36%),
+      radial-gradient(circle at 76% 78%, rgba(246, 200, 95, 0.14), transparent 42%),
+      rgba(10, 14, 22, 0.75);
+  }
+
+  .training-map__artwork {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1.2rem 1.4rem;
+  }
+
+  .training-map__figure {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1613 / 1417;
+    max-height: 100%;
+    margin: 0 auto;
+  }
+
+  .training-map__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.92;
+    filter:
+      invert(1)
+      brightness(1.35)
+      drop-shadow(0 18px 28px rgba(0, 0, 0, 0.35));
+  }
+
+  .training-map__marker {
+    position: absolute;
+    left: var(--marker-x);
+    top: var(--marker-y);
+    transform: translate(-50%, -50%);
+    display: inline-grid;
+    justify-items: center;
+    gap: 0.32rem;
+    border: 0;
+    background: transparent;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .training-map__marker-dot {
+    width: 0.95rem;
+    height: 0.95rem;
+    border-radius: 999px;
+    background: var(--accent);
+    border: 2px solid #101317;
+    box-shadow: 0 0 0 6px rgba(246, 200, 95, 0.12);
+    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  }
+
+  .training-map__marker-label {
+    font-size: 0.72rem;
+    line-height: 1.1;
+    padding: 0.2rem 0.42rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(8, 12, 19, 0.8);
+    white-space: nowrap;
+  }
+
+  .training-map__marker:hover .training-map__marker-dot,
+  .training-map__marker:focus-visible .training-map__marker-dot,
+  .training-map__marker.is-active .training-map__marker-dot {
+    transform: scale(1.14);
+    background: var(--accent-2);
+    box-shadow: 0 0 0 8px rgba(105, 210, 231, 0.14);
+  }
+
+  .training-map__marker:hover .training-map__marker-label,
+  .training-map__marker:focus-visible .training-map__marker-label,
+  .training-map__marker.is-active .training-map__marker-label {
+    border-color: rgba(105, 210, 231, 0.4);
+    color: #fff;
+  }
+
+  .training-map__marker:focus-visible {
+    outline: none;
+  }
+
+  .training-map__panel {
+    display: grid;
+    gap: 1rem;
+    min-height: 100%;
+    background:
+      linear-gradient(180deg, rgba(105, 210, 231, 0.05), transparent 22%),
+      var(--card);
+  }
+
+  .training-map__panel-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    width: fit-content;
+    padding: 0.36rem 0.62rem;
+    border-radius: 999px;
+    background: rgba(105, 210, 231, 0.1);
+    color: var(--accent-2);
+    border: 1px solid rgba(105, 210, 231, 0.18);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .training-map__panel-meta {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+
+  .training-map__panel h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.45;
+  }
+
+  .training-map__facts {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .training-map__fact-card,
+  .training-map__summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.9rem;
+    border-radius: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .training-map__summary {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .training-map__summary-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .training-map__fact-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 999px;
+    color: var(--accent-2);
+    background: rgba(105, 210, 231, 0.08);
+    border: 1px solid rgba(105, 210, 231, 0.14);
+  }
+
+  .training-map__fact-label {
+    margin: 0 0 0.22rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+
+  .training-map__panel-place,
+  .training-map__panel-institution,
+  .training-map__panel-description {
+    margin: 0;
+  }
+
+  .training-map__panel-place,
+  .training-map__panel-institution {
+    color: var(--text-main);
+    font-weight: 700;
+    line-height: 1.55;
+  }
+
+  .training-map__panel-description {
+    color: var(--text-soft);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 900px) {
+    .training-map {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .training-map__artwork {
+      padding: 0.9rem;
+    }
+
+    .training-map__marker-label {
+      font-size: 0.64rem;
+      padding: 0.16rem 0.35rem;
+    }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { withBase } from '../../lib/paths';
+---
+
+<PageLayout
+  lang="en"
+  title="CV QA | Grzegorz Samson"
+  description="A supporting CV subpage prepared for quality assurance-related academic service."
+>
+  <section class="content-stack">
+    <p class="section-kicker">Note</p>
+    <h2>This subpage is primarily available in Polish</h2>
+    <div class="text-panel">
+      <p>
+        This page was prepared mainly for internal academic use in Polish as
+        a focused CV subpage related to quality assurance work.
+      </p>
+      <p>
+        You can access the Polish version below:
+      </p>
+      <div class="hero-cta-row">
+        <a class="button button-primary" href={withBase('/pl/cv-qa/')}>Open the Polish subpage</a>
+        <a class="button button-ghost" href={withBase('/en/bio/')}>Back to bio</a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
