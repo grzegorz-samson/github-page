@@ -1,0 +1,25 @@
+---
+import { Moon, SunMedium } from 'lucide';
+import LucideIcon from './LucideIcon.astro';
+---
+
+<div class="theme-switch" role="group" aria-label="Przełącz motyw">
+  <button
+    type="button"
+    class="theme-switch__option"
+    data-theme-option="dark"
+    aria-label="Motyw ciemny"
+    aria-pressed="false"
+  >
+    <LucideIcon icon={Moon} size={16} />
+  </button>
+  <button
+    type="button"
+    class="theme-switch__option"
+    data-theme-option="light"
+    aria-label="Motyw jasny"
+    aria-pressed="false"
+  >
+    <LucideIcon icon={SunMedium} size={16} />
+  </button>
+</div>

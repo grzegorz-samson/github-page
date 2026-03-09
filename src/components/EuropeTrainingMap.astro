@@ -13,6 +13,8 @@ type TrainingItem = {
   description: string;
   lat: number;
   lon: number;
+  x?: number;
+  y?: number;
 };
 
 const { trainings = [], initialId }: { trainings: TrainingItem[]; initialId?: string } = Astro.props;
@@ -25,13 +27,18 @@ const startTraining = trainings.find((item) => item.id === startId) ?? trainings
 const GEO_BOUNDS = {
   minLon: -20,
   maxLon: 45,
-  minLat: 34,
+  minLat: 30,
   maxLat: 72
 };
 
+const mercatorY = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+
 const projectPoint = (lat: number, lon: number) => {
   const x = ((lon - GEO_BOUNDS.minLon) / (GEO_BOUNDS.maxLon - GEO_BOUNDS.minLon)) * 100;
-  const y = ((GEO_BOUNDS.maxLat - lat) / (GEO_BOUNDS.maxLat - GEO_BOUNDS.minLat)) * 100;
+  const north = mercatorY(GEO_BOUNDS.maxLat);
+  const south = mercatorY(GEO_BOUNDS.minLat);
+  const current = mercatorY(lat);
+  const y = ((north - current) / (north - south)) * 100;
 
   return {
     x: Number(x.toFixed(2)),
@@ -48,7 +55,10 @@ const projectPoint = (lat: number, lon: number) => {
           <img class="training-map__image" src={withBase('/assets/maps/europe-outline.svg')} alt="" />
 
           {trainings.map((training) => {
-            const point = projectPoint(training.lat, training.lon);
+            const point =
+              typeof training.x === 'number' && typeof training.y === 'number'
+                ? { x: training.x, y: training.y }
+                : projectPoint(training.lat, training.lon);
 
             return (
             <button

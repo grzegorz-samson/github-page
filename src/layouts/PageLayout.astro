@@ -1,5 +1,6 @@
 ﻿---
 import LanguageSwitch from '../components/LanguageSwitch.astro';
+import ThemeSwitch from '../components/ThemeSwitch.astro';
 import FundingFooter from '../components/FundingFooter.astro';
 import PageViewTracker from '../components/PageViewTracker.astro';
 import { withBase } from '../lib/paths';
@@ -80,6 +81,13 @@ const footerText =
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     {pageDescription && <meta name="twitter:description" content={pageDescription} />}
+    <script is:inline>
+      (() => {
+        const stored = window.localStorage.getItem('site-theme');
+        const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
   </head>
   <body>
     <div class="site-bg"></div>
@@ -95,7 +103,10 @@ const footerText =
           );
         })}
       </nav>
-      <LanguageSwitch />
+      <div class="header-controls">
+        <ThemeSwitch />
+        <LanguageSwitch />
+      </div>
     </header>
 
     <main class="container">
@@ -176,6 +187,34 @@ const footerText =
       };
 
       runTypographyPass();
+
+      const root = document.documentElement;
+      const themeOptions = Array.from(document.querySelectorAll('[data-theme-option]'));
+
+      const syncThemeOptions = () => {
+        for (const option of themeOptions) {
+          if (!(option instanceof HTMLButtonElement)) continue;
+          const isActive = option.dataset.themeOption === root.dataset.theme;
+          option.classList.toggle('active', isActive);
+          option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        }
+      };
+
+      if (themeOptions.length > 0) {
+        syncThemeOptions();
+
+        for (const option of themeOptions) {
+          if (!(option instanceof HTMLButtonElement)) continue;
+
+          option.addEventListener('click', () => {
+            const nextTheme = option.dataset.themeOption;
+            if (nextTheme !== 'light' && nextTheme !== 'dark') return;
+            root.dataset.theme = nextTheme;
+            window.localStorage.setItem('site-theme', nextTheme);
+            syncThemeOptions();
+          });
+        }
+      }
     </script>
   </body>
 </html>

@@ -5,6 +5,7 @@
   --bg-a: #07131a;
   --bg-b: #0f1825;
   --bg-c: #1a1724;
+  --page-bg: #05070d;
   --card: rgba(255, 255, 255, 0.06);
   --card-border: rgba(255, 255, 255, 0.14);
   --text-main: #f4f2ed;
@@ -13,6 +14,33 @@
   --accent-2: #69d2e7;
   --ok: #68d391;
   --warn: #f6c85f;
+  --header-bg: rgba(12, 16, 24, 0.6);
+  --header-link: #dbe4ef;
+  --header-link-hover-bg: rgba(255, 255, 255, 0.08);
+  --header-link-hover-border: rgba(255, 255, 255, 0.18);
+  --brand-bg: rgba(255, 255, 255, 0.03);
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  --bg-a: #f6efe0;
+  --bg-b: #eef5fb;
+  --bg-c: #fff8ef;
+  --page-bg: #f4efe7;
+  --card: rgba(255, 255, 255, 0.78);
+  --card-border: rgba(28, 40, 54, 0.16);
+  --text-main: #18212b;
+  --text-soft: #4c5a67;
+  --accent: #c58a10;
+  --accent-2: #176f87;
+  --ok: #2f855a;
+  --warn: #b7791f;
+  --header-bg: rgba(255, 251, 245, 0.82);
+  --header-link: #223040;
+  --header-link-hover-bg: rgba(23, 111, 135, 0.08);
+  --header-link-hover-border: rgba(23, 111, 135, 0.18);
+  --brand-bg: rgba(24, 33, 43, 0.04);
+  color-scheme: light;
 }
 
 * {
@@ -24,7 +52,7 @@ body {
   margin: 0;
   min-height: 100%;
   color: var(--text-main);
-  background: #05070d;
+  background: var(--page-bg);
   font-family: "Manrope", "Segoe UI", sans-serif;
 }
 
@@ -71,7 +99,7 @@ section {
   border: 1px solid var(--card-border);
   border-radius: 999px;
   backdrop-filter: blur(8px);
-  background: rgba(12, 16, 24, 0.6);
+  background: var(--header-bg);
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -88,7 +116,7 @@ section {
   font-family: "Space Grotesk", "Segoe UI", sans-serif;
   font-size: 0.85rem;
   letter-spacing: 0.08em;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--brand-bg);
 }
 
 .main-header nav {
@@ -99,7 +127,7 @@ section {
 }
 
 .main-header nav a {
-  color: #dbe4ef;
+  color: var(--header-link);
   font-size: 1rem;
   font-weight: 600;
   line-height: 1;
@@ -111,8 +139,8 @@ section {
 
 .main-header nav a:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: var(--header-link-hover-bg);
+  border-color: var(--header-link-hover-border);
 }
 
 .main-header nav a[aria-current='page'] {
@@ -137,6 +165,79 @@ section {
 .lang-switch a.active {
   color: #101317;
   background: var(--accent);
+}
+
+.header-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.theme-switch {
+  display: inline-flex;
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.theme-switch__option {
+  appearance: none;
+  width: 2.1rem;
+  height: 2.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.theme-switch__option:hover {
+  background: var(--header-link-hover-bg);
+  color: var(--text-main);
+}
+
+.theme-switch__option.active {
+  color: #101317;
+  background: var(--accent);
+}
+
+html[data-theme='light'] .main-header nav a:hover {
+  color: var(--text-main);
+}
+
+html[data-theme='light'] .feature-card,
+html[data-theme='light'] .publication-card,
+html[data-theme='light'] .release-card,
+html[data-theme='light'] .media-wrap,
+html[data-theme='light'] .soundcloud-wrap,
+html[data-theme='light'] .contact-cta,
+html[data-theme='light'] .text-panel,
+html[data-theme='light'] .timeline-card,
+html[data-theme='light'] .research-poster-card,
+html[data-theme='light'] .funding-footer,
+html[data-theme='light'] .plugin-feature-card,
+html[data-theme='light'] .plugin-panel-tile,
+html[data-theme='light'] .plugin-panel-active,
+html[data-theme='light'] .plugin-about-card,
+html[data-theme='light'] .plugin-video-card,
+html[data-theme='light'] .workshop-session,
+html[data-theme='light'] .workshop-video-card,
+html[data-theme='light'] .download-gate-modal__panel,
+html[data-theme='light'] .admin-summary-card,
+html[data-theme='light'] .admin-viz-card,
+html[data-theme='light'] .admin-output-card,
+html[data-theme='light'] .admin-json-panel {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(245, 248, 251, 0.84)),
+    rgba(255, 255, 255, 0.82);
+  box-shadow: 0 14px 28px rgba(33, 48, 63, 0.08);
+}
+
+html[data-theme='light'] .theme-switch {
+  background: rgba(24, 33, 43, 0.03);
 }
 
 .section-kicker {
