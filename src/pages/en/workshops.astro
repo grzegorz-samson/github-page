@@ -1,5 +1,6 @@
-﻿---
+---
 import PageLayout from '../../layouts/PageLayout.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import MediaEmbedYouTube from '../../components/MediaEmbedYouTube.astro';
 import { withBase } from '../../lib/paths';
 ---
@@ -10,8 +11,8 @@ import { withBase } from '../../lib/paths';
   description="Workshops and educational activities delivered within the scholarship project."
 >
   <section class="content-stack">
-    <p class="section-kicker">Invitation</p>
-    <h2>Open workshops | 2026-02-27</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="calendar-days" class="section-kicker__icon" />Invitation</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="calendar-days" class="section-title__icon" /><span>Open workshops | 2026-02-27</span></h2>
     <div class="text-panel">
       <p>
         Invitation to open workshops focused on generative technologies in sound creation
@@ -37,8 +38,8 @@ import { withBase } from '../../lib/paths';
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Materials</p>
-    <h2>Workshops</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="presentation" class="section-kicker__icon" />Materials</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="presentation" class="section-title__icon" /><span>Workshops</span></h2>
     <div class="workshop-session-grid">
       <article class="workshop-session">
         <a
@@ -105,8 +106,8 @@ import { withBase } from '../../lib/paths';
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Video documentation</p>
-    <h2>Workshop recordings</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="video" class="section-kicker__icon" />Video documentation</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="video" class="section-title__icon" /><span>Workshop recordings</span></h2>
     <div class="workshop-video-grid">
       <article class="workshop-video-card">
         <MediaEmbedYouTube
@@ -153,8 +154,8 @@ import { withBase } from '../../lib/paths';
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Photo documentation</p>
-    <h2>Workshop photos</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="image" class="section-kicker__icon" />Photo documentation</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="image" class="section-title__icon" /><span>Workshop photos</span></h2>
     <div class="workshop-photo-grid">
       <a
         class="workshop-photo-card"

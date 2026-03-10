@@ -2,6 +2,7 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import HeroCta from '../../components/HeroCta.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import MediaEmbedSoundCloud from '../../components/MediaEmbedSoundCloud.astro';
 import Timeline from '../../components/Timeline.astro';
 import CTAContact from '../../components/CTAContact.astro';
@@ -36,35 +37,39 @@ const compositionEmbed =
   />
 
   <section>
-    <p class="section-kicker">Project overview</p>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="layers-2" class="section-kicker__icon" />Project overview</p>
     <FeatureGrid
       items={[
         {
           title: 'VST plugin',
+          icon: 'audio-waveform',
           text: 'A custom tool for generative design of sound structures and textures.',
           href: '#vst'
         },
         {
           title: 'Research and conference',
+          icon: 'flask-conical',
           text: 'Poster and method summary presented at Audio Developer Conference 2025.',
           href: '#research'
         },
         {
           title: 'Composition',
+          icon: 'file-music',
           text: 'The “Pendamonika” piece published on SoundCloud as an artistic outcome of the tool.',
           href: '#composition'
         },
-          {
-            title: 'Workshops',
-            text: 'Educational activities and dissemination of project outcomes.',
-            href: '#workshops'
-          }
+        {
+          title: 'Workshops',
+          icon: 'presentation',
+          text: 'Educational activities and dissemination of project outcomes.',
+          href: '#workshops'
+        }
       ]}
     />
   </section>
 
   <section id="vst" class="content-stack">
-    <h2>VST Plugin</h2>
+    <h2 class="section-title-with-icon"><LucideIcon name="audio-waveform" class="section-title__icon" /><span>VST Plugin</span></h2>
     <div class="text-panel">
       <p>
         The main outcome is a custom VST plugin for generative sound design, developed as part of project tasks
@@ -82,7 +87,7 @@ const compositionEmbed =
   </section>
 
   <section id="composition" class="content-stack">
-    <h2>Composition and audio material</h2>
+    <h2 class="section-title-with-icon"><LucideIcon name="file-music" class="section-title__icon" /><span>Composition and audio material</span></h2>
     <div class="text-panel">
       <p>
         The artistic part of the project includes the piece “Pendamonika”, developed in parallel with
@@ -110,7 +115,7 @@ const compositionEmbed =
   </section>
 
   <section id="research" class="content-stack">
-    <h2>Research and ADC 2025 conference</h2>
+    <h2 class="section-title-with-icon"><LucideIcon name="flask-conical" class="section-title__icon" /><span>Research and ADC 2025 conference</span></h2>
     <div class="project-research-preview">
       <div class="text-panel">
         <p>
@@ -142,13 +147,13 @@ const compositionEmbed =
     </div>
   </section>
 
-    <section id="workshops" class="content-stack">
-      <h2>Workshops</h2>
-      <div class="text-panel">
-        <p>
-          The dissemination part of the project included workshops focused on creative generative audio
-          and an introduction to working with VST plugins.
-        </p>
+  <section id="workshops" class="content-stack">
+    <h2 class="section-title-with-icon"><LucideIcon name="presentation" class="section-title__icon" /><span>Workshops</span></h2>
+    <div class="text-panel">
+      <p>
+        The dissemination part of the project included workshops focused on creative generative audio
+        and an introduction to working with VST plugins.
+      </p>
       <ul class="project-result-list">
         <li>Presentation of workflow based on generative and granular tools.</li>
         <li>Overview of plugin panels and practical use cases in music-oriented environments.</li>
@@ -161,8 +166,8 @@ const compositionEmbed =
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Schedule</p>
-    <h2>Scholarship milestones</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="milestone" class="section-kicker__icon" />Schedule</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="milestone" class="section-title__icon" /><span>Scholarship milestones</span></h2>
     <Timeline
       items={[
         { label: 'Courses and training (task 1)', date: '09.2025 - 10.2025', status: 'done', statusLabel: 'completed', href: withBase('/en/scholarship/#training'), hrefLabel: 'View certificates' },

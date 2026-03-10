@@ -1,7 +1,8 @@
-﻿---
+---
 import PageLayout from '../../layouts/PageLayout.astro';
 import HorizontalTimeline from '../../components/HorizontalTimeline.astro';
 import ContactForm from '../../components/ContactForm.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import ObfuscatedEmailImage from '../../components/ObfuscatedEmailImage.astro';
 import { withBase } from '../../lib/paths';
 
@@ -60,8 +61,8 @@ const timelineItems = [
 
 <PageLayout lang="en" title="Bio | Scholarship project" description="Biography and activity profile of Grzegorz Samson.">
   <section class="content-stack">
-    <p class="section-kicker">Bio</p>
-    <h2>Grzegorz Samson</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="user-round" class="section-kicker__icon" />Bio</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="user-round" class="section-title__icon" /><span>Grzegorz Samson</span></h2>
     <div class="bio-grid">
       <a
         class="bio-photo"
@@ -93,8 +94,8 @@ const timelineItems = [
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Publications</p>
-    <h2>Selected scientific papers</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="book-open" class="section-kicker__icon" />Publications</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="book-open" class="section-title__icon" /><span>Selected scientific papers</span></h2>
     <div class="publication-list">
       <article class="publication-card">
         <h3>Perspectives on Generative Sound Design: A Generative Soundscapes Showcase</h3>
@@ -129,15 +130,15 @@ const timelineItems = [
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Conferences and activity</p>
-    <h2>Selected talks and activities</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="presentation" class="section-kicker__icon" />Conferences and activity</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="presentation" class="section-title__icon" /><span>Selected talks and activities</span></h2>
     <p class="timeline-hint">Hover over or click an event shortcut to display the full description card.</p>
     <HorizontalTimeline items={timelineItems} initialId="aes-2025" />
   </section>
 
   <section class="content-stack" id="full-biographical-note">
-    <p class="section-kicker">Full note</p>
-    <h2>Full biographical note</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="file-text" class="section-kicker__icon" />Full note</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="file-text" class="section-title__icon" /><span>Full biographical note</span></h2>
     <div class="text-panel bio-rich-text">
       <p>
         Grzegorz Samson has completed a series of artistic-research projects and activities in new sound technologies,
@@ -170,7 +171,7 @@ const timelineItems = [
   <section class="content-stack">
     <ContactForm lang="en" />
     <div class="text-panel">
-      <p class="section-kicker">Direct contact</p>
+      <p class="section-kicker section-kicker--with-icon"><LucideIcon name="mail" class="section-kicker__icon" />Direct contact</p>
       <p>
         If you prefer direct email contact, click:
         {' '}

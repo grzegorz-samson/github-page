@@ -1,8 +1,37 @@
 ---
+import {
+  AudioWaveform,
+  Award,
+  BookOpen,
+  CalendarDays,
+  Download,
+  Drum,
+  ExternalLink,
+  FileMusic,
+  FileText,
+  Film,
+  FlaskConical,
+  GraduationCap,
+  History,
+  Image,
+  Layers2,
+  Mail,
+  MapPin,
+  MicVocal,
+  Milestone,
+  Presentation,
+  SlidersHorizontal,
+  Sparkles,
+  UserRound,
+  Video,
+  Waypoints
+} from 'lucide';
+
 type IconNode = [string, Record<string, string>][];
 
 type Props = {
-  icon: IconNode;
+  icon?: IconNode;
+  name?: string;
   size?: number | string;
   strokeWidth?: number | string;
   class?: string;
@@ -10,10 +39,41 @@ type Props = {
 
 const {
   icon,
+  name,
   size = 18,
   strokeWidth = 1.9,
   class: className = ''
 }: Props = Astro.props;
+
+const icons: Record<string, IconNode> = {
+  'audio-waveform': AudioWaveform,
+  award: Award,
+  'book-open': BookOpen,
+  'calendar-days': CalendarDays,
+  download: Download,
+  drum: Drum,
+  'external-link': ExternalLink,
+  'file-music': FileMusic,
+  'file-text': FileText,
+  film: Film,
+  'flask-conical': FlaskConical,
+  'graduation-cap': GraduationCap,
+  history: History,
+  image: Image,
+  'layers-2': Layers2,
+  mail: Mail,
+  'map-pin': MapPin,
+  'mic-vocal': MicVocal,
+  milestone: Milestone,
+  presentation: Presentation,
+  'sliders-horizontal': SlidersHorizontal,
+  sparkles: Sparkles,
+  'user-round': UserRound,
+  video: Video,
+  waypoints: Waypoints
+};
+
+const resolvedIcon = icon ?? (name ? icons[name] : undefined);
 
 const escapeAttr = (value: string | number) =>
   String(value)
@@ -22,7 +82,7 @@ const escapeAttr = (value: string | number) =>
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
 
-const iconMarkup = (icon ?? [])
+const iconMarkup = (resolvedIcon ?? [])
   .map(([tag, attrs]) => {
     const attrMarkup = Object.entries(attrs)
       .map(([key, value]) => `${key}="${escapeAttr(value)}"`)

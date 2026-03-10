@@ -2,36 +2,37 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import ReleaseCard from '../../components/ReleaseCard.astro';
 import DownloadGateModal from '../../components/DownloadGateModal.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import MediaEmbedYouTube from '../../components/MediaEmbedYouTube.astro';
 import { withBase } from '../../lib/paths';
 
 const capabilityCards = [
   {
-    icon: 'G',
+    icon: 'audio-waveform',
     title: 'Granularny silnik wieloźródłowy',
     text: 'Ładowanie wielu plików WAV do wspólnego bufora i budowanie złożonych chmur ziaren w czasie rzeczywistym.',
     tags: ['Granular', 'WAV', 'Live']
   },
   {
-    icon: 'P',
+    icon: 'sliders-horizontal',
     title: 'Precyzyjna kontrola parametrów',
     text: 'Sterowanie czasem trwania ziaren, gęstością chmury, rozrzutem wysokości i głośności oraz obwiednią.',
     tags: ['Pitch', 'Gain', 'Envelope']
   },
   {
-    icon: 'W',
+    icon: 'waypoints',
     title: 'Workflow oparty o waveform',
     text: 'Selekcja, grupowanie i edycja zakresów próbkowania bezpośrednio na podglądzie fali.',
     tags: ['Waveform', 'Selection', 'Editing']
   },
   {
-    icon: 'M',
+    icon: 'waypoints',
     title: 'Rozszerzony routing kanałów',
     text: 'Panel multichannel z routingiem, mute/solo oraz parami panorama dla złożonych układów wyjściowych.',
     tags: ['Routing', 'Multichannel', 'Pan']
   },
   {
-    icon: 'A',
+    icon: 'sparkles',
     title: 'Audio Generator (AI)',
     text: 'Panel konwersacyjny wspierający generowanie materiału audio i szybkie iteracje wariantów brzmieniowych.',
     tags: ['Generator', 'Prompt', 'Session']
@@ -40,25 +41,25 @@ const capabilityCards = [
 
 const useCaseCards = [
   {
-    icon: 'F',
+    icon: 'film',
     title: 'Tekstury filmowe i drony',
     text: 'Budowanie atmosfer i warstw tła o ciągłej, ewoluującej strukturze.',
     tags: ['Cinematic', 'Ambient']
   },
   {
-    icon: 'R',
+    icon: 'drum',
     title: 'Rytmiczne glitche',
     text: 'Dekonstrukcja i ponowne składanie materiału perkusyjnego w nieregularne sekwencje.',
     tags: ['Glitch', 'Rhythm']
   },
   {
-    icon: 'V',
+    icon: 'mic-vocal',
     title: 'Resynteza głosu i field recording',
     text: 'Przetwarzanie źródeł mowy i nagrań terenowych do form eksperymentalnych.',
     tags: ['Voice', 'Field Recording']
   },
   {
-    icon: 'B',
+    icon: 'flask-conical',
     title: 'Praca badawczo-artystyczna',
     text: 'Eksploracja interaktywnych systemów audio i multimodalności w praktyce twórczej.',
     tags: ['Research', 'Interactive']
@@ -113,10 +114,10 @@ const initialPanel = guiItems[0];
   description="Opis wtyczki GreggularVST: funkcjonalności, panele i zastosowania."
 >
   <section id="panels" class="content-stack">
-    <p class="section-kicker">Wtyczka VST</p>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="audio-waveform" class="section-kicker__icon" />Wtyczka VST</p>
     <article class="plugin-intro-panel">
       <div class="plugin-intro-panel__title">
-        <h2>GreggularVST</h2>
+        <h2 class="section-title-with-icon"><LucideIcon name="audio-waveform" class="section-title__icon" /><span>GreggularVST</span></h2>
       </div>
       <div class="plugin-intro-panel__body">
         <p>
@@ -129,8 +130,8 @@ const initialPanel = guiItems[0];
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Panele interfejsu</p>
-    <h2>Panele</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="sliders-horizontal" class="section-kicker__icon" />Panele interfejsu</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="sliders-horizontal" class="section-title__icon" /><span>Panele</span></h2>
     <div class="plugin-panels" data-plugin-panels data-initial-id={initialPanel.id}>
       <div class="plugin-panels-nav">
       {guiItems.map((item) => (
@@ -207,13 +208,13 @@ const initialPanel = guiItems[0];
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Funkcjonalności</p>
-    <h2>Co potrafi wtyczka</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="sparkles" class="section-kicker__icon" />Funkcjonalności</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="sparkles" class="section-title__icon" /><span>Co potrafi wtyczka</span></h2>
     <div class="plugin-feature-grid">
       {capabilityCards.map((item) => (
         <article class="plugin-feature-card">
           <div class="plugin-feature-card__head">
-            <span class="plugin-feature-card__icon">{item.icon}</span>
+            <span class="plugin-feature-card__icon"><LucideIcon name={item.icon} /></span>
             <h3>{item.title}</h3>
           </div>
           <p>{item.text}</p>
@@ -228,13 +229,13 @@ const initialPanel = guiItems[0];
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Use case</p>
-    <h2>Zastosowania twórcze</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="film" class="section-kicker__icon" />Use case</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="film" class="section-title__icon" /><span>Zastosowania twórcze</span></h2>
     <div class="plugin-feature-grid plugin-feature-grid--compact">
       {useCaseCards.map((item) => (
         <article class="plugin-feature-card">
           <div class="plugin-feature-card__head">
-            <span class="plugin-feature-card__icon">{item.icon}</span>
+            <span class="plugin-feature-card__icon"><LucideIcon name={item.icon} /></span>
             <h3>{item.title}</h3>
           </div>
           <p>{item.text}</p>
@@ -249,8 +250,8 @@ const initialPanel = guiItems[0];
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Dokumentacja wideo</p>
-    <h2>Pokazy działania wtyczki</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="video" class="section-kicker__icon" />Dokumentacja wideo</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="video" class="section-title__icon" /><span>Pokazy działania wtyczki</span></h2>
     <div class="plugin-video-grid">
       <article class="plugin-video-card">
         <MediaEmbedYouTube
@@ -293,8 +294,8 @@ const initialPanel = guiItems[0];
   </section>
 
   <section id="download" class="content-stack">
-    <p class="section-kicker">Pobieranie</p>
-    <h2>Pobieranie</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="download" class="section-kicker__icon" />Pobieranie</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="download" class="section-title__icon" /><span>Pobieranie</span></h2>
     <ReleaseCard
       name="Generatywny syntezator granularny VST"
       version="v1.0.0"

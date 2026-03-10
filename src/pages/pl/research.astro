@@ -1,5 +1,6 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import { withBase } from '../../lib/paths';
 ---
 
@@ -9,8 +10,8 @@ import { withBase } from '../../lib/paths';
   description="Materiały badawcze i konferencyjne projektu, w tym ADC 2025."
 >
   <section class="content-stack">
-    <p class="section-kicker">Badania</p>
-    <h2>Audio Developer Conference 2025</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="flask-conical" class="section-kicker__icon" />Badania</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="presentation" class="section-title__icon" /><span>Audio Developer Conference 2025</span></h2>
     <div class="text-panel">
       <p>
         Projekt został zaprezentowany podczas Audio Developer Conference 2025

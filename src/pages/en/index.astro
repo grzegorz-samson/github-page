@@ -1,7 +1,8 @@
-﻿---
+---
 import PageLayout from '../../layouts/PageLayout.astro';
 import HeroCta from '../../components/HeroCta.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import { withBase } from '../../lib/paths';
 
 const pluginPanelsHref = `${withBase('/en/plugin/')}#panels`;
@@ -28,26 +29,30 @@ const pluginPanelsHref = `${withBase('/en/plugin/')}#panels`;
   />
 
   <section>
-    <p class="section-kicker">Project at a glance</p>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="layers-2" class="section-kicker__icon" />Project at a glance</p>
     <FeatureGrid
       items={[
         {
           title: 'About the project',
+          icon: 'layers-2',
           text: 'Full overview of the goals, outcomes, research materials, and scholarship timeline.',
           href: withBase('/en/project/')
         },
         {
           title: 'VST plugin',
+          icon: 'audio-waveform',
           text: 'An original tool for generative design of sound structures and textures.',
           href: withBase('/en/plugin/')
         },
         {
           title: 'Research and conference',
+          icon: 'flask-conical',
           text: 'Poster and method overview presented during Audio Developer Conference 2025.',
           href: withBase('/en/research/')
         },
         {
           title: 'Workshops',
+          icon: 'presentation',
           text: 'Educational activities and dissemination of project outcomes.',
           href: withBase('/en/workshops/')
         }

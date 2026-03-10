@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import Timeline from '../../components/Timeline.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import { withBase } from '../../lib/paths';
 ---
 
@@ -10,8 +11,8 @@ import { withBase } from '../../lib/paths';
   description="Kamienie milowe i szkolenia zrealizowane w ramach projektu stypendialnego."
 >
   <section class="content-stack">
-    <p class="section-kicker">Stypendium</p>
-    <h2>Kamienie milowe projektu</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="award" class="section-kicker__icon" />Stypendium</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="milestone" class="section-title__icon" /><span>Kamienie milowe projektu</span></h2>
     <Timeline
       items={[
         { label: 'Kursy i szkolenia (zadanie 1)', date: '09.2025 - 10.2025', status: 'done', statusLabel: 'zrealizowane', href: withBase('/pl/scholarship/#training'), hrefLabel: 'Zobacz certyfikaty' },
@@ -25,8 +26,8 @@ import { withBase } from '../../lib/paths';
   </section>
 
   <section id="training" class="content-stack">
-    <p class="section-kicker">Szkolenia</p>
-    <h2>Certificates</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="graduation-cap" class="section-kicker__icon" />Szkolenia</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="graduation-cap" class="section-title__icon" /><span>Certificates</span></h2>
     <div class="publication-list">
       <article class="publication-card">
         <h3>Signal Processing Onramp (MATLAB)</h3>

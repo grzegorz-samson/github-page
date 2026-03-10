@@ -248,6 +248,31 @@ html[data-theme='light'] .theme-switch {
   margin-bottom: 0.7rem;
 }
 
+.section-kicker--with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.section-kicker__icon,
+.section-title__icon,
+.feature-card__icon,
+.plugin-feature-card__icon svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.section-title-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.section-title__icon {
+  color: var(--accent);
+}
+
 .hero-grid {
   display: grid;
   gap: 2rem;
@@ -349,6 +374,29 @@ html[data-theme='light'] .theme-switch {
   border-radius: 1rem;
   background: var(--card);
   padding: 1rem;
+}
+
+.feature-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.feature-card__title h3 {
+  margin: 0;
+}
+
+.feature-card__icon-wrap {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.58rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(246, 200, 95, 0.34);
+  background: rgba(246, 200, 95, 0.08);
+  color: var(--accent);
+  flex: 0 0 auto;
 }
 
 .feature-card h3 {
@@ -1385,8 +1433,6 @@ body.download-gate-open {
   border-radius: 0.55rem;
   display: inline-grid;
   place-items: center;
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
-  font-size: 0.82rem;
   color: var(--accent);
   border: 1px solid rgba(246, 200, 95, 0.38);
   background: rgba(246, 200, 95, 0.08);

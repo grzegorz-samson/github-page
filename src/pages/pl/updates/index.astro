@@ -1,5 +1,6 @@
 ---
 import PageLayout from '../../../layouts/PageLayout.astro';
+import LucideIcon from '../../../components/LucideIcon.astro';
 ---
 
 <PageLayout
@@ -8,8 +9,8 @@ import PageLayout from '../../../layouts/PageLayout.astro';
   description="Dziennik prac i postępu projektu."
 >
   <section class="content-stack">
-    <p class="section-kicker">Aktualności</p>
-    <h2>Dziennik postępu</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="history" class="section-kicker__icon" />Aktualności</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="history" class="section-title__icon" /><span>Dziennik postępu</span></h2>
     <div class="text-panel">
       <ul>
         <li>2026-02-21: uruchomienie strony projektu i sekcji PL/EN.</li>
@@ -19,4 +20,3 @@ import PageLayout from '../../../layouts/PageLayout.astro';
     </div>
   </section>
 </PageLayout>
-

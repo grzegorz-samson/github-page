@@ -1,11 +1,20 @@
 ---
+import LucideIcon from './LucideIcon.astro';
+
 const { items = [] } = Astro.props;
 ---
 
 <div class="feature-grid">
-  {items.map((item: { title: string; text: string; href: string }) => (
+  {items.map((item: { title: string; text: string; href: string; icon?: string }) => (
     <a class="feature-card" href={item.href}>
-      <h3>{item.title}</h3>
+      <div class="feature-card__title">
+        {item.icon && (
+          <span class="feature-card__icon-wrap">
+            <LucideIcon name={item.icon} class="feature-card__icon" />
+          </span>
+        )}
+        <h3>{item.title}</h3>
+      </div>
       <p>{item.text}</p>
     </a>
   ))}

@@ -2,6 +2,7 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import HorizontalTimeline from '../../components/HorizontalTimeline.astro';
 import ContactForm from '../../components/ContactForm.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import ObfuscatedEmailImage from '../../components/ObfuscatedEmailImage.astro';
 import { withBase } from '../../lib/paths';
 
@@ -60,8 +61,8 @@ const timelineItems = [
 
 <PageLayout lang="pl" title="Bio | Projekt stypendialny" description="Biogram i działalność Grzegorza Samsona.">
   <section class="content-stack">
-    <p class="section-kicker">Bio</p>
-    <h2>Grzegorz Samson</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="user-round" class="section-kicker__icon" />Bio</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="user-round" class="section-title__icon" /><span>Grzegorz Samson</span></h2>
     <div class="bio-grid">
       <a
         class="bio-photo"
@@ -95,8 +96,8 @@ const timelineItems = [
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Publikacje</p>
-    <h2>Wybrane artykuły naukowe</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="book-open" class="section-kicker__icon" />Publikacje</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="book-open" class="section-title__icon" /><span>Wybrane artykuły naukowe</span></h2>
     <div class="publication-list">
       <article class="publication-card">
         <h3>Perspectives on Generative Sound Design: A Generative Soundscapes Showcase</h3>
@@ -131,15 +132,15 @@ const timelineItems = [
   </section>
 
   <section class="content-stack">
-    <p class="section-kicker">Konferencje i działalność</p>
-    <h2>Wybrane wystąpienia i aktywności</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="presentation" class="section-kicker__icon" />Konferencje i działalność</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="presentation" class="section-title__icon" /><span>Wybrane wystąpienia i aktywności</span></h2>
     <p class="timeline-hint">Najedź lub kliknij skrót wydarzenia, aby wyświetlić pełną kartę opisu.</p>
     <HorizontalTimeline items={timelineItems} initialId="aes-2025" />
   </section>
 
   <section class="content-stack" id="pelna-nota-biograficzna">
-    <p class="section-kicker">Pełna nota</p>
-    <h2>Pełna nota biograficzna</h2>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="file-text" class="section-kicker__icon" />Pełna nota</p>
+    <h2 class="section-title-with-icon"><LucideIcon name="file-text" class="section-title__icon" /><span>Pełna nota biograficzna</span></h2>
     <div class="text-panel bio-rich-text">
       <p>
         Grzegorz Samson zrealizował szereg projektów i&nbsp;działań artystyczno-badawczych w&nbsp;obszarze nowych technologii
@@ -174,7 +175,7 @@ const timelineItems = [
   <section class="content-stack">
     <ContactForm lang="pl" />
     <div class="text-panel">
-      <p class="section-kicker">Kontakt bezpośredni</p>
+      <p class="section-kicker section-kicker--with-icon"><LucideIcon name="mail" class="section-kicker__icon" />Kontakt bezpośredni</p>
       <p>
         Jeśli wolisz kontakt mailowy, kliknij:
         {' '}
@@ -184,4 +185,3 @@ const timelineItems = [
     </div>
   </section>
 </PageLayout>
-

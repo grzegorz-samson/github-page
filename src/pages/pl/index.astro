@@ -2,6 +2,7 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import HeroCta from '../../components/HeroCta.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import { withBase } from '../../lib/paths';
 
 const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
@@ -28,26 +29,30 @@ const pluginPanelsHref = `${withBase('/pl/plugin/')}#panels`;
   />
 
   <section>
-    <p class="section-kicker">Projekt w skrócie</p>
+    <p class="section-kicker section-kicker--with-icon"><LucideIcon name="layers-2" class="section-kicker__icon" />Projekt w skrócie</p>
     <FeatureGrid
       items={[
         {
           title: 'O projekcie',
+          icon: 'layers-2',
           text: 'Pełny opis założeń, rezultatów, materiału audio, badań i harmonogramu działań.',
           href: withBase('/pl/project/')
         },
         {
           title: 'Wtyczka VST',
+          icon: 'audio-waveform',
           text: 'Autorskie narzędzie do generatywnego projektowania struktur i tekstur dźwiękowych.',
           href: withBase('/pl/plugin/')
         },
         {
           title: 'Badania i konferencja',
+          icon: 'flask-conical',
           text: 'Poster i opis metody zaprezentowane podczas Audio Developer Conference 2025.',
           href: withBase('/pl/research/')
         },
         {
           title: 'Warsztaty',
+          icon: 'presentation',
           text: 'Działania edukacyjne oraz upowszechnianie rezultatów projektu.',
           href: withBase('/pl/workshops/')
         }
