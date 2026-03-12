@@ -25,7 +25,7 @@
       let rafId = 0;
       let isVisible = !document.hidden;
       let animationEnabled = !reduceMotionQuery.matches;
-      const storageKey = 'particle-bg-state-v1';
+      const storageKey = 'particle-bg-state-v3';
 
       const particles = [];
       const pointer = {
@@ -123,7 +123,7 @@
         size: 1,
         alpha: 0.1,
         parallax: random(0.25, 0.95),
-        accent: Math.random() > 0.9
+        accent: Math.random() < 0.35
       });
 
       const loadSavedParticles = () => {
@@ -247,7 +247,7 @@
           const drawY = particle.y;
 
           const color = particle.accent ? palette.accent : palette.base;
-          const alpha = particle.alpha * (particle.accent ? 0.55 : 1) * alphaMultiplier;
+          const alpha = particle.alpha * alphaMultiplier;
           const radius = particle.size * 5.6;
           const gradient = ctx.createRadialGradient(
             drawX,
