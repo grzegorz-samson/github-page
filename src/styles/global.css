@@ -30,7 +30,7 @@ html[data-theme='light'] {
   --card: rgba(255, 255, 255, 0.74);
   --card-border: rgba(28, 40, 54, 0.22);
   --text-main: #18212b;
-  --text-soft: #40515f;
+  --text-soft: #34424f;
   --accent: #ffd24f;
   --accent-2: #37d9ff;
   --ok: #2f855a;
@@ -340,6 +340,23 @@ html[data-theme='light'] .badge {
   background: rgba(55, 217, 255, 0.08);
 }
 
+html[data-theme='light'] .funding-note,
+html[data-theme='light'] .plugin-panel-tile__body p,
+html[data-theme='light'] .plugin-panel-active__description,
+html[data-theme='light'] .plugin-feature-card p,
+html[data-theme='light'] .plugin-panel-active__caption,
+html[data-theme='light'] .plugin-tag,
+html[data-theme='light'] .timeline-status,
+html[data-theme='light'] .badge,
+html[data-theme='light'] .publication-meta {
+  color: var(--text-soft);
+}
+
+html[data-theme='light'] .plugin-tag {
+  border-color: rgba(24, 33, 43, 0.18);
+  background: rgba(255, 255, 255, 0.7);
+}
+
 html[data-theme='light'] .feature-card__icon-wrap {
   border-color: rgba(255, 210, 79, 0.48);
   background: rgba(255, 210, 79, 0.12);
@@ -409,6 +426,23 @@ html[data-theme='light'] .workshop-photo-card:focus-visible {
   box-shadow:
     0 16px 32px rgba(255, 210, 79, 0.1),
     0 10px 24px rgba(33, 48, 63, 0.08);
+}
+
+html[data-theme='light'] .status-done {
+  color: #0d7f3f;
+  border-color: rgba(17, 153, 79, 0.42);
+  background: rgba(20, 184, 96, 0.14);
+  box-shadow: 0 0 0 1px rgba(20, 184, 96, 0.08) inset;
+}
+
+html[data-theme='light'] .status-progress {
+  color: #b88200;
+}
+
+html[data-theme='light'] .status-planned {
+  color: #4d5d6d;
+  border-color: rgba(24, 33, 43, 0.12);
+  background: rgba(255, 255, 255, 0.68);
 }
 
 .section-kicker {
