@@ -46,6 +46,11 @@ const defaultApiBase = API_BASE;
         <button type="button" class="button button-ghost" data-admin-load-contacts>Kontakt (JSON)</button>
       </div>
 
+      <div class="admin-actions">
+        <button type="button" class="button button-ghost" data-admin-export-json disabled>Eksport ostatnich danych (JSON)</button>
+        <button type="button" class="button button-ghost" data-admin-export-csv disabled>Eksport ostatnich rekordów (CSV)</button>
+      </div>
+
       <p class="admin-status" data-admin-status hidden></p>
 
       <div class="admin-summary-grid" data-admin-summary hidden>
@@ -212,7 +217,14 @@ const defaultApiBase = API_BASE;
     events: document.querySelector('[data-admin-load-events]'),
     pageviews: document.querySelector('[data-admin-load-pageviews]'),
     downloads: document.querySelector('[data-admin-load-downloads]'),
-    contacts: document.querySelector('[data-admin-load-contacts]')
+    contacts: document.querySelector('[data-admin-load-contacts]'),
+    exportJson: document.querySelector('[data-admin-export-json]'),
+    exportCsv: document.querySelector('[data-admin-export-csv]')
+  };
+
+  const exportState = {
+    key: '',
+    payload: null
   };
 
   const setStatus = (message, tone = 'info') => {
@@ -269,6 +281,85 @@ const defaultApiBase = API_BASE;
         }
       }
     }
+  };
+
+  const setExportState = (key, payload) => {
+    exportState.key = key;
+    exportState.payload = payload;
+
+    const hasPayload = Boolean(payload);
+    const csvRows = getRowsForCsv(payload);
+
+    if (buttons.exportJson instanceof HTMLButtonElement) {
+      buttons.exportJson.disabled = !hasPayload;
+    }
+
+    if (buttons.exportCsv instanceof HTMLButtonElement) {
+      buttons.exportCsv.disabled = csvRows.length === 0;
+    }
+  };
+
+  const getRowsForCsv = (payload) => {
+    if (!payload || typeof payload !== 'object') return [];
+    if (Array.isArray(payload?.items)) return payload.items;
+    if (Array.isArray(payload)) return payload;
+    return [];
+  };
+
+  const escapeCsv = (value) => {
+    const text =
+      value == null
+        ? ''
+        : Array.isArray(value)
+          ? value.join('; ')
+          : typeof value === 'object'
+            ? JSON.stringify(value)
+            : String(value);
+
+    if (/[",\n;]/.test(text)) {
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    return text;
+  };
+
+  const downloadBlob = (filename, content, type) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportJson = () => {
+    if (!exportState.payload) {
+      throw new Error('Brak danych do eksportu JSON.');
+    }
+
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `admin-${exportState.key || 'data'}-${stamp}.json`;
+    downloadBlob(filename, JSON.stringify(exportState.payload, null, 2), 'application/json;charset=utf-8');
+  };
+
+  const exportCsv = () => {
+    const rows = getRowsForCsv(exportState.payload);
+    if (rows.length === 0) {
+      throw new Error('Brak rekordów tabelarycznych do eksportu CSV.');
+    }
+
+    const headers = [...new Set(rows.flatMap((row) => (row && typeof row === 'object' ? Object.keys(row) : [])))];
+    const csv = [
+      headers.join(','),
+      ...rows.map((row) => headers.map((header) => escapeCsv(row?.[header])).join(','))
+    ].join('\n');
+
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `admin-${exportState.key || 'records'}-${stamp}.csv`;
+    downloadBlob(filename, csv, 'text/csv;charset=utf-8');
   };
 
   const appendEmptyItem = (node, text) => {
@@ -490,6 +581,7 @@ const defaultApiBase = API_BASE;
     renderTopList(chartNodes.topPaths, stats?.topPaths ?? [], 'path');
     renderTopList(chartNodes.topEvents, stats?.topEvents ?? [], 'event');
     renderRecentEvents(events?.items ?? []);
+    setExportState('stats', { stats, events });
   };
 
   const loadRecords = async (type) => {
@@ -505,6 +597,7 @@ const defaultApiBase = API_BASE;
       renderDownloadsTable(records?.items ?? []);
     }
     if (type === 'contacts') setOutput('contacts', records);
+    setExportState(type, records);
   };
 
   const runAction = async (message, action) => {
@@ -534,4 +627,6 @@ const defaultApiBase = API_BASE;
   buttons.pageviews?.addEventListener('click', () => runAction('Pobrano pageviews.', () => loadRecords('pageviews')));
   buttons.downloads?.addEventListener('click', () => runAction('Pobrano rekordy pobrań.', () => loadRecords('downloads')));
   buttons.contacts?.addEventListener('click', () => runAction('Pobrano rekordy kontaktu.', () => loadRecords('contacts')));
+  buttons.exportJson?.addEventListener('click', () => runAction('Wyeksportowano dane JSON.', exportJson));
+  buttons.exportCsv?.addEventListener('click', () => runAction('Wyeksportowano rekordy CSV.', exportCsv));
 </script>
