@@ -11,23 +11,34 @@ const {
 } = Astro.props;
 
 const footerLabel = lang === 'pl' ? 'Informacja o finansowaniu projektu' : 'Project funding information';
-const logoSrc =
+const darkLogoSrc =
   lang === 'pl'
     ? withBase('/assets/funding/kpo-ngeu-achromatic.png')
     : withBase('/assets/funding/kpo-ngeu-achromatic-en.png');
-const logoAlt =
+const lightLogoSrc = withBase('/assets/funding/kpo-rp-ngeu-light-pl.png');
+const darkLogoAlt =
   lang === 'pl'
     ? 'KPO i NextGenerationEU - wariant achromatyczny'
     : 'KPO and NextGenerationEU - achromatic version';
+const lightLogoAlt =
+  lang === 'pl'
+    ? 'KPO, barwy RP i NextGenerationEU - wariant kolorowy'
+    : 'KPO, Polish national colors and NextGenerationEU - color version';
 ---
 
 <section class="funding-footer" aria-label={footerLabel}>
   {showLogos && (
     <div class="funding-logos">
       <img
-        src={logoSrc}
-        alt={logoAlt}
-        class="funding-logo-white"
+        src={darkLogoSrc}
+        alt={darkLogoAlt}
+        class="funding-logo funding-logo--dark"
+        loading="lazy"
+      />
+      <img
+        src={lightLogoSrc}
+        alt={lightLogoAlt}
+        class="funding-logo funding-logo--light"
         loading="lazy"
       />
     </div>

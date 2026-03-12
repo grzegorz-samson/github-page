@@ -42,8 +42,8 @@
           accent: [105, 210, 231]
         },
         light: {
-          base: [246, 200, 95],
-          accent: [105, 210, 231]
+          base: [255, 210, 79],
+          accent: [55, 217, 255]
         }
       };
 
@@ -55,21 +55,21 @@
       const getVisualProfile = () =>
         root.dataset.theme === 'light'
           ? {
-              alphaMultiplier: 0.95,
-              haloMultiplier: 0.3,
+              alphaMultiplier: 1.28,
+              haloMultiplier: 0.42,
               reactionDistance: 12,
-              minSize: 1.3,
-              maxSize: 3.4,
-              minAlpha: 0.12,
-              maxAlpha: 0.22,
+              minSize: 1.45,
+              maxSize: 3.85,
+              minAlpha: 0.18,
+              maxAlpha: 0.32,
               shadowMultiplier: 3.2,
               attractionStrength: 0.0065,
               maxVelocity: 0.16,
-              coreAlphaMultiplier: 1.08,
-              midAlphaMultiplier: 0.62,
-              outerAlphaMultiplier: 0.24,
-              innerStop: 0.14,
-              middleStop: 0.36
+              coreAlphaMultiplier: 1.34,
+              midAlphaMultiplier: 0.84,
+              outerAlphaMultiplier: 0.38,
+              innerStop: 0.16,
+              middleStop: 0.42
             }
           : {
               alphaMultiplier: 2.2,

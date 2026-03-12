@@ -498,6 +498,89 @@ const startCityVisits = visits.filter((visit) => visit.city === startVisit?.city
     line-height: 1.55;
   }
 
+  html[data-theme='light'] .visit-map__visual,
+  html[data-theme='light'] .visit-map__panel {
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(247, 251, 255, 0.86)),
+      rgba(255, 255, 255, 0.8);
+    box-shadow: 0 16px 30px rgba(33, 48, 63, 0.08);
+  }
+
+  html[data-theme='light'] .visit-map__shell {
+    background:
+      radial-gradient(circle at 20% 10%, rgba(55, 217, 255, 0.22), transparent 42%),
+      radial-gradient(circle at 80% 85%, rgba(255, 210, 79, 0.2), transparent 48%),
+      rgba(247, 250, 255, 0.94);
+  }
+
+  html[data-theme='light'] .visit-map__image {
+    opacity: 0.88;
+    filter:
+      brightness(0.45)
+      contrast(1.12)
+      drop-shadow(0 12px 18px rgba(255, 255, 255, 0.18));
+  }
+
+  html[data-theme='light'] .visit-map__caption {
+    color: rgba(24, 33, 43, 0.12);
+  }
+
+  html[data-theme='light'] .visit-map__marker-dot {
+    border-color: rgba(24, 33, 43, 0.86);
+    box-shadow: 0 0 0 8px rgba(255, 210, 79, 0.18);
+  }
+
+  html[data-theme='light'] .visit-map__marker-label {
+    border-color: rgba(24, 33, 43, 0.16);
+    background: rgba(255, 255, 255, 0.86);
+    color: var(--text-main);
+  }
+
+  html[data-theme='light'] .visit-map__marker:hover .visit-map__marker-dot,
+  html[data-theme='light'] .visit-map__marker:focus-visible .visit-map__marker-dot,
+  html[data-theme='light'] .visit-map__marker.is-active .visit-map__marker-dot {
+    box-shadow: 0 0 0 10px rgba(55, 217, 255, 0.18);
+  }
+
+  html[data-theme='light'] .visit-map__marker:hover .visit-map__marker-label,
+  html[data-theme='light'] .visit-map__marker:focus-visible .visit-map__marker-label,
+  html[data-theme='light'] .visit-map__marker.is-active .visit-map__marker-label {
+    border-color: rgba(55, 217, 255, 0.44);
+    color: var(--text-main);
+  }
+
+  html[data-theme='light'] .visit-map__panel {
+    background:
+      linear-gradient(180deg, rgba(55, 217, 255, 0.08), transparent 22%),
+      rgba(255, 255, 255, 0.8);
+  }
+
+  html[data-theme='light'] .visit-map__panel-chip {
+    background: rgba(55, 217, 255, 0.14);
+    border-color: rgba(55, 217, 255, 0.3);
+  }
+
+  html[data-theme='light'] .visit-map__panel-date,
+  html[data-theme='light'] .visit-map__panel-date-copy {
+    color: #f0b400;
+  }
+
+  html[data-theme='light'] .visit-map__panel-next {
+    border-color: rgba(24, 33, 43, 0.16);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  html[data-theme='light'] .visit-map__fact-card,
+  html[data-theme='light'] .visit-map__summary {
+    border-color: rgba(24, 33, 43, 0.1);
+    background: rgba(255, 255, 255, 0.68);
+  }
+
+  html[data-theme='light'] .visit-map__fact-icon {
+    background: rgba(55, 217, 255, 0.12);
+    border-color: rgba(55, 217, 255, 0.24);
+  }
+
   @media (max-width: 900px) {
     .visit-map {
       grid-template-columns: 1fr;
