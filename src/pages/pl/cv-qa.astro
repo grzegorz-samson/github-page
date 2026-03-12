@@ -370,6 +370,36 @@ const projectItems = [
       'Umożliwia dodawanie informacji o źródle i numerze strony oraz przygotowanie bardziej uporządkowanych zestawień fragmentów.',
       'Projekt powstał jako praktyczne wsparcie pracy badawczej, czytania literatury i porządkowania notatek z wielu dokumentów.'
     ]
+  },
+  {
+    title: 'Felix i Grammy',
+    meta: 'projekt edukacyjny AI / Discord / język angielski specjalistyczny',
+    imageSrc: withBase('/assets/cv/projects/felix-grammy-logo.png'),
+    imageAlt: 'Identyfikacja wizualna projektu Felix i Grammy',
+    href: 'https://www.konkurspaderewskiego.pl/inkluzywnosc-wsparcie-nowe-technologie/',
+    linkLabel: 'Strona projektu',
+    description:
+      'Projekt edukacyjny wspierający naukę specjalistycznego języka angielskiego w środowisku Akademii Muzycznej w Bydgoszczy. Łączył warsztaty, materiały dydaktyczne i tutorów AI zaprojektowanych jako praktyczne wsparcie codziennej nauki.',
+    points: [
+      'Powstał jako działanie wzmacniające kompetencje językowe i cyfrowe oraz ułatwiające bardziej elastyczną, indywidualną pracę uczestników.',
+      'Felix i Grammy pełnili różne role: jeden wspierał rozmowę i rozwój swobody wypowiedzi, drugi pomagał w ćwiczeniu słownictwa, gramatyki i utrwalaniu materiału.',
+      'Rozwiązanie działało w środowisku Discord, z prywatnymi kanałami i materiałami dopasowanymi do programu zajęć.',
+      'Projekt pokazywał, jak narzędzia AI mogą realnie wspierać edukację artystyczną, dostępność nauki i samodzielną pracę poza tradycyjnymi godzinami zajęć.'
+    ]
+  },
+  {
+    title: 'AI SoundSpektrum',
+    meta: 'międzynarodowa konferencja studencka / Bydgoszcz / 9-11.10.2024',
+    imageSrc: withBase('/assets/cv/projects/ai-soundspektrum-banner.png'),
+    imageAlt: 'Baner konferencji AI SoundSpektrum',
+    description:
+      'Międzynarodowa konferencja studencka poświęcona przyszłości muzyki w dobie sztucznej inteligencji. Wydarzenie tworzyło przestrzeń do prezentacji badań, projektów artystycznych i doświadczeń związanych z wykorzystaniem AI w sztuce muzycznej.',
+    points: [
+      'Byłem pomysłodawcą i organizatorem wydarzenia, przygotowanego wspólnie z Fundacją Konsonans i kołem artystyczno-naukowym SPEKTRUM przy Akademii Muzycznej w Bydgoszczy.',
+      'Konferencja miała formę hybrydową i była skierowana do studentów oraz doktorantów polskich i zagranicznych uczelni artystycznych.',
+      'Program obejmował referaty, wykłady eksperckie, panele, warsztaty oraz prezentacje projektów związanych z AI w muzyce, edukacji muzycznej i dźwięku przestrzennym.',
+      'W ramach wydarzenia prowadziłem także część merytoryczną jako prelegent i przewodniczący wybranych sesji referatowych.'
+    ]
   }
 ];
 
@@ -593,6 +623,13 @@ const strengths = [
                 <li>{point}</li>
               ))}
             </ul>
+            {project.href && (
+              <p>
+                <a class="qa-project-link" href={project.href} target="_blank" rel="noreferrer">
+                  {project.linkLabel ?? 'Więcej informacji'}
+                </a>
+              </p>
+            )}
           </div>
         </article>
       ))}
@@ -942,6 +979,18 @@ const strengths = [
   .qa-project-body {
     display: grid;
     gap: 0.8rem;
+  }
+
+  .qa-project-link {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    font-weight: 600;
+  }
+
+  .qa-project-link:hover {
+    color: #ffe6a4;
   }
 
   .qa-list-compact {

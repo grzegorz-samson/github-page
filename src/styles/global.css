@@ -51,9 +51,18 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  overflow-x: hidden;
   color: var(--text-main);
-  background: var(--page-bg);
   font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+html {
+  background: var(--page-bg);
+}
+
+body {
+  position: relative;
+  background: transparent;
 }
 
 h1,
@@ -82,17 +91,69 @@ section {
 .site-bg {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   background: linear-gradient(135deg, var(--bg-a), var(--bg-b) 48%, var(--bg-c));
 }
 
+.particle-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0.96;
+}
+
+.site-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(5, 10, 18, 0.22), transparent 34%),
+    radial-gradient(circle at 78% 22%, rgba(4, 9, 16, 0.16), transparent 38%),
+    rgba(3, 7, 12, 0.38);
+}
+
+html[data-theme='light'] .site-overlay {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(246, 239, 224, 0.18), transparent 34%),
+    radial-gradient(circle at 78% 22%, rgba(238, 245, 251, 0.14), transparent 38%),
+    rgba(255, 250, 245, 0.26);
+}
+
 .container {
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
   width: min(1100px, 92vw);
   margin: 0 auto;
   padding: 2.2rem 0 4rem;
 }
 
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0 -1.4rem 0;
+  z-index: -1;
+  border-radius: 1.8rem;
+  background:
+    linear-gradient(180deg, rgba(5, 9, 16, 0.5), rgba(4, 8, 14, 0.38)),
+    rgba(3, 7, 12, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme='light'] .container::before {
+  background:
+    linear-gradient(180deg, rgba(255, 251, 245, 0.54), rgba(246, 239, 224, 0.38)),
+    rgba(255, 250, 245, 0.26);
+  border-color: rgba(24, 33, 43, 0.07);
+}
+
 .main-header {
+  position: relative;
+  z-index: 3;
   width: min(1100px, 92vw);
   margin: 0 auto;
   padding: 0.8rem 1rem;
@@ -117,6 +178,12 @@ section {
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   background: var(--brand-bg);
+}
+
+.header-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
 }
 
 .main-header nav {
@@ -1209,6 +1276,8 @@ body.download-gate-open {
 }
 
 .main-footer {
+  position: relative;
+  z-index: 3;
   width: min(1100px, 92vw);
   margin: 0 auto;
   border-top: 1px solid var(--card-border);
@@ -1224,6 +1293,8 @@ body.download-gate-open {
 }
 
 .funding-footer {
+  position: relative;
+  z-index: 3;
   width: min(1100px, 92vw);
   margin: 0 auto;
   border: 1px solid var(--card-border);
@@ -2152,5 +2223,11 @@ body.download-gate-open {
 
   .horizontal-timeline__year-line {
     height: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-bg {
+    opacity: 0.42;
   }
 }

@@ -1,0 +1,356 @@
+---
+---
+
+<canvas class="particle-bg" data-particle-bg aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.querySelector('[data-particle-bg]');
+
+  if (canvas instanceof HTMLCanvasElement && canvas.dataset.ready !== 'true') {
+    canvas.dataset.ready = 'true';
+
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const coarsePointerQuery = window.matchMedia('(pointer: coarse)');
+      const root = document.documentElement;
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const random = (min, max) => Math.random() * (max - min) + min;
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      let rafId = 0;
+      let isVisible = !document.hidden;
+      let animationEnabled = !reduceMotionQuery.matches;
+      const storageKey = 'particle-bg-state-v1';
+
+      const particles = [];
+      const pointer = {
+        x: window.innerWidth * 0.5,
+        y: window.innerHeight * 0.35,
+        active: false,
+        strength: 0,
+        radius: 110
+      };
+
+      const themePalette = {
+        dark: {
+          base: [246, 200, 95],
+          accent: [105, 210, 231]
+        },
+        light: {
+          base: [197, 138, 16],
+          accent: [23, 111, 135]
+        }
+      };
+
+      const getPalette = () => {
+        const theme = root.dataset.theme === 'light' ? 'light' : 'dark';
+        return themePalette[theme];
+      };
+
+      const getVisualProfile = () =>
+        root.dataset.theme === 'light'
+          ? {
+              alphaMultiplier: 0.95,
+              haloMultiplier: 0.3,
+              reactionDistance: 12,
+              minSize: 1.3,
+              maxSize: 3.4,
+              minAlpha: 0.12,
+              maxAlpha: 0.22,
+              shadowMultiplier: 3.2,
+              attractionStrength: 0.0065,
+              maxVelocity: 0.16,
+              coreAlphaMultiplier: 1.08,
+              midAlphaMultiplier: 0.62,
+              outerAlphaMultiplier: 0.24,
+              innerStop: 0.14,
+              middleStop: 0.36
+            }
+          : {
+              alphaMultiplier: 2.2,
+              haloMultiplier: 0.52,
+              reactionDistance: 24,
+              minSize: 1.8,
+              maxSize: 5.2,
+              minAlpha: 0.24,
+              maxAlpha: 0.42,
+              shadowMultiplier: 5.6,
+              attractionStrength: 0.0095,
+              maxVelocity: 0.22,
+              coreAlphaMultiplier: 0.72,
+              midAlphaMultiplier: 0.4,
+              outerAlphaMultiplier: 0.16,
+              innerStop: 0.2,
+              middleStop: 0.48
+            };
+
+      const getParticleCount = () => {
+        const area = window.innerWidth * window.innerHeight;
+        const scaled = Math.round(area / 85000);
+
+        if (coarsePointerQuery.matches) {
+          return clamp(12 + scaled, 12, 18);
+        }
+
+        return clamp(28 + scaled, 28, 42);
+      };
+
+      const setupCanvas = () => {
+        dpr = clamp(window.devicePixelRatio || 1, 1, 1.75);
+        width = window.innerWidth;
+        height = window.innerHeight;
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+
+      const createParticle = () => ({
+        x: random(0, width || window.innerWidth),
+        y: random(0, height || window.innerHeight),
+        vx: random(-0.04, 0.04),
+        vy: random(-0.03, 0.03),
+        driftX: random(-0.018, 0.018),
+        driftY: random(-0.014, 0.014),
+        size: 1,
+        alpha: 0.1,
+        parallax: random(0.25, 0.95),
+        accent: Math.random() > 0.9
+      });
+
+      const loadSavedParticles = () => {
+        try {
+          const raw = window.sessionStorage.getItem(storageKey);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (
+            !parsed ||
+            typeof parsed !== 'object' ||
+            typeof parsed.width !== 'number' ||
+            typeof parsed.height !== 'number' ||
+            !Array.isArray(parsed.particles)
+          ) {
+            return null;
+          }
+
+          return parsed;
+        } catch {
+          return null;
+        }
+      };
+
+      const saveParticles = () => {
+        try {
+          const payload = {
+            width,
+            height,
+            particles: particles.map((particle) => ({
+              x: particle.x,
+              y: particle.y,
+              vx: particle.vx,
+              vy: particle.vy,
+              driftX: particle.driftX,
+              driftY: particle.driftY,
+              size: particle.size,
+              alpha: particle.alpha,
+              parallax: particle.parallax,
+              accent: particle.accent
+            }))
+          };
+          window.sessionStorage.setItem(storageKey, JSON.stringify(payload));
+        } catch {
+          // no-op
+        }
+      };
+
+      const resetParticles = () => {
+        particles.length = 0;
+        const count = getParticleCount();
+        const visualProfile = getVisualProfile();
+        const saved = loadSavedParticles();
+        const scaleX = saved && saved.width > 0 ? width / saved.width : 1;
+        const scaleY = saved && saved.height > 0 ? height / saved.height : 1;
+
+        for (let index = 0; index < count; index += 1) {
+          const restored = saved?.particles?.[index];
+          const particle = createParticle();
+
+          if (restored && typeof restored === 'object') {
+            particle.x = typeof restored.x === 'number' ? restored.x * scaleX : particle.x;
+            particle.y = typeof restored.y === 'number' ? restored.y * scaleY : particle.y;
+            particle.vx = typeof restored.vx === 'number' ? restored.vx : particle.vx;
+            particle.vy = typeof restored.vy === 'number' ? restored.vy : particle.vy;
+            particle.driftX = typeof restored.driftX === 'number' ? restored.driftX : particle.driftX;
+            particle.driftY = typeof restored.driftY === 'number' ? restored.driftY : particle.driftY;
+            particle.size = typeof restored.size === 'number' ? restored.size : particle.size;
+            particle.alpha = typeof restored.alpha === 'number' ? restored.alpha : particle.alpha;
+            particle.parallax = typeof restored.parallax === 'number' ? restored.parallax : particle.parallax;
+            particle.accent = typeof restored.accent === 'boolean' ? restored.accent : particle.accent;
+          } else {
+            particle.size = random(visualProfile.minSize, visualProfile.maxSize);
+            particle.alpha = random(visualProfile.minAlpha, visualProfile.maxAlpha);
+          }
+
+          particles.push(particle);
+        }
+      };
+
+      const wrapParticle = (particle) => {
+        if (particle.x < -12) particle.x = width + 12;
+        if (particle.x > width + 12) particle.x = -12;
+        if (particle.y < -12) particle.y = height + 12;
+        if (particle.y > height + 12) particle.y = -12;
+      };
+
+      const drawParticles = () => {
+        const palette = getPalette();
+        const visualProfile = getVisualProfile();
+        const alphaMultiplier = visualProfile.alphaMultiplier;
+        const reactionRadius = coarsePointerQuery.matches ? 0 : pointer.radius;
+
+        ctx.clearRect(0, 0, width, height);
+        pointer.strength += ((pointer.active ? 1 : 0) - pointer.strength) * 0.045;
+
+        for (const particle of particles) {
+          particle.vx += (particle.driftX - particle.vx) * 0.028;
+          particle.vy += (particle.driftY - particle.vy) * 0.028;
+
+          if (pointer.active && reactionRadius > 0) {
+            const dx = pointer.x - particle.x;
+            const dy = pointer.y - particle.y;
+            const distance = Math.hypot(dx, dy);
+
+            if (distance > 0.001 && distance < reactionRadius) {
+              const falloff = 1 - distance / reactionRadius;
+              const attraction =
+                falloff * visualProfile.attractionStrength * particle.parallax * (0.55 + pointer.strength * 0.35);
+              particle.vx += (dx / distance) * attraction;
+              particle.vy += (dy / distance) * attraction;
+            }
+          }
+
+          particle.vx = clamp(particle.vx, -visualProfile.maxVelocity, visualProfile.maxVelocity);
+          particle.vy = clamp(particle.vy, -visualProfile.maxVelocity, visualProfile.maxVelocity);
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          wrapParticle(particle);
+
+          const drawX = particle.x;
+          const drawY = particle.y;
+
+          const color = particle.accent ? palette.accent : palette.base;
+          const alpha = particle.alpha * (particle.accent ? 0.55 : 1) * alphaMultiplier;
+          const radius = particle.size * 5.6;
+          const gradient = ctx.createRadialGradient(
+            drawX,
+            drawY,
+            particle.size * 0.18,
+            drawX,
+            drawY,
+            radius
+          );
+
+          gradient.addColorStop(
+            0,
+            `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * visualProfile.coreAlphaMultiplier})`
+          );
+          gradient.addColorStop(
+            visualProfile.innerStop,
+            `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * visualProfile.midAlphaMultiplier})`
+          );
+          gradient.addColorStop(
+            visualProfile.middleStop,
+            `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * visualProfile.outerAlphaMultiplier})`
+          );
+          gradient.addColorStop(1, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0)`);
+
+          ctx.fillStyle = gradient;
+          ctx.fillRect(drawX - radius, drawY - radius, radius * 2, radius * 2);
+        }
+      };
+
+      const stop = () => {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      };
+
+      const render = () => {
+        drawParticles();
+
+        if (animationEnabled && isVisible) {
+          rafId = window.requestAnimationFrame(render);
+        }
+      };
+
+      const start = () => {
+        stop();
+        render();
+      };
+
+      const refresh = () => {
+        setupCanvas();
+        resetParticles();
+        start();
+      };
+
+      const onPointerMove = (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.active = true;
+      };
+
+      const onPointerLeave = () => {
+        pointer.active = false;
+      };
+
+      const onVisibilityChange = () => {
+        isVisible = !document.hidden;
+
+        if (isVisible) {
+          start();
+        } else {
+          stop();
+        }
+      };
+
+      const onReducedMotionChange = () => {
+        animationEnabled = !reduceMotionQuery.matches;
+        start();
+      };
+
+      const themeObserver = new MutationObserver(() => {
+        start();
+      });
+
+      refresh();
+      themeObserver.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+      window.addEventListener('resize', refresh, { passive: true });
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('pointerdown', onPointerMove, { passive: true });
+      window.addEventListener('pointerout', (event) => {
+        if (!event.relatedTarget) onPointerLeave();
+      });
+      window.addEventListener('blur', onPointerLeave);
+      window.addEventListener('pagehide', saveParticles);
+      window.addEventListener('beforeunload', saveParticles);
+      document.addEventListener('visibilitychange', onVisibilityChange);
+
+      if (typeof reduceMotionQuery.addEventListener === 'function') {
+        reduceMotionQuery.addEventListener('change', onReducedMotionChange);
+      } else if (typeof reduceMotionQuery.addListener === 'function') {
+        reduceMotionQuery.addListener(onReducedMotionChange);
+      }
+    }
+  }
+</script>

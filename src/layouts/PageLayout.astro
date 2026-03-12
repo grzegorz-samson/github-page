@@ -3,6 +3,7 @@ import LanguageSwitch from '../components/LanguageSwitch.astro';
 import ThemeSwitch from '../components/ThemeSwitch.astro';
 import FundingFooter from '../components/FundingFooter.astro';
 import PageViewTracker from '../components/PageViewTracker.astro';
+import ParticleBackground from '../components/ParticleBackground.astro';
 import { withBase } from '../lib/paths';
 import '../styles/global.css';
 
@@ -91,8 +92,13 @@ const footerText =
   </head>
   <body>
     <div class="site-bg"></div>
+    <ParticleBackground />
+    <div class="site-overlay" aria-hidden="true"></div>
     <header class="main-header">
-      <a class="brand" href={withBase(`/${lang}/`)}>GS</a>
+      <div class="header-start">
+        <a class="brand" href={withBase(`/${lang}/`)}>GS</a>
+        <ThemeSwitch />
+      </div>
       <nav>
         {navItems.map((item) => {
           const isCurrent = normalizePath(item.href) === currentPath;
@@ -104,7 +110,6 @@ const footerText =
         })}
       </nav>
       <div class="header-controls">
-        <ThemeSwitch />
         <LanguageSwitch />
       </div>
     </header>
