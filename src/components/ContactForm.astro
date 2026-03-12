@@ -304,6 +304,36 @@ const copy =
     flex-wrap: wrap;
   }
 
+  html[data-theme='light'] .contact-form__grid span {
+    color: var(--text-main);
+  }
+
+  html[data-theme='light'] .contact-form__grid input[type='text'],
+  html[data-theme='light'] .contact-form__grid input[type='email'],
+  html[data-theme='light'] .contact-form__grid textarea {
+    border-color: rgba(24, 33, 43, 0.16);
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  }
+
+  html[data-theme='light'] .contact-form__grid input:focus-visible,
+  html[data-theme='light'] .contact-form__grid textarea:focus-visible {
+    outline: 2px solid rgba(55, 217, 255, 0.48);
+    outline-offset: 1px;
+    border-color: rgba(55, 217, 255, 0.48);
+  }
+
+  html[data-theme='light'] .contact-form__status {
+    color: #a12929;
+    background: rgba(255, 110, 110, 0.1);
+  }
+
+  html[data-theme='light'] .contact-form__status--success {
+    color: #0d7f3f;
+    border-color: rgba(17, 153, 79, 0.36);
+    background: rgba(20, 184, 96, 0.12);
+  }
+
   @media (max-width: 900px) {
     .contact-form__grid {
       grid-template-columns: 1fr;
