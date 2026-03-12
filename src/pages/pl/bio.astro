@@ -6,6 +6,94 @@ import LucideIcon from '../../components/LucideIcon.astro';
 import ObfuscatedEmailImage from '../../components/ObfuscatedEmailImage.astro';
 import { withBase } from '../../lib/paths';
 
+const bioTimelineItems = [
+  {
+    id: 'isset-2023',
+    year: '2023',
+    date: '12.10.2023',
+    label: 'ISSET',
+    title: 'ISSET 2023, Warszawa',
+    description: 'Wystąpienie dotyczące procedurally generated AI compound media i doświadczeń immersyjnych.'
+  },
+  {
+    id: 'musa-2023',
+    year: '2023',
+    date: '28.10.2023',
+    label: 'MuSA',
+    title: 'MuSA 2023, University of Manchester',
+    description: 'Prezentacja możliwości modeli generatywnych w kontekście twórczego projektowania dźwięku.'
+  },
+  {
+    id: 'renewable-2024',
+    year: '2024',
+    date: '15-17.10.2024',
+    label: 'RenMus',
+    title: 'International Online Conference on Renewable Music',
+    description: 'Wystąpienie o podejściach do renewable music z wykorzystaniem generatywnych sieci transformerowych.'
+  },
+  {
+    id: 'soundspektrum-2024',
+    year: '2024',
+    date: '2024',
+    label: 'SPEK',
+    title: 'AI SoundSpektrum Conference, Bydgoszcz',
+    description: 'Rola organizatora i prelegenta; prezentacja praktycznych zastosowań narzędzi AI w sztuce dźwięku.'
+  },
+  {
+    id: 'fua-2024',
+    year: '2024',
+    date: '01.2024-04.2025',
+    label: 'FUA',
+    title: 'Forum Uczelni Artystycznych / Parlament Studentów RP',
+    description:
+      'Przewodniczenie Forum Uczelni Artystycznych, współorganizacja sześciu ogólnopolskich kongresów oraz reprezentowanie studentów uczelni artystycznych w debacie o jakości kształcenia.'
+  },
+  {
+    id: 'kpo-ai-2024',
+    year: '2024',
+    date: '09-12.2024',
+    label: 'KPO',
+    title: 'Projekt KPO: wdrożenia edukacyjne AI',
+    description:
+      'Implementacja interaktywnych tutorów AI wspierających naukę specjalistycznego języka angielskiego w środowisku akademii muzycznej.'
+  },
+  {
+    id: 'pka-2024',
+    year: '2024',
+    date: 'od 21.12.2024',
+    label: 'PKA',
+    title: 'Polska Komisja Akredytacyjna',
+    description:
+      'Działalność jako ekspert studencki PKA w ocenach programowych i analizie jakości kształcenia na kierunkach artystycznych oraz projektowych.'
+  },
+  {
+    id: 'aes-2025',
+    year: '2025',
+    date: '05.2025',
+    label: 'AES',
+    title: 'Audio Engineering Society European Convention, Warszawa',
+    description: 'Prezentacja projektu badawczo-artystycznego z obszaru generatywnego dźwięku i treści audiowizualnych.'
+  },
+  {
+    id: 'esu-qa-2025',
+    year: '2025',
+    date: '18.07.2025-17.07.2026',
+    label: 'ESU QA',
+    title: "ESU's Quality Assurance Student Experts' Pool",
+    description:
+      'Członkostwo w europejskiej puli ekspertów studenckich ds. quality assurance oraz udział w szkoleniach dotyczących ESG, review process i społecznego wymiaru jakości kształcenia.'
+  },
+  {
+    id: 'adc-2025',
+    year: '2025',
+    date: '10-12.11.2025',
+    label: 'ADC',
+    title: 'Audio Developer Conference 2025, Bristol i online',
+    description:
+      'Prezentacja posterowa „From Text Wishes to Sound” dotycząca łączenia warstwy promptowej z generatywnym przetwarzaniem audio i granularnym silnikiem VST.'
+  }
+];
+
 const timelineItems = [
   {
     id: 'isset-2023',
@@ -135,7 +223,7 @@ const timelineItems = [
     <p class="section-kicker section-kicker--with-icon"><LucideIcon name="presentation" class="section-kicker__icon" />Konferencje i działalność</p>
     <h2 class="section-title-with-icon"><LucideIcon name="presentation" class="section-title__icon" /><span>Wybrane wystąpienia i aktywności</span></h2>
     <p class="timeline-hint">Najedź lub kliknij skrót wydarzenia, aby wyświetlić pełną kartę opisu.</p>
-    <HorizontalTimeline items={timelineItems} initialId="aes-2025" />
+    <HorizontalTimeline items={bioTimelineItems} initialId="adc-2025" />
   </section>
 
   <section class="content-stack" id="pelna-nota-biograficzna">

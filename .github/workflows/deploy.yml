@@ -24,6 +24,8 @@ jobs:
         uses: withastro/action@v5
         env:
           SITE_URL: https://${{ github.repository_owner }}.github.io
+          PUBLIC_INCLUDE_PRIVATE_CV: "false"
+          EXCLUDE_PRIVATE_CV: "true"
 
   deploy:
     needs: build
