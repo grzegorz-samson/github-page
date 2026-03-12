@@ -11,7 +11,6 @@ const { title, description = '', lang = 'pl' } = Astro.props;
 const pageTitle = typeof title === 'string' && title.trim().length > 0 ? title.trim() : 'Greggular VST';
 const pageDescription = typeof description === 'string' ? description.trim() : '';
 const pageUrl = Astro.url.href;
-const includePrivateCv = process.env.PUBLIC_INCLUDE_PRIVATE_CV !== 'false';
 const normalizePath = (value: string): string => {
   const normalized = value.replace(/\/+$/, '');
   return normalized.length > 0 ? normalized : '/';
@@ -47,8 +46,7 @@ const navItems =
         { href: withBase('/pl/research/'), label: labels.research },
         { href: withBase('/pl/workshops/'), label: labels.workshops },
         { href: withBase('/pl/scholarship/'), label: labels.scholarship },
-        { href: withBase('/pl/bio/'), label: labels.bio },
-        ...(includePrivateCv ? [{ href: withBase('/pl/cv-qa/'), label: labels.cv }] : [])
+        { href: withBase('/pl/bio/'), label: labels.bio }
       ]
     : [
         { href: withBase('/en/project/'), label: labels.project },
@@ -56,8 +54,7 @@ const navItems =
         { href: withBase('/en/research/'), label: labels.research },
         { href: withBase('/en/workshops/'), label: labels.workshops },
         { href: withBase('/en/scholarship/'), label: labels.scholarship },
-        { href: withBase('/en/bio/'), label: labels.bio },
-        ...(includePrivateCv ? [{ href: withBase('/en/cv-qa/'), label: labels.cv }] : [])
+        { href: withBase('/en/bio/'), label: labels.bio }
       ];
 
 const footerText =
