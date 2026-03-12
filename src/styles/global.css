@@ -929,6 +929,18 @@ html[data-theme='light'] .status-planned {
   font-size: 0.65rem;
 }
 
+html[data-theme='light'] .release-notes-list li,
+html[data-theme='light'] .project-result-list li {
+  border-color: rgba(24, 33, 43, 0.14);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(245, 249, 252, 0.78)),
+    rgba(255, 255, 255, 0.78);
+  color: var(--text-soft);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.72) inset,
+    0 10px 24px rgba(24, 33, 43, 0.04);
+}
+
 .checksum {
   margin-top: 0.8rem;
   font-size: 0.78rem;
