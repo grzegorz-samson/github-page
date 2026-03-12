@@ -31,14 +31,14 @@ html[data-theme='light'] {
   --card-border: rgba(28, 40, 54, 0.16);
   --text-main: #18212b;
   --text-soft: #4c5a67;
-  --accent: #c58a10;
-  --accent-2: #176f87;
+  --accent: #f6c85f;
+  --accent-2: #69d2e7;
   --ok: #2f855a;
-  --warn: #b7791f;
+  --warn: #f6c85f;
   --header-bg: rgba(255, 251, 245, 0.82);
   --header-link: #223040;
-  --header-link-hover-bg: rgba(23, 111, 135, 0.08);
-  --header-link-hover-border: rgba(23, 111, 135, 0.18);
+  --header-link-hover-bg: rgba(105, 210, 231, 0.08);
+  --header-link-hover-border: rgba(105, 210, 231, 0.18);
   --brand-bg: rgba(24, 33, 43, 0.04);
   color-scheme: light;
 }
