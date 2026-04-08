@@ -25,7 +25,7 @@
       let rafId = 0;
       let isVisible = !document.hidden;
       let animationEnabled = !reduceMotionQuery.matches;
-      const storageKey = 'particle-bg-state-v3';
+      const storageKey = 'particle-bg-state-v4';
 
       const particles = [];
       const pointer = {
@@ -52,42 +52,74 @@
         return themePalette[theme];
       };
 
+      const getSceneScale = () => {
+        const viewportWidth = width || window.innerWidth;
+        const viewportHeight = height || window.innerHeight;
+        const shortSide = Math.min(viewportWidth, viewportHeight);
+        const longSide = Math.max(viewportWidth, viewportHeight);
+        const areaScale = Math.sqrt((viewportWidth * viewportHeight) / (1440 * 900));
+        const shortScale = shortSide / 900;
+        const longScale = longSide / 1440;
+
+        return {
+          sizeScale: clamp(shortScale * 0.72 + areaScale * 0.28, 0.96, 1.82),
+          motionScale: clamp(shortScale * 0.55 + areaScale * 0.45, 0.94, 1.95),
+          radiusScale: clamp(shortScale * 0.4 + longScale * 0.6, 0.96, 1.88)
+        };
+      };
+
       const getVisualProfile = () =>
-        root.dataset.theme === 'light'
-          ? {
-              alphaMultiplier: 1.28,
-              haloMultiplier: 0.42,
-              reactionDistance: 12,
-              minSize: 1.45,
-              maxSize: 3.85,
-              minAlpha: 0.18,
-              maxAlpha: 0.32,
-              shadowMultiplier: 3.2,
-              attractionStrength: 0.0065,
-              maxVelocity: 0.16,
-              coreAlphaMultiplier: 1.34,
-              midAlphaMultiplier: 0.84,
-              outerAlphaMultiplier: 0.38,
-              innerStop: 0.16,
-              middleStop: 0.42
-            }
-          : {
-              alphaMultiplier: 2.2,
-              haloMultiplier: 0.52,
-              reactionDistance: 24,
-              minSize: 1.8,
-              maxSize: 5.2,
-              minAlpha: 0.24,
-              maxAlpha: 0.42,
-              shadowMultiplier: 5.6,
-              attractionStrength: 0.0095,
-              maxVelocity: 0.22,
-              coreAlphaMultiplier: 0.72,
-              midAlphaMultiplier: 0.4,
-              outerAlphaMultiplier: 0.16,
-              innerStop: 0.2,
-              middleStop: 0.48
-            };
+        (() => {
+          const sceneScale = getSceneScale();
+          const baseProfile =
+            root.dataset.theme === 'light'
+              ? {
+                  alphaMultiplier: 1.28,
+                  haloMultiplier: 0.42,
+                  reactionDistance: 12,
+                  minSize: 1.45,
+                  maxSize: 3.85,
+                  minAlpha: 0.18,
+                  maxAlpha: 0.32,
+                  shadowMultiplier: 3.2,
+                  attractionStrength: 0.0065,
+                  maxVelocity: 0.16,
+                  coreAlphaMultiplier: 1.34,
+                  midAlphaMultiplier: 0.84,
+                  outerAlphaMultiplier: 0.38,
+                  innerStop: 0.16,
+                  middleStop: 0.42
+                }
+              : {
+                  alphaMultiplier: 2.2,
+                  haloMultiplier: 0.52,
+                  reactionDistance: 24,
+                  minSize: 1.8,
+                  maxSize: 5.2,
+                  minAlpha: 0.24,
+                  maxAlpha: 0.42,
+                  shadowMultiplier: 5.6,
+                  attractionStrength: 0.0095,
+                  maxVelocity: 0.22,
+                  coreAlphaMultiplier: 0.72,
+                  midAlphaMultiplier: 0.4,
+                  outerAlphaMultiplier: 0.16,
+                  innerStop: 0.2,
+                  middleStop: 0.48
+                };
+
+          return {
+            ...baseProfile,
+            minSize: baseProfile.minSize * sceneScale.sizeScale,
+            maxSize: baseProfile.maxSize * sceneScale.sizeScale,
+            reactionDistance: baseProfile.reactionDistance * sceneScale.radiusScale,
+            attractionStrength: baseProfile.attractionStrength * sceneScale.motionScale,
+            maxVelocity: baseProfile.maxVelocity * sceneScale.motionScale,
+            pointerRadius: 110 * sceneScale.radiusScale,
+            motionScale: sceneScale.motionScale,
+            wrapPadding: 12 * sceneScale.sizeScale
+          };
+        })();
 
       const getParticleCount = () => {
         const area = window.innerWidth * window.innerHeight;
@@ -113,13 +145,13 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       };
 
-      const createParticle = () => ({
+      const createParticle = (motionScale = 1) => ({
         x: random(0, width || window.innerWidth),
         y: random(0, height || window.innerHeight),
-        vx: random(-0.04, 0.04),
-        vy: random(-0.03, 0.03),
-        driftX: random(-0.018, 0.018),
-        driftY: random(-0.014, 0.014),
+        vx: random(-0.04, 0.04) * motionScale,
+        vy: random(-0.03, 0.03) * motionScale,
+        driftX: random(-0.018, 0.018) * motionScale,
+        driftY: random(-0.014, 0.014) * motionScale,
         size: 1,
         alpha: 0.1,
         parallax: random(0.25, 0.95),
@@ -152,6 +184,8 @@
           const payload = {
             width,
             height,
+            sizeScale: getSceneScale().sizeScale,
+            motionScale: getSceneScale().motionScale,
             particles: particles.map((particle) => ({
               x: particle.x,
               y: particle.y,
@@ -178,19 +212,27 @@
         const saved = loadSavedParticles();
         const scaleX = saved && saved.width > 0 ? width / saved.width : 1;
         const scaleY = saved && saved.height > 0 ? height / saved.height : 1;
+        const savedSizeScale =
+          saved && typeof saved.sizeScale === 'number' && saved.sizeScale > 0 ? saved.sizeScale : 1;
+        const savedMotionScale =
+          saved && typeof saved.motionScale === 'number' && saved.motionScale > 0 ? saved.motionScale : 1;
+        const sizeScaleRatio = visualProfile.minSize > 0 ? getSceneScale().sizeScale / savedSizeScale : 1;
+        const motionScaleRatio = visualProfile.motionScale / savedMotionScale;
 
         for (let index = 0; index < count; index += 1) {
           const restored = saved?.particles?.[index];
-          const particle = createParticle();
+          const particle = createParticle(visualProfile.motionScale);
 
           if (restored && typeof restored === 'object') {
             particle.x = typeof restored.x === 'number' ? restored.x * scaleX : particle.x;
             particle.y = typeof restored.y === 'number' ? restored.y * scaleY : particle.y;
-            particle.vx = typeof restored.vx === 'number' ? restored.vx : particle.vx;
-            particle.vy = typeof restored.vy === 'number' ? restored.vy : particle.vy;
-            particle.driftX = typeof restored.driftX === 'number' ? restored.driftX : particle.driftX;
-            particle.driftY = typeof restored.driftY === 'number' ? restored.driftY : particle.driftY;
-            particle.size = typeof restored.size === 'number' ? restored.size : particle.size;
+            particle.vx = typeof restored.vx === 'number' ? restored.vx * motionScaleRatio : particle.vx;
+            particle.vy = typeof restored.vy === 'number' ? restored.vy * motionScaleRatio : particle.vy;
+            particle.driftX =
+              typeof restored.driftX === 'number' ? restored.driftX * motionScaleRatio : particle.driftX;
+            particle.driftY =
+              typeof restored.driftY === 'number' ? restored.driftY * motionScaleRatio : particle.driftY;
+            particle.size = typeof restored.size === 'number' ? restored.size * sizeScaleRatio : particle.size;
             particle.alpha = typeof restored.alpha === 'number' ? restored.alpha : particle.alpha;
             particle.parallax = typeof restored.parallax === 'number' ? restored.parallax : particle.parallax;
             particle.accent = typeof restored.accent === 'boolean' ? restored.accent : particle.accent;
@@ -203,17 +245,18 @@
         }
       };
 
-      const wrapParticle = (particle) => {
-        if (particle.x < -12) particle.x = width + 12;
-        if (particle.x > width + 12) particle.x = -12;
-        if (particle.y < -12) particle.y = height + 12;
-        if (particle.y > height + 12) particle.y = -12;
+      const wrapParticle = (particle, wrapPadding) => {
+        if (particle.x < -wrapPadding) particle.x = width + wrapPadding;
+        if (particle.x > width + wrapPadding) particle.x = -wrapPadding;
+        if (particle.y < -wrapPadding) particle.y = height + wrapPadding;
+        if (particle.y > height + wrapPadding) particle.y = -wrapPadding;
       };
 
       const drawParticles = () => {
         const palette = getPalette();
         const visualProfile = getVisualProfile();
         const alphaMultiplier = visualProfile.alphaMultiplier;
+        pointer.radius = visualProfile.pointerRadius;
         const reactionRadius = coarsePointerQuery.matches ? 0 : pointer.radius;
 
         ctx.clearRect(0, 0, width, height);
@@ -241,7 +284,7 @@
           particle.vy = clamp(particle.vy, -visualProfile.maxVelocity, visualProfile.maxVelocity);
           particle.x += particle.vx;
           particle.y += particle.vy;
-          wrapParticle(particle);
+          wrapParticle(particle, visualProfile.wrapPadding);
 
           const drawX = particle.x;
           const drawY = particle.y;
