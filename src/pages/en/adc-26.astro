@@ -1,0 +1,883 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
+import MediaEmbedYouTube from '../../components/MediaEmbedYouTube.astro';
+import HorizontalTimeline from '../../components/HorizontalTimeline.astro';
+import { withBase } from '../../lib/paths';
+
+const guiItems = [
+  {
+    id: 'controls',
+    title: 'Controls Panel',
+    shortDescription: 'Core creation layer and granular parameters.',
+    imageSrc: withBase('/assets/plugin/controls-panel.png'),
+    imageAlt: 'Controls panel in GreggularVST plugin',
+    description:
+      'The main sound-shaping workspace for grain duration, pitch, gain, envelope and cloud parameters.',
+    bullets: ['Per-sample parameter control', 'Fast iteration', 'Real-time granular shaping'],
+    tags: ['Duration', 'Pitch', 'Cloud']
+  },
+  {
+    id: 'multichannel',
+    title: 'Multichannel Panel',
+    shortDescription: 'Routing and panning for extended output layouts.',
+    imageSrc: withBase('/assets/plugin/multichannel-panel.png'),
+    imageAlt: 'Multichannel panel in GreggularVST plugin',
+    description:
+      'Routing, mute/solo and panning controls support workflows from stereo to extended multichannel setups.',
+    bullets: ['Channel routing', 'Mute / solo', 'Multichannel panning'],
+    tags: ['Routing', 'Multichannel', 'Pan']
+  },
+  {
+    id: 'audio-generator',
+    title: 'Audio Generator',
+    shortDescription: 'Prompt-driven generation of source material.',
+    imageSrc: withBase('/assets/plugin/audio-generator-panel.png'),
+    imageAlt: 'Audio Generator panel in GreggularVST plugin',
+    description:
+      'A conversation-based panel for creating source material and iterating on sonic ideas before granular transformation.',
+    bullets: ['Prompt workflow', 'Generated source material', 'Session context'],
+    tags: ['Generator', 'Prompt', 'Session']
+  }
+];
+
+const initialPanel = guiItems[0];
+
+const developmentStages = [
+  {
+    id: 'prototype',
+    year: '2025',
+    date: 'Prototype research',
+    label: 'Prototype',
+    title: 'Two-module text-to-sound workflow',
+    description:
+      'Text input, generative audio creation and granular transformation were explored as separate prototype modules.'
+  },
+  {
+    id: 'installation',
+    year: '2025',
+    date: 'Artistic presentation',
+    label: 'Installation',
+    title: 'Interactive sound installation',
+    description:
+      'Prototype technologies were used in an interactive sound installation presented in an artistic festival context.'
+  },
+  {
+    id: 'adc25',
+    year: '2025',
+    date: 'ADC 2025',
+    label: 'ADC25',
+    title: 'From Text Wishes to Sound',
+    description:
+      'The research was presented online at ADC 2025 as a poster focused on text-driven audio generation and real-time granular processing.'
+  },
+  {
+    id: 'greggular',
+    year: '2025–2026',
+    date: 'Scholarship project',
+    label: 'VST',
+    title: 'GreggularVST',
+    description:
+      'The workflow was consolidated into an all-in-one JUCE/VST3 granular synthesizer with multiple sources, grouping and multichannel routing.'
+  },
+  {
+    id: 'adc26',
+    year: '2026',
+    date: 'ADCx Gather / ADC26',
+    label: 'ADC26',
+    title: 'Greggular at ADC26',
+    description:
+      'This page documents the transition from prototypes to an integrated instrument and presents the creative workflow developed for ADC26.'
+  },
+  {
+    id: 'hybrid',
+    year: '2026',
+    date: 'Current research direction',
+    label: 'Hybrid',
+    title: 'Interactive hybrid instrument',
+    description:
+      'The next stage expands the software instrument towards a hybrid performance system combining sound, visual elements and performer interaction.'
+  }
+];
+---
+
+<PageLayout
+  lang="en"
+  title="Greggular at ADC26 | Grzegorz Samson"
+  description="ADC26 research materials for Greggular, a JUCE/VST3 granular instrument for text-to-sound synthesis, generative audio and multichannel creative workflows."
+  showProjectFooter={false}
+>
+  <div class="adc26-page">
+    <section class="adc26-hero">
+      <div class="adc26-hero__copy">
+        <p class="section-kicker section-kicker--with-icon">
+          <LucideIcon name="presentation" class="section-kicker__icon" />
+          ADC26 · Research Poster
+        </p>
+
+        <div class="adc26-event-row" aria-label="Conference dates">
+          <span>ADCx Gather · 16 Oct 2026</span>
+          <span>ADC26 Bristol & Online · 9–11 Nov 2026</span>
+        </div>
+
+        <h1>Greggular</h1>
+        <p class="adc26-hero__title">A Granular VST for Text-to-Sound Synthesis</p>
+        <p class="lead adc26-hero__lead">
+          From a two-module text-to-sound prototype presented at ADC 2025 to an integrated JUCE/VST3
+          environment for generative audio, real-time granular processing and multichannel creative workflows.
+        </p>
+
+        <div class="badge-row" aria-label="Project technologies">
+          <span class="badge">JUCE / VST3</span>
+          <span class="badge">Granular synthesis</span>
+          <span class="badge">Generative audio</span>
+          <span class="badge">Multichannel</span>
+          <span class="badge">Freeware</span>
+        </div>
+
+        <div class="hero-cta-row">
+          <a class="button button-primary" href="#system">Explore the system</a>
+          <a class="button button-ghost" href="#demos">Watch demos</a>
+          <a class="button button-ghost" href={withBase('/en/plugin/')}>Full plugin page</a>
+        </div>
+
+        <p class="adc26-byline">Research poster by Grzegorz Samson</p>
+      </div>
+
+      <a class="adc26-hero__media" href={withBase('/en/plugin/#panels')}>
+        <img
+          src={withBase('/assets/plugin/controls-panel.png')}
+          alt="GreggularVST Controls Panel"
+          loading="eager"
+          decoding="async"
+        />
+        <span>Open full plugin documentation ↗</span>
+      </a>
+    </section>
+
+    <section id="evolution" class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="history" class="section-kicker__icon" />
+        Research evolution
+      </p>
+      <h2 class="section-title-with-icon">
+        <LucideIcon name="milestone" class="section-title__icon" />
+        <span>From ADC 2025 to ADC 2026</span>
+      </h2>
+
+      <div class="adc26-comparison">
+        <article class="adc26-comparison__card">
+          <div class="adc26-card-label">ADC 2025 · Prototype</div>
+          <a
+            class="adc26-comparison__media adc26-comparison__media--poster"
+            href={withBase('/assets/research/from-text-wishes-to-sound-adc-2025-poster.jpg')}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src={withBase('/assets/research/from-text-wishes-to-sound-adc-2025-poster-thumb.jpg')}
+              alt="From Text Wishes to Sound poster presented at ADC 2025"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+          <h3>From Text Wishes to Sound</h3>
+          <p>Text input → generative audio → granular processing.</p>
+          <ul>
+            <li>Two prototype modules</li>
+            <li>Experimental text-driven pipeline</li>
+            <li>Real-time granular transformation</li>
+          </ul>
+        </article>
+
+        <div class="adc26-comparison__arrow" aria-hidden="true">→</div>
+
+        <article class="adc26-comparison__card adc26-comparison__card--current">
+          <div class="adc26-card-label">ADC 2026 · Integrated instrument</div>
+          <a class="adc26-comparison__media" href={withBase('/en/plugin/')}>
+            <img
+              src={withBase('/assets/plugin/controls-panel.png')}
+              alt="GreggularVST interface"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+          <h3>GreggularVST</h3>
+          <p>Generated or prerecorded material → granular instrument → multichannel output.</p>
+          <ul>
+            <li>All-in-one JUCE/VST3 workflow</li>
+            <li>Multiple concurrent granular generators</li>
+            <li>Grouping, routing and per-sample control</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="system" class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="waypoints" class="section-kicker__icon" />
+        System at a glance
+      </p>
+      <h2 class="section-title-with-icon">
+        <LucideIcon name="audio-waveform" class="section-title__icon" />
+        <span>Text-to-sound workflow</span>
+      </h2>
+
+      <div class="adc26-flow" aria-label="GreggularVST processing flow">
+        <div class="adc26-flow__sources">
+          <article class="adc26-flow__node">
+            <span class="adc26-flow__eyebrow">Source A</span>
+            <strong>Text prompt</strong>
+            <span>Generated audio material</span>
+          </article>
+          <article class="adc26-flow__node">
+            <span class="adc26-flow__eyebrow">Source B</span>
+            <strong>Prerecorded audio</strong>
+            <span>Imported source material</span>
+          </article>
+        </div>
+        <div class="adc26-flow__arrow" aria-hidden="true">↓</div>
+        <article class="adc26-flow__node adc26-flow__node--accent">
+          <span class="adc26-flow__eyebrow">Instrument</span>
+          <strong>Shared sample pool</strong>
+          <span>Selection, grouping and per-sample setup</span>
+        </article>
+        <div class="adc26-flow__arrow" aria-hidden="true">↓</div>
+        <article class="adc26-flow__node adc26-flow__node--accent2">
+          <span class="adc26-flow__eyebrow">Real time</span>
+          <strong>Granular processing</strong>
+          <span>Multiple generators · pitch · gain · envelope · cloud</span>
+        </article>
+        <div class="adc26-flow__arrow" aria-hidden="true">↓</div>
+        <article class="adc26-flow__node">
+          <span class="adc26-flow__eyebrow">Output</span>
+          <strong>Grouping & multichannel routing</strong>
+          <span>Performance, composition and sound-design workflows</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="sparkles" class="section-kicker__icon" />
+        Research idea
+      </p>
+      <h2 class="section-title-with-icon">
+        <LucideIcon name="flask-conical" class="section-title__icon" />
+        <span>Generative technology as creative material</span>
+      </h2>
+
+      <div class="text-panel adc26-research-note">
+        <p>
+          The project explores the creative and responsible use of new generative technologies in artistic workflows.
+          Generated sound is not treated as a finished result, but as source material that can be selected,
+          transformed and shaped by the artist in real time.
+        </p>
+      </div>
+
+      <div class="adc26-principles">
+        <article>
+          <LucideIcon name="sparkles" />
+          <h3>Generate</h3>
+          <p>Create new source material or import existing recordings.</p>
+        </article>
+        <article>
+          <LucideIcon name="audio-waveform" />
+          <h3>Transform</h3>
+          <p>Shape the material through detailed real-time granular processing.</p>
+        </article>
+        <article>
+          <LucideIcon name="presentation" />
+          <h3>Perform</h3>
+          <p>Combine, group and route evolving structures as an interactive instrument.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="interface" class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="sliders-horizontal" class="section-kicker__icon" />
+        Explore the interface
+      </p>
+      <h2 class="section-title-with-icon">
+        <LucideIcon name="sliders-horizontal" class="section-title__icon" />
+        <span>Three parts of the workflow</span>
+      </h2>
+
+      <div class="plugin-panels" data-plugin-panels data-initial-id={initialPanel.id}>
+        <div class="plugin-panels-nav">
+          {guiItems.map((item) => (
+            <button
+              type="button"
+              class={`plugin-panel-tile ${item.id === initialPanel.id ? 'is-active' : ''}`}
+              data-panel-id={item.id}
+              aria-pressed={item.id === initialPanel.id ? 'true' : 'false'}
+            >
+              <img src={item.imageSrc} alt="" aria-hidden="true" loading="lazy" />
+              <span class="plugin-panel-tile__body">
+                <span class="plugin-panel-tile__title">{item.title}</span>
+                <span class="plugin-panel-tile__description">{item.shortDescription}</span>
+                <span class="plugin-tag-row">
+                  {item.tags.map((tag) => <span class="plugin-tag">{tag}</span>)}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <article class="plugin-panel-active" data-panel-active aria-live="polite">
+          <div class="plugin-panel-active__media">
+            <img src={initialPanel.imageSrc} alt={initialPanel.imageAlt} loading="lazy" data-active-image />
+            <p class="plugin-panel-active__caption" data-active-caption>{initialPanel.shortDescription}</p>
+          </div>
+          <div class="plugin-panel-active__content">
+            <p class="plugin-panel-active__kicker">Active panel</p>
+            <h3 data-active-title>{initialPanel.title}</h3>
+            <p class="plugin-panel-active__description" data-active-description>{initialPanel.description}</p>
+            <section class="plugin-panel-active__highlights">
+              <h4>Panel details</h4>
+              <ul data-active-bullets>
+                {initialPanel.bullets.map((bullet) => <li>{bullet}</li>)}
+              </ul>
+            </section>
+            <div class="plugin-panel-active__switch" aria-label="Panel navigation">
+              <button type="button" class="plugin-panel-active__arrow" data-panel-prev aria-label="Previous panel">←</button>
+              <button type="button" class="plugin-panel-active__arrow" data-panel-next aria-label="Next panel">→</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="demos" class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="video" class="section-kicker__icon" />
+        Watch Greggular in action
+      </p>
+      <h2 class="section-title-with-icon">
+        <LucideIcon name="video" class="section-title__icon" />
+        <span>Video demonstrations</span>
+      </h2>
+
+      <div class="plugin-video-grid">
+        <article class="plugin-video-card">
+          <MediaEmbedYouTube url="https://youtu.be/408RIow4tQE" title="GreggularVST - Demo I" />
+          <div class="text-panel plugin-video-card__content">
+            <h3>Demo I · Workflow</h3>
+            <p>Generative source material, granular transformation and the main GreggularVST workflow.</p>
+          </div>
+        </article>
+
+        <article class="plugin-video-card">
+          <MediaEmbedYouTube url="https://youtu.be/0Vzin_ilv40" title="GreggularVST - Demo II" />
+          <div class="text-panel plugin-video-card__content">
+            <h3>Demo II · Interface</h3>
+            <p>Additional interface, parameter and granular-panel workflow documentation.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="milestone" class="section-kicker__icon" />
+        Development path
+      </p>
+      <h2 class="section-title-with-icon">
+        <LucideIcon name="history" class="section-title__icon" />
+        <span>From prototype to hybrid instrument</span>
+      </h2>
+      <HorizontalTimeline items={developmentStages} initialId="adc26" />
+    </section>
+
+    <section class="content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="layers-2" class="section-kicker__icon" />
+        Key outcomes
+      </p>
+      <div class="adc26-outcomes">
+        <article>
+          <h3>Software</h3>
+          <p>JUCE/VST3 granular instrument with real-time multi-source processing.</p>
+        </article>
+        <article>
+          <h3>Research</h3>
+          <p>Text-to-sound and generative creative workflows developed across successive prototypes.</p>
+        </article>
+        <article>
+          <h3>Artistic practice</h3>
+          <p>Prototype technologies tested in an interactive sound-installation context.</p>
+        </article>
+        <article>
+          <h3>Open dissemination</h3>
+          <p>Freeware release, public documentation, demos and conference materials.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="adc26-resources content-stack">
+      <p class="section-kicker section-kicker--with-icon">
+        <LucideIcon name="external-link" class="section-kicker__icon" />
+        Explore further
+      </p>
+      <h2>Resources & contact</h2>
+      <p>
+        GreggularVST was developed within the scholarship project “New technologies in developing tools and
+        technological competences for contemporary music”, carried out in 2025–2026 and funded by the European
+        Union through NextGenerationEU.
+      </p>
+
+      <div class="adc26-resource-grid">
+        <a href="https://conference.audio.dev/schedule/" target="_blank" rel="noreferrer">Official ADC26 schedule <span>↗</span></a>
+        <a href={withBase('/en/plugin/')}>GreggularVST documentation <span>↗</span></a>
+        <a href={withBase('/en/plugin/#download')}>Download GreggularVST <span>↗</span></a>
+        <a href={withBase('/en/research/')}>ADC 2025 research poster <span>↗</span></a>
+        <a href={withBase('/en/bio/')}>Research, publications & bio <span>↗</span></a>
+      </div>
+
+      <div class="adc26-author">
+        <div>
+          <strong>Grzegorz Samson</strong>
+          <p>Sound engineer · computer scientist · audio developer · early-career researcher</p>
+        </div>
+        <div class="adc26-author__meta">
+          <span>Discord: @grzegorzsamson</span>
+          <a href={withBase('/en/bio/')}>About the author ↗</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</PageLayout>
+
+<script define:vars={{ guiItems }}>
+  const roots = document.querySelectorAll('[data-plugin-panels]');
+
+  for (const root of roots) {
+    const buttons = Array.from(root.querySelectorAll('button[data-panel-id]'));
+    const activeCard = root.querySelector('[data-panel-active]');
+    const image = root.querySelector('[data-active-image]');
+    const caption = root.querySelector('[data-active-caption]');
+    const title = root.querySelector('[data-active-title]');
+    const description = root.querySelector('[data-active-description]');
+    const bullets = root.querySelector('[data-active-bullets]');
+    const prevButton = root.querySelector('[data-panel-prev]');
+    const nextButton = root.querySelector('[data-panel-next]');
+
+    if (!buttons.length || !activeCard || !image || !caption || !title || !description || !bullets) continue;
+
+    const itemMap = new Map(guiItems.map((item) => [item.id, item]));
+    const ids = buttons
+      .map((button) => button.dataset.panelId)
+      .filter((value) => typeof value === 'string' && value.length > 0);
+    let activeId = ids[0] ?? '';
+
+    const setActive = (id, scrollToCard = true) => {
+      const item = itemMap.get(id);
+      if (!item) return;
+      activeId = id;
+
+      for (const button of buttons) {
+        const isActive = button.dataset.panelId === id;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      }
+
+      image.setAttribute('src', item.imageSrc);
+      image.setAttribute('alt', item.imageAlt);
+      caption.textContent = item.shortDescription ?? item.description;
+      title.textContent = item.title;
+      description.textContent = item.description;
+
+      bullets.textContent = '';
+      for (const entry of item.bullets ?? []) {
+        const li = document.createElement('li');
+        li.textContent = entry;
+        bullets.appendChild(li);
+      }
+
+      const activeIndex = ids.indexOf(id);
+      if (prevButton instanceof HTMLButtonElement) prevButton.disabled = activeIndex <= 0;
+      if (nextButton instanceof HTMLButtonElement) nextButton.disabled = activeIndex === -1 || activeIndex >= ids.length - 1;
+
+      if (scrollToCard) activeCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        const id = button.dataset.panelId;
+        if (id) setActive(id, true);
+      });
+    }
+
+    prevButton?.addEventListener('click', () => {
+      const index = ids.indexOf(activeId);
+      if (index > 0) setActive(ids[index - 1], true);
+    });
+
+    nextButton?.addEventListener('click', () => {
+      const index = ids.indexOf(activeId);
+      if (index >= 0 && index < ids.length - 1) setActive(ids[index + 1], true);
+    });
+
+    const initialId = root.getAttribute('data-initial-id');
+    if (initialId) setActive(initialId, false);
+  }
+</script>
+
+<style>
+  .plugin-panel-tile__title {
+    color: var(--text-main);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .plugin-panel-tile__description {
+    color: var(--text-soft);
+    font-size: 0.8rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .plugin-panel-tile:hover .plugin-panel-tile__title,
+  .plugin-panel-tile:focus-visible .plugin-panel-tile__title,
+  .plugin-panel-tile:hover .plugin-panel-tile__description,
+  .plugin-panel-tile:focus-visible .plugin-panel-tile__description {
+    color: var(--text-main);
+  }
+
+  .adc26-page {
+    --adc26-panel: color-mix(in srgb, var(--card) 92%, transparent);
+    --adc26-border: var(--card-border);
+  }
+
+  .adc26-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(330px, 0.95fr);
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 4.5rem;
+  }
+
+  .adc26-hero__copy {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .adc26-event-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .adc26-event-row span,
+  .adc26-card-label,
+  .adc26-flow__eyebrow {
+    width: fit-content;
+    border: 1px solid var(--adc26-border);
+    border-radius: 999px;
+    padding: 0.34rem 0.7rem;
+    color: var(--text-soft);
+    background: rgba(255, 255, 255, 0.035);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .adc26-hero h1 {
+    font-size: clamp(3rem, 8vw, 6.2rem);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
+  }
+
+  .adc26-hero__title {
+    max-width: 680px;
+    color: var(--text-main);
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-size: clamp(1.35rem, 2.8vw, 2.15rem);
+    line-height: 1.15;
+  }
+
+  .adc26-hero__lead {
+    max-width: 720px;
+  }
+
+  .adc26-byline {
+    font-size: 0.9rem;
+  }
+
+  .adc26-hero__media {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    border: 1px solid var(--adc26-border);
+    border-radius: 1.4rem;
+    background: var(--adc26-panel);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    transition: transform 180ms ease, border-color 180ms ease;
+  }
+
+  .adc26-hero__media:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--accent) 48%, var(--adc26-border));
+  }
+
+  .adc26-hero__media img {
+    width: 100%;
+    border-radius: 0.95rem;
+    display: block;
+  }
+
+  .adc26-hero__media span {
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    text-align: right;
+  }
+
+  .adc26-comparison {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .adc26-comparison__card,
+  .adc26-principles article,
+  .adc26-outcomes article,
+  .adc26-resources,
+  .adc26-flow__node {
+    border: 1px solid var(--adc26-border);
+    border-radius: 1.25rem;
+    background: var(--adc26-panel);
+  }
+
+  .adc26-comparison__card {
+    display: grid;
+    align-content: start;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .adc26-comparison__card--current {
+    border-color: color-mix(in srgb, var(--accent) 38%, var(--adc26-border));
+  }
+
+  .adc26-comparison__media {
+    min-height: 230px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 0.95rem;
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .adc26-comparison__media img {
+    width: 100%;
+    height: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .adc26-comparison__media--poster img {
+    max-height: 410px;
+  }
+
+  .adc26-comparison__card h3 {
+    font-size: 1.35rem;
+  }
+
+  .adc26-comparison__card ul,
+  .plugin-panel-active__highlights ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+
+  .adc26-comparison__arrow {
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+
+  .adc26-flow {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .adc26-flow__sources {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .adc26-flow__node {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1rem 1.1rem;
+    text-align: center;
+  }
+
+  .adc26-flow__node strong {
+    color: var(--text-main);
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-size: 1.08rem;
+  }
+
+  .adc26-flow__node span:last-child {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+
+  .adc26-flow__node--accent {
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--adc26-border));
+  }
+
+  .adc26-flow__node--accent2 {
+    border-color: color-mix(in srgb, var(--accent-2) 42%, var(--adc26-border));
+  }
+
+  .adc26-flow__arrow {
+    text-align: center;
+    color: var(--accent);
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .adc26-research-note {
+    border-left: 3px solid var(--accent);
+  }
+
+  .adc26-principles,
+  .adc26-outcomes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .adc26-principles article,
+  .adc26-outcomes article {
+    padding: 1.1rem;
+  }
+
+  .adc26-principles article {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .adc26-principles .lucide-icon {
+    color: var(--accent);
+  }
+
+  .adc26-principles h3,
+  .adc26-outcomes h3 {
+    font-size: 1.1rem;
+  }
+
+  .adc26-outcomes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .adc26-resources {
+    padding: 1.2rem;
+  }
+
+  .adc26-resource-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .adc26-resource-grid a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.95rem 1rem;
+    border: 1px solid var(--adc26-border);
+    border-radius: 0.9rem;
+    background: rgba(255, 255, 255, 0.035);
+    font-weight: 700;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+
+  .adc26-resource-grid a:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--adc26-border));
+  }
+
+  .adc26-resource-grid a span {
+    color: var(--accent);
+  }
+
+  .adc26-author {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    align-items: flex-end;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--adc26-border);
+  }
+
+  .adc26-author strong {
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-size: 1.25rem;
+  }
+
+  .adc26-author__meta {
+    display: grid;
+    gap: 0.35rem;
+    justify-items: end;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+
+  .adc26-author__meta a {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .adc26-hero,
+    .adc26-comparison {
+      grid-template-columns: 1fr;
+    }
+
+    .adc26-comparison__arrow {
+      transform: rotate(90deg);
+    }
+
+    .adc26-principles {
+      grid-template-columns: 1fr;
+    }
+
+    .adc26-outcomes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .adc26-flow__sources,
+    .adc26-resource-grid,
+    .adc26-outcomes {
+      grid-template-columns: 1fr;
+    }
+
+    .adc26-author {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .adc26-author__meta {
+      justify-items: start;
+    }
+  }
+</style>

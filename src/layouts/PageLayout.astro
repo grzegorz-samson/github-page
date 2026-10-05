@@ -7,7 +7,7 @@ import ParticleBackground from '../components/ParticleBackground.astro';
 import { withBase } from '../lib/paths';
 import '../styles/global.css';
 
-const { title, description = '', lang = 'pl' } = Astro.props;
+const { title, description = '', lang = 'pl', showProjectFooter = true } = Astro.props;
 const pageTitle = typeof title === 'string' && title.trim().length > 0 ? title.trim() : 'Greggular VST';
 const pageDescription = typeof description === 'string' ? description.trim() : '';
 const pageUrl = Astro.url.href;
@@ -46,7 +46,8 @@ const navItems =
         { href: withBase('/pl/research/'), label: labels.research },
         { href: withBase('/pl/workshops/'), label: labels.workshops },
         { href: withBase('/pl/scholarship/'), label: labels.scholarship },
-        { href: withBase('/pl/bio/'), label: labels.bio }
+        { href: withBase('/pl/bio/'), label: labels.bio },
+        { href: withBase('/pl/adc-26/'), label: 'ADC 26' }
       ]
     : [
         { href: withBase('/en/project/'), label: labels.project },
@@ -54,7 +55,8 @@ const navItems =
         { href: withBase('/en/research/'), label: labels.research },
         { href: withBase('/en/workshops/'), label: labels.workshops },
         { href: withBase('/en/scholarship/'), label: labels.scholarship },
-        { href: withBase('/en/bio/'), label: labels.bio }
+        { href: withBase('/en/bio/'), label: labels.bio },
+        { href: withBase('/en/adc-26/'), label: 'ADC 26' }
       ];
 
 const footerText =
@@ -116,10 +118,12 @@ const footerText =
       <slot />
     </main>
 
-    <footer class="main-footer">
-      <p>{footerText}</p>
-      <p>09.2025 - 02.2026</p>
-    </footer>
+    {showProjectFooter && (
+      <footer class="main-footer">
+        <p>{footerText}</p>
+        <p>09.2025 - 02.2026</p>
+      </footer>
+    )}
     <FundingFooter lang={lang} />
     <PageViewTracker lang={lang} />
     <script>
