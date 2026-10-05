@@ -14,12 +14,27 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ secrets.PAGES_REPO_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check deploy token
+        id: deploy-gate
+        shell: bash
+        env:
+          PAGES_REPO_TOKEN: ${{ secrets.PAGES_REPO_TOKEN }}
+        run: |
+          if [[ -n "$PAGES_REPO_TOKEN" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Missing deploy token
+        if: steps.deploy-gate.outputs.enabled != 'true'
+        run: echo "Set PAGES_REPO_TOKEN in repository secrets to enable deploys to grzegorz-samson.github.io."
       - name: Checkout repository
+        if: steps.deploy-gate.outputs.enabled == 'true'
         uses: actions/checkout@v5
       - name: Setup Node.js
+        if: steps.deploy-gate.outputs.enabled == 'true'
         uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,13 +42,16 @@ jobs:
           node-version: 20
           cache: npm
       - name: Install dependencies
+        if: steps.deploy-gate.outputs.enabled == 'true'
         run: npm ci
       - name: Build public site
+        if: steps.deploy-gate.outputs.enabled == 'true'
         env:
           SITE_URL: https://${{ github.repository_owner }}.github.io
           BASE_PATH: /
         run: npm run build
       - name: Publish dist to grzegorz-samson.github.io
+        if: steps.deploy-gate.outputs.enabled == 'true'
         shell: bash
         env:
           PAGES_REPO_TOKEN: ${{ secrets.PAGES_REPO_TOKEN }}
@@ -52,11 +70,4 @@ jobs:
           fi
           git commit -m "Deploy from github-page@${GITHUB_SHA::7}"
           git push origin main
-
-  deploy-skipped:
-    if: ${{ secrets.PAGES_REPO_TOKEN == '' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Missing deploy token
-        run: echo "Set PAGES_REPO_TOKEN in repository secrets to enable deploys to grzegorz-samson.github.io."
 
