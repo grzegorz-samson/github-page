@@ -8,6 +8,7 @@ export interface ContactPayload {
   lang: string;
   sourcePath?: string;
   website?: string;
+  turnstileToken: string;
 }
 
 export interface ContactResponse {
