@@ -1,9 +1,11 @@
 ---
 import { API_BASE } from '../lib/config';
+import { withBase } from '../lib/paths';
 
 type Lang = 'pl' | 'en';
 
 const { lang = 'pl' } = Astro.props as { lang?: Lang };
+const turnstileSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
 
 const copy =
   lang === 'pl'
@@ -49,7 +51,7 @@ const copy =
       };
 ---
 
-<div class="text-panel contact-form" data-contact-form data-lang={lang} data-api-base={API_BASE}>
+<div class="text-panel contact-form" data-contact-form data-lang={lang} data-api-base={API_BASE} data-site-key={turnstileSiteKey}>
   <p class="section-kicker">{copy.kicker}</p>
   <h3>{copy.title}</h3>
   <p class="contact-form__lead">{copy.description}</p>
@@ -77,8 +79,21 @@ const copy =
 
     <input class="contact-form__honeypot" type="text" name="website" tabindex="-1" autocomplete="off" />
 
-    <p class="contact-form__status" data-contact-error hidden></p>
-    <p class="contact-form__status contact-form__status--success" data-contact-success hidden></p>
+    {turnstileSiteKey && <div class="contact-form__full" data-contact-captcha>
+      <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="contact" data-size="flexible" data-language={lang}></div>
+    </div>}
+    <p class="contact-form__full">
+      {lang === 'pl'
+        ? 'Cloudflare chroni formularz przed spamem, a Resend obsługuje wysyłkę wiadomości. '
+        : 'Cloudflare protects this form from spam, and Resend handles email delivery. '}
+      <a href={lang === 'pl' ? withBase('/pl/regulamin/#polityka-prywatnosci') : withBase('/en/terms/#privacy-policy')}>
+        {lang === 'pl' ? 'Polityka prywatności' : 'Privacy policy'}
+      </a>
+    </p>
+    <noscript>{lang === 'pl' ? 'Włącz JavaScript, aby wysłać formularz.' : 'Enable JavaScript to send this form.'}</noscript>
+
+    <p class="contact-form__status" data-contact-error role="alert" hidden></p>
+    <p class="contact-form__status contact-form__status--success" data-contact-success role="status" hidden></p>
 
     <div class="contact-form__actions">
       <button type="submit" class="button button-primary" data-contact-submit>{copy.submit}</button>
@@ -87,7 +102,9 @@ const copy =
   </form>
 </div>
 
-<script type="module">
+{turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<script>
   import { ContactFormApiError, fetchContactMessage } from '../lib/contactForm';
 
   const forms = document.querySelectorAll('[data-contact-form]');
@@ -98,7 +115,8 @@ const copy =
       messageLengthError: 'Wiadomość musi mieć co najmniej 10 znaków.',
       tooManyRequests: 'Za dużo prób. Odczekaj chwilę i spróbuj ponownie.',
       serverError: 'Wystąpił błąd po stronie serwera. Spróbuj ponownie za chwilę.',
-      configError: 'Brak konfiguracji API. Ustaw PUBLIC_API_BASE.',
+      configError: 'Formularz jest chwilowo niedostępny. Skorzystaj z adresu e-mail poniżej.',
+      captchaError: 'Potwierdź weryfikację antyspamową. Jeśli się nie pojawia, odśwież stronę.',
       genericError: 'Nie udało się wysłać formularza.',
       successDelivered: 'Wiadomość została wysłana. Otrzymasz odpowiedź na podany adres e-mail.',
       successFallback:
@@ -109,7 +127,8 @@ const copy =
       messageLengthError: 'Message must be at least 10 characters long.',
       tooManyRequests: 'Too many attempts. Please wait and try again.',
       serverError: 'Server error. Please try again in a moment.',
-      configError: 'Contact API is not configured. Set PUBLIC_API_BASE.',
+      configError: 'The form is temporarily unavailable. Please use the email address below.',
+      captchaError: 'Please complete the spam check. If it does not appear, reload this page.',
       genericError: 'Could not send the form.',
       successDelivered: 'Message sent successfully. You will receive a reply at the provided email address.',
       successFallback:
@@ -135,14 +154,14 @@ const copy =
       continue;
     }
 
-    const showError = (message) => {
+    const showError = (message: string) => {
       errorBox.textContent = message;
       errorBox.hidden = false;
       successBox.hidden = true;
       successBox.textContent = '';
     };
 
-    const showSuccess = (message) => {
+    const showSuccess = (message: string) => {
       successBox.textContent = message;
       successBox.hidden = false;
       errorBox.hidden = true;
@@ -156,9 +175,23 @@ const copy =
       successBox.textContent = '';
     };
 
+    const resetCaptcha = () => {
+      const widget = root.querySelector('.cf-turnstile');
+      const turnstile = (window as Window & { turnstile?: { reset: () => void } }).turnstile;
+      if (widget && turnstile) {
+        // Bio pages contain one implicitly rendered widget; reset() selects it.
+        try { turnstile.reset(); } catch { /* The widget may still be loading. */ }
+      }
+    };
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       clearStatus();
+
+      if (!apiBase || !root.getAttribute('data-site-key')) {
+        showError(copy.configError);
+        return;
+      }
 
       if (!form.reportValidity()) {
         showError(copy.validationError);
@@ -167,9 +200,15 @@ const copy =
 
       const formData = new FormData(form);
       const message = String(formData.get('message') ?? '').trim();
+      const turnstileToken = String(formData.get('cf-turnstile-response') ?? '').trim();
 
       if (message.length < 10) {
         showError(copy.messageLengthError);
+        return;
+      }
+
+      if (!turnstileToken) {
+        showError(copy.captchaError);
         return;
       }
 
@@ -182,24 +221,23 @@ const copy =
           email: String(formData.get('email') ?? '').trim(),
           subject: String(formData.get('subject') ?? '').trim(),
           message,
+          turnstileToken,
           lang,
           sourcePath: window.location.pathname,
           website: String(formData.get('website') ?? '').trim()
         };
 
-        if (!apiBase) {
-          throw new ContactFormApiError(copy.configError, 500);
-        }
-
         const response = await fetchContactMessage(payload);
-        showSuccess(response.delivered ? copy.successDelivered : copy.successFallback);
         form.reset();
+        showSuccess(response.delivered ? copy.successDelivered : copy.successFallback);
       } catch (error) {
         if (error instanceof ContactFormApiError) {
           if (error.status === 429) {
             showError(copy.tooManyRequests);
           } else if (error.status >= 500) {
             showError(error.message === copy.configError ? copy.configError : copy.serverError);
+          } else if (typeof error.details === 'object' && error.details && 'error' in error.details && error.details.error === 'captcha_failed') {
+            showError(copy.captchaError);
           } else {
             showError(error.message || copy.genericError);
           }
@@ -207,6 +245,7 @@ const copy =
           showError(copy.genericError);
         }
       } finally {
+        resetCaptcha();
         submitButton.disabled = false;
         submitButton.removeAttribute('aria-busy');
       }
@@ -214,6 +253,7 @@ const copy =
 
     form.addEventListener('reset', () => {
       clearStatus();
+      if (!submitButton.disabled) resetCaptcha();
     });
   }
 </script>
