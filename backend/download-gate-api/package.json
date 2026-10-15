@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "d1:create": "wrangler d1 create download-gate-prod",
     "d1:migrate": "wrangler d1 migrations apply download-gate-prod",
     "d1:migrate:local": "wrangler d1 migrations apply download-gate-prod --local"

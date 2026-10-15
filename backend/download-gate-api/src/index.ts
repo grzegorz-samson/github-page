@@ -11,6 +11,7 @@ interface Env {
   RESEND_API_KEY?: string;
   CONTACT_TO_EMAIL?: string;
   CONTACT_FROM_EMAIL?: string;
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 interface DownloadPayload {
@@ -38,6 +39,7 @@ interface ContactPayload {
   lang: string;
   sourcePath: string;
   website: string;
+  turnstileToken: string;
 }
 
 interface PageViewPayload {
@@ -196,7 +198,9 @@ function extractContactPayload(body: unknown): ContactPayload | null {
     message: normalizeText(input.message, 2000),
     lang: normalizeText(input.lang, 10),
     sourcePath: normalizeText(input.sourcePath, 200),
-    website: normalizeText(input.website, 180)
+    website: normalizeText(input.website, 180),
+    // Preserve the original length so oversized tokens fail closed instead of being truncated.
+    turnstileToken: typeof input.turnstileToken === 'string' ? input.turnstileToken.trim() : ''
   };
 }
 
@@ -442,9 +446,9 @@ async function isRateLimited(env: Env, table: 'downloads' | 'contact_messages' |
 async function sendContactEmail(payload: ContactPayload, env: Env): Promise<{ delivered: boolean; error: string | null }> {
   const apiKey = env.RESEND_API_KEY?.trim();
   const toEmail = env.CONTACT_TO_EMAIL?.trim();
-  const fromEmail = env.CONTACT_FROM_EMAIL?.trim() || 'onboarding@resend.dev';
+  const fromEmail = env.CONTACT_FROM_EMAIL?.trim();
 
-  if (!apiKey || !toEmail) {
+  if (!apiKey || !toEmail || !fromEmail) {
     return { delivered: false, error: 'resend_not_configured' };
   }
 
@@ -472,18 +476,44 @@ async function sendContactEmail(payload: ContactPayload, env: Env): Promise<{ de
         subject,
         text: textBody,
         reply_to: payload.email
-      })
+      }),
+      signal: AbortSignal.timeout(10_000)
     });
 
     if (!response.ok) {
-      const details = normalizeText(await response.text(), 260);
-      return { delivered: false, error: `resend_${response.status}${details ? `:${details}` : ''}` };
+      return { delivered: false, error: `resend_${response.status}` };
     }
 
     return { delivered: true, error: null };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'resend_request_failed';
-    return { delivered: false, error: normalizeText(message, 260) || 'resend_request_failed' };
+  } catch {
+    return { delivered: false, error: 'resend_request_failed' };
+  }
+}
+
+async function validateTurnstile(request: Request, env: Env, token: string): Promise<'ok' | 'invalid' | 'unavailable'> {
+  const secret = env.TURNSTILE_SECRET_KEY?.trim();
+  if (!secret) return 'unavailable';
+  if (!token || token.length > 2048) return 'invalid';
+  let expectedHostname: string;
+  try {
+    expectedHostname = new URL(getOrigin(request)).hostname.toLowerCase();
+  } catch {
+    return 'invalid';
+  }
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ secret, response: token }),
+      signal: AbortSignal.timeout(10_000)
+    });
+    if (!response.ok) return 'unavailable';
+    const result = await response.json() as { success?: unknown; hostname?: unknown; action?: unknown };
+    if (result.success !== true || typeof result.hostname !== 'string' ||
+        result.hostname.toLowerCase() !== expectedHostname || result.action !== 'contact') return 'invalid';
+    return 'ok';
+  } catch {
+    return 'unavailable';
   }
 }
 
@@ -626,6 +656,18 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'validation_error', message: validationError }, 400, origin, env);
   }
 
+  if (!env.RESEND_API_KEY?.trim() || !env.CONTACT_TO_EMAIL?.trim() || !env.CONTACT_FROM_EMAIL?.trim()) {
+    return jsonResponse({ error: 'contact_unavailable', message: 'Contact delivery is temporarily unavailable.' }, 503, origin, env);
+  }
+
+  const captcha = await validateTurnstile(request, env, payload.turnstileToken);
+  if (captcha === 'unavailable') {
+    return jsonResponse({ error: 'captcha_unavailable', message: 'Contact verification is temporarily unavailable.' }, 503, origin, env);
+  }
+  if (captcha !== 'ok') {
+    return jsonResponse({ error: 'captcha_failed', message: 'Please complete the CAPTCHA and try again.' }, 400, origin, env);
+  }
+
   const ipHash = await getIpHash(request, env);
   const now = Date.now();
 
@@ -633,7 +675,6 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'rate_limited', message: 'Too many requests. Try again later.' }, 429, origin, env);
   }
 
-  const mailResult = await sendContactEmail(payload, env);
   const id = crypto.randomUUID();
   const createdAt = new Date(now).toISOString();
   const userAgent = normalizeText(request.headers.get('User-Agent'), 300);
@@ -660,13 +701,24 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
       await encryptOptionalText(payload.sourcePath, env, aad('source_path')),
       await encryptOptionalText(userAgent, env, aad('user_agent')),
       ipHash,
-      mailResult.delivered ? 1 : 0,
-      mailResult.error ? normalizeText(mailResult.error, 260) : null
+      0,
+      'pending'
     )
     .run();
 
   if (!insert.success) {
     return jsonResponse({ error: 'db_insert_failed', message: 'Could not store contact request.' }, 500, origin, env);
+  }
+
+  const mailResult = await sendContactEmail(payload, env);
+  try {
+    const updated = await env.DB.prepare('UPDATE contact_messages SET email_sent = ?1, email_error = ?2 WHERE id = ?3')
+      .bind(mailResult.delivered ? 1 : 0, mailResult.error, id)
+      .run();
+    if (!updated.success) console.error('contact_email_status_update_failed');
+  } catch {
+    // The message is already stored; avoid inviting a duplicate send after Resend accepted it.
+    console.error('contact_email_status_update_failed');
   }
 
   return jsonResponse({ ok: true, delivered: mailResult.delivered }, 200, origin, env);
