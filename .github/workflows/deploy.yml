@@ -49,6 +49,8 @@ jobs:
         env:
           SITE_URL: https://${{ github.repository_owner }}.github.io
           BASE_PATH: /
+          PUBLIC_API_BASE: ${{ vars.PUBLIC_API_BASE || 'https://download-gate-api.s20796-download-gate.workers.dev' }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFXpcHNBkQZECI0E' }}
         run: npm run build
       - name: Publish dist to grzegorz-samson.github.io
         if: steps.deploy-gate.outputs.enabled == 'true'
